@@ -101,7 +101,7 @@
         <div class="dashboard-content">
           <div class="service-cards">
             <a
-              href="{{ url_for('user.vehicle_verification') }}"
+              href="{{ url_for('car_custom_doc.vehicle_verification') }}"
               class="service-card"
             >
               <div class="service-icon">
@@ -116,7 +116,10 @@
               </div>
             </a>
 
-            <a href="{{ url_for('user.global_courier') }}" class="service-card">
+            <a
+              href="{{ url_for('global_courier.global_courier') }}"
+              class="service-card"
+            >
               <div class="service-icon">
                 <i class="fas fa-box"></i>
               </div>
@@ -160,7 +163,7 @@
           <div class="dashboard-cards">
             <!-- My Verifications Card -->
             <a
-              href="{{ url_for('user.my_verifications') }}"
+              href="{{ url_for('car_custom_doc.my_verifications')}}"
               class="dashboard-card"
             >
               <div class="card-icon">
@@ -177,7 +180,7 @@
 
             <!-- My Global Courier Card -->
             <a
-              href="{{ url_for('user.my_global_courier') }}"
+              href="{{ url_for('global_courier.my_global_courier') }}"
               class="dashboard-card"
             >
               <div class="card-icon">

@@ -34,7 +34,7 @@
 
         <form
           id="courierForm"
-          action="{{ url_for('user.global_courier') }}"
+          action="{{ url_for('global_courier.global_courier') }}"
           method="POST"
         >
           <input type="hidden" name="csrf_token" value="{{csrf_token()}}" />
