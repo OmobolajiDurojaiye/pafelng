@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pafelng Logistics - Client Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/dashboard.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/flash.css') }}"
+    />
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <div class="logo">
+            <img
+              src="{{ url_for('static', filename='images/Pafelnglogo.png') }}"
+              alt="Pafelng Logo"
+            />
+          </div>
+          <div class="mobile-toggle" id="sidebarToggle">
+            <i class="fas fa-bars"></i>
+          </div>
+        </div>
+
+        <nav class="sidebar-nav">
+          <ul>
+            <li class="active">
+              <a href="#">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>Tracking Update</span>
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <i class="fas fa-history"></i>
+                <span>Job History</span>
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+              </a>
+            </li>
+            <li class="logout">
+              <a href="{{ url_for('auth.logout') }}">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        {% with messages = get_flashed_messages(with_categories=true) %} {% if
+        messages %}
+        <div class="flash-container">
+          {% for category, message in messages %}
+          <div class="flash flash-{{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+        {% endif %} {% endwith %}
+        <header class="main-header">
+          <div class="header-content">
+            <div class="welcome-section">
+              <h1>Welcome, <span id="clientName">{{ user.name }}</span></h1>
+              <p>What would you like to do today?</p>
+            </div>
+            <div class="profile-section">
+              <div class="profile-dropdown">
+                <div class="profile-img">
+                  <img
+                    src="{{ url_for('static', filename='images/profile-placeholder.png') }}"
+                    alt="Profile Image"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <div class="dashboard-content">
+          <div class="service-cards">
+            <a
+              href="{{ url_for('user.vehicle_verification') }}"
+              class="service-card"
+            >
+              <div class="service-icon">
+                <i class="fas fa-car"></i>
+              </div>
+              <div class="service-info">
+                <h3>Vehicle Customs Verification</h3>
+                <p>Verify and process vehicles through customs efficiently</p>
+              </div>
+              <div class="service-action">
+                <i class="fas fa-arrow-right"></i>
+              </div>
+            </a>
+
+            <a href="{{ url_for('user.global_courier') }}" class="service-card">
+              <div class="service-icon">
+                <i class="fas fa-box"></i>
+              </div>
+              <div class="service-info">
+                <h3>Global Courier</h3>
+                <p>Fast and reliable delivery to anywhere in the world</p>
+              </div>
+              <div class="service-action">
+                <i class="fas fa-arrow-right"></i>
+              </div>
+            </a>
+
+            <a href="{{ url_for('user.air_freight') }}" class="service-card">
+              <div class="service-icon">
+                <i class="fas fa-plane"></i>
+              </div>
+              <div class="service-info">
+                <h3>Air Freight</h3>
+                <p>Express delivery for time-sensitive shipments</p>
+              </div>
+              <div class="service-action">
+                <i class="fas fa-arrow-right"></i>
+              </div>
+            </a>
+
+            <a href="{{ url_for('user.sea_freight') }}" class="service-card">
+              <div class="service-icon">
+                <i class="fas fa-ship"></i>
+              </div>
+              <div class="service-info">
+                <h3>Sea Freight</h3>
+                <p>Cost-effective solution for large shipments</p>
+              </div>
+              <div class="service-action">
+                <i class="fas fa-arrow-right"></i>
+              </div>
+            </a>
+          </div>
+
+          <!-- Navigation Cards Section -->
+          <div class="dashboard-cards">
+            <!-- My Verifications Card -->
+            <a
+              href="{{ url_for('user.my_verifications') }}"
+              class="dashboard-card"
+            >
+              <div class="card-icon">
+                <i class="fas fa-car-side"></i>
+              </div>
+              <div class="card-info">
+                <h3>My Vehicle Verifications</h3>
+                <p>View your submitted vehicle customs verifications</p>
+              </div>
+              <div class="card-arrow">
+                <i class="fas fa-chevron-right"></i>
+              </div>
+            </a>
+
+            <!-- My Global Courier Card -->
+            <a
+              href="{{ url_for('user.my_global_courier') }}"
+              class="dashboard-card"
+            >
+              <div class="card-icon">
+                <i class="fas fa-shipping-fast"></i>
+              </div>
+              <div class="card-info">
+                <h3>My Global Courier</h3>
+                <p>Track and manage your global courier shipments</p>
+              </div>
+              <div class="card-arrow">
+                <i class="fas fa-chevron-right"></i>
+              </div>
+            </a>
+
+            <!-- My Air Freight Card -->
+            <a href="#" class="dashboard-card">
+              <div class="card-icon">
+                <i class="fas fa-plane"></i>
+              </div>
+              <div class="card-info">
+                <h3>My Air Freight</h3>
+                <p>View your air freight shipments and status</p>
+              </div>
+              <div class="card-arrow">
+                <i class="fas fa-chevron-right"></i>
+              </div>
+            </a>
+
+            <!-- My Sea Freight Card -->
+            <a href="#" class="dashboard-card">
+              <div class="card-icon">
+                <i class="fas fa-ship"></i>
+              </div>
+              <div class="card-info">
+                <h3>My Sea Freight</h3>
+                <p>Track and manage your sea freight shipments</p>
+              </div>
+              <div class="card-arrow">
+                <i class="fas fa-chevron-right"></i>
+              </div>
+            </a>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/flash.js') }}"></script>
+  </body>
+</html>

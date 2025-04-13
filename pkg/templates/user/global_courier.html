@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Global Courier Service | Logistics App</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/global_courier.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/flash.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <div class="form-container">
+        <div class="back-button" onclick="history.back()">
+          <i class="fas fa-arrow-left"></i> Back
+        </div>
+
+        <div class="form-header">
+          <div class="logo">
+            <i class="fas fa-shipping-fast"></i>
+          </div>
+          <h1>Global Courier</h1>
+          <p>Track your package across international destinations</p>
+        </div>
+
+        <form
+          id="courierForm"
+          action="{{ url_for('user.global_courier') }}"
+          method="POST"
+        >
+          <input type="hidden" name="csrf_token" value="{{csrf_token()}}" />
+          <div class="input-group">
+            <label for="name">Full Name</label>
+            <div class="input-field">
+              <i class="fas fa-user"></i>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Enter your full name"
+                required
+                value="{{ session.get('user_name', '') }}"
+              />
+            </div>
+            <span class="error-message" id="nameError"></span>
+          </div>
+
+          <div class="input-group">
+            <label for="email">Email Address</label>
+            <div class="input-field">
+              <i class="fas fa-envelope"></i>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Enter your email address"
+                required
+              />
+            </div>
+            <span class="error-message" id="emailError"></span>
+          </div>
+
+          <div class="input-group">
+            <label for="phone">Phone Number</label>
+            <div class="input-field">
+              <i class="fas fa-phone"></i>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                placeholder="Enter your phone number"
+                required
+              />
+            </div>
+            <span class="error-message" id="phoneError"></span>
+          </div>
+
+          <div class="input-group">
+            <label for="courier">Courier Company</label>
+            <div class="select-wrapper">
+              <select id="courier" name="courier" required>
+                <option value="" disabled selected>
+                  Select courier company
+                </option>
+                <option value="DHL">DHL</option>
+                <option value="Fedex">FedEx</option>
+                <option value="UPS">UPS</option>
+                <option value="Aramex">Aramex</option>
+              </select>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <span class="error-message" id="courierError"></span>
+          </div>
+
+          <div class="input-group">
+            <label for="tracking">Tracking Number</label>
+            <div class="input-field">
+              <i class="fas fa-barcode"></i>
+              <input
+                type="text"
+                id="tracking"
+                name="tracking"
+                placeholder="Enter your tracking number"
+                required
+              />
+            </div>
+            <span class="error-message" id="trackingError"></span>
+          </div>
+
+          <button type="submit" class="submit-btn">
+            <span>Submit</span>
+            <i class="fas fa-arrow-right"></i>
+          </button>
+        </form>
+
+        <div class="form-footer">
+          <p>Our partners:</p>
+          <div class="partners">
+            <div class="partner">DHL</div>
+            <div class="partner">FedEx</div>
+            <div class="partner">UPS</div>
+            <div class="partner">Aramex</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="visual-element">
+        <div class="circle circle-1"></div>
+        <div class="circle circle-2"></div>
+        <div class="circle circle-3"></div>
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+      </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/global_courier.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/flash.js') }}"></script>
+  </body>
+</html>

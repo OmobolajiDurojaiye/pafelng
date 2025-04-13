@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %} Pafel Logistics {% endblock title %}</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+
+    {% block extra_style %} {% endblock extra_style %}
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Navigation -->
+    <header>
+      <nav class="navbar">
+        <div class="logo-container">
+          <a href="/" class="logo">
+            <div class="logo-placeholder">
+              <img
+                src="{{ url_for('static', filename='images/pafelnglogo.png') }}"
+                alt=""
+                srcset=""
+              />
+            </div>
+          </a>
+        </div>
+        <ul class="nav-links">
+          <li>
+            <a href="about.html"><i class="fas fa-info-circle"></i> About Us</a>
+          </li>
+          <li>
+            <a href="/#vehicle-doc"
+              ><i class="fas fa-car"></i> Vehicle Doc Check</a
+            >
+          </li>
+          <li>
+            <a href="/#global-courier"
+              ><i class="fas fa-shipping-fast"></i> Global Courier</a
+            >
+          </li>
+          <li>
+            <a href="/#air-freight"><i class="fas fa-plane"></i> Air Freight</a>
+          </li>
+          <li>
+            <a href="/#ship-freight"><i class="fas fa-ship"></i> Sea Freight</a>
+          </li>
+          <li>
+            <a href="contact.html"
+              ><i class="fas fa-envelope"></i> Contact Us</a
+            >
+          </li>
+          <li>
+            <a href="/user/login" class="navlog"> Log in</a>
+          </li>
+        </ul>
+        <div class="hamburger">
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+        </div>
+      </nav>
+    </header>
+
+    {% block content %}
+
+    <!-- Section with Slider -->
+    <section class="hero-slider">
+      <div class="slider-container">
+        <div
+          class="slide active"
+          style="background-image: url('static/images/slider1.jpeg')"
+        ></div>
+        <div
+          class="slide"
+          style="background-image: url('static/images/slider2.jpeg')"
+        ></div>
+        <div
+          class="slide"
+          style="background-image: url('static/images/slider3.jpeg')"
+        ></div>
+        <div
+          class="slide"
+          style="background-image: url('static/images/slider1.jpeg')"
+        ></div>
+
+        <div class="slider-text">
+          <span class="slider-tagline">3PL Logistics Company</span>
+          <h1>3-7 Days Delivery</h1>
+          <div class="slider-features">
+            <span>Transparency</span>
+            <span>Effective Communication</span>
+            <span>Safety of Shipment</span>
+          </div>
+          <span class="slider-motto">The Power of Zero Delay</span>
+        </div>
+
+        <div class="slider-controls">
+          <button class="prev-btn"><i class="fas fa-chevron-left"></i></button>
+          <div class="slider-dots">
+            <span class="dot active" data-index="0"></span>
+            <span class="dot" data-index="1"></span>
+            <span class="dot" data-index="2"></span>
+            <span class="dot" data-index="3"></span>
+          </div>
+          <button class="next-btn"><i class="fas fa-chevron-right"></i></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Services Sections -->
+    <main class="services">
+      <!-- Vehicle Customs Verification -->
+      <section id="vehicle-doc" class="service-section">
+        <div class="service-content">
+          <div class="service-text">
+            <div class="service-icon">
+              <i class="fas fa-car-side"></i>
+            </div>
+            <h2>Vehicle Customs Verification</h2>
+            <p>
+              Our vehicle customs verification service ensures a smooth and
+              compliant process for importing and exporting vehicles. We handle
+              all the documentation and verification procedures required by
+              customs authorities.
+            </p>
+            <a href="/user/signup" class="quote-btn"
+              >Signup to request a quote</a
+            >
+          </div>
+          <div class="service-image">
+            <img src="#" alt="Vehicle Customs Verification" />
+          </div>
+        </div>
+        <div class="service-bg-element">
+          <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <path
+              fill="#42B0D522"
+              d="M48.8,-64.2C61.9,-55.3,70.5,-39.5,75.2,-22.7C79.9,-5.9,80.6,11.9,74.4,27C68.2,42.1,55.1,54.5,40.1,61.5C25.1,68.5,8.2,70.1,-8.9,70.5C-26.1,70.8,-43.3,69.9,-54.8,61.5C-66.2,53.2,-71.8,37.5,-74.4,21.6C-77,5.7,-76.6,-10.3,-70.3,-23.9C-64.1,-37.5,-52,-48.6,-38.7,-57.3C-25.4,-65.9,-10.9,-72.2,3.7,-76.7C18.3,-81.2,35.7,-73.1,48.8,-64.2Z"
+              transform="translate(100 100)"
+            />
+          </svg>
+        </div>
+      </section>
+
+      <!-- Global Courier -->
+      <section id="global-courier" class="service-section">
+        <div class="service-content reverse">
+          <div class="service-image">
+            <img src="images/global-courier-detail.jpg" alt="Global Courier" />
+          </div>
+          <div class="service-text">
+            <div class="service-icon">
+              <i class="fas fa-shipping-fast"></i>
+            </div>
+            <h2>Global Courier</h2>
+            <p>
+              Our global courier service offers fast and reliable delivery
+              solutions worldwide. We partner with the leading courier companies
+              to provide you with the best shipping options for your packages.
+            </p>
+            <div class="discount-tag">
+              <span>30% discount on custom clearance</span>
+            </div>
+            <div class="courier-partners">
+              <img
+                src="{{ url_for('static', filename='images/dhl.png') }}"
+                alt="DHL"
+                class="courier-logo"
+              />
+              <img
+                src="{{ url_for('static', filename='images/aramex.png') }}"
+                alt="ARAMEX"
+                class="courier-logo"
+              />
+              <img
+                src="{{ url_for('static', filename='images/fedex.png') }}"
+                alt="FEDEX"
+                class="courier-logo"
+              />
+              <img
+                src="{{ url_for('static', filename='images/ups.png') }}"
+                alt="UPS"
+                class="courier-logo"
+              />
+            </div>
+            <a href="/user/signup" class="quote-btn"
+              >Signup to request a quote</a
+            >
+          </div>
+        </div>
+        <div class="service-bg-element right">
+          <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <path
+              fill="#42B0D522"
+              d="M40.4,-49.8C52,-39.7,61,-26.9,64.6,-12.6C68.3,1.8,66.4,17.5,58.6,29.3C50.7,41.1,36.8,48.9,21.9,55.1C7,61.3,-9,65.9,-24.4,63.1C-39.8,60.4,-54.6,50.3,-64,36.1C-73.3,21.9,-77.1,3.5,-72.5,-12.4C-67.9,-28.4,-54.7,-41.9,-40.1,-51.4C-25.5,-60.9,-9.6,-66.5,2.2,-69C14,-71.4,28.7,-59.8,40.4,-49.8Z"
+              transform="translate(100 100)"
+            />
+          </svg>
+        </div>
+      </section>
+
+      <!-- Air Freight -->
+      <section id="air-freight" class="service-section">
+        <div class="service-content">
+          <div class="service-text">
+            <div class="service-icon">
+              <i class="fas fa-plane"></i>
+            </div>
+            <h2>Air Freight</h2>
+            <p>
+              Our air freight service provides swift transportation solutions
+              for urgent shipments. We offer competitive rates and exceptional
+              service to ensure your cargo arrives safely and on time.
+            </p>
+            <a href="/user/signup" class="quote-btn"
+              >Signup to request a quote</a
+            >
+          </div>
+          <div class="service-image">
+            <img
+              src="{{ url_for('static', filename='images/air.jpeg') }}"
+              alt="Air Freight"
+            />
+          </div>
+        </div>
+        <div class="service-bg-element">
+          <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <path
+              fill="#42B0D522"
+              d="M44.5,-58.4C57.9,-46.9,69.3,-33.1,75.4,-16.6C81.5,-0.1,82.2,19.1,74.2,34.4C66.3,49.7,49.6,61.1,31.9,68.5C14.1,75.9,-4.7,79.3,-23.9,75.6C-43.1,71.8,-62.7,61,-73.2,44.2C-83.7,27.4,-85.2,4.7,-79.2,-14.8C-73.3,-34.2,-60,-50.3,-44.7,-61.5C-29.4,-72.7,-12.2,-79,2.7,-82.2C17.6,-85.5,31.1,-69.9,44.5,-58.4Z"
+              transform="translate(100 100)"
+            />
+          </svg>
+        </div>
+      </section>
+
+      <!-- Ship Freight -->
+      <section id="ship-freight" class="service-section">
+        <div class="service-content reverse">
+          <div class="service-image">
+            <img
+              src="{{ url_for('static', filename='images/ship.jpeg') }}"
+              alt="Sea Freight"
+            />
+          </div>
+          <div class="service-text">
+            <div class="service-icon">
+              <i class="fas fa-ship"></i>
+            </div>
+            <h2>Sea Freight</h2>
+            <p>
+              Our Sea freight service provides cost-effective solutions for bulk
+              cargo transportation across oceans. We handle everything from
+              documentation to delivery, ensuring a seamless shipping
+              experience.
+            </p>
+            <a href="/user/signup" class="quote-btn"
+              >Signup to request a quote</a
+            >
+          </div>
+        </div>
+        <div class="service-bg-element right">
+          <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <path
+              fill="#42B0D522"
+              d="M39.3,-46.2C52.4,-41.1,65.4,-29.7,70.4,-15.3C75.5,-0.9,72.6,16.5,64.1,30.2C55.6,43.8,41.5,53.7,26.3,60C11.1,66.4,-5.2,69.2,-22,66.8C-38.8,64.4,-56.2,56.8,-64.2,43C-72.2,29.3,-70.9,9.5,-67.1,-8.5C-63.3,-26.5,-57.1,-42.6,-45.5,-48.3C-34,-54,-17,-49.4,-1.3,-47.7C14.4,-46,26.2,-51.4,39.3,-46.2Z"
+              transform="translate(100 100)"
+            />
+          </svg>
+        </div>
+      </section>
+    </main>
+
+    {% endblock content %}
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-content">
+        <div class="footer-logo">
+          <div class="logo-placeholder">
+            <img
+              src="{{ url_for('static', filename='images/pafelnglogo.png') }}"
+              alt=""
+              srcset=""
+            />
+          </div>
+          <p>The Power Of Zero Delay.</p>
+        </div>
+
+        <div class="footer-contact">
+          <h3>Contact Information</h3>
+          <p>
+            <i class="fas fa-envelope"></i> Email:
+            <a href="mailto:sales@pafelng.com">sales@pafelng.com</a>,
+            <a href="mailto:philip@pafelng.com">philip@pafelng.com</a>
+          </p>
+          <p><i class="fas fa-phone"></i> Phone: +234 (0) 913 – 7552- 297</p>
+          <p>
+            <i class="fas fa-map-marker-alt"></i> Address: 25, Ija Road, off
+            Isuti Road, Igando.
+          </p>
+        </div>
+
+        <div class="footer-social">
+          <h3>Connect With Us</h3>
+          <div class="social-icons">
+            <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-whatsapp"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2025 Pafel Logistics. All Rights Reserved.</p>
+      </div>
+    </footer>
+
+    {% block script %} {% endblock script %}
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+  </body>
+</html>

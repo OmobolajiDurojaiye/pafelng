@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Global Courier Submissions | Logistics App</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/flash.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/global_courier.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      /* Additional styles for the submissions table */
+      .submissions-container {
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+      }
+
+      .submissions-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+
+      .submissions-table th,
+      .submissions-table td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      .submissions-table th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+        color: #333;
+      }
+
+      .submissions-table tr:hover {
+        background-color: #f5f5f5;
+      }
+
+      .status-badge {
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .status-pending {
+        background-color: #fff8e1;
+        color: #ffa000;
+      }
+
+      .status-processed {
+        background-color: #e8f5e9;
+        color: #4caf50;
+      }
+
+      .status-cancelled {
+        background-color: #ffebee;
+        color: #f44336;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 40px 0;
+        color: #757575;
+      }
+
+      .empty-state i {
+        font-size: 48px;
+        margin-bottom: 15px;
+        color: #ccc;
+      }
+
+      .actions {
+        display: flex;
+        gap: 10px;
+      }
+
+      .action-btn {
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 12px;
+        cursor: pointer;
+        background-color: #f0f0f0;
+        color: #333;
+        border: none;
+        transition: all 0.3s ease;
+      }
+
+      .action-btn:hover {
+        background-color: #e0e0e0;
+      }
+
+      .back-link {
+        display: inline-block;
+        margin-bottom: 20px;
+        color: #333;
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      .back-link i {
+        margin-right: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="submissions-container">
+        <a href="{{ url_for('user.dashboard') }}" class="back-link">
+          <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+
+        <h1>
+          <i class="fas fa-shipping-fast"></i> My Global Courier Submissions
+        </h1>
+
+        {% if courier_submissions %}
+        <table class="submissions-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Courier</th>
+              <th>Tracking Number</th>
+              <th>Recipient</th>
+              <th>Status</th>
+              <th>Date Submitted</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for submission in courier_submissions %}
+            <tr>
+              <td>#{{ submission.id }}</td>
+              <td>{{ submission.courier_company }}</td>
+              <td>{{ submission.tracking_number }}</td>
+              <td>{{ submission.name }}</td>
+              <td>
+                <span
+                  class="status-badge {% if submission.status == 'pending' %}status-pending {% elif submission.status == 'processed' %}status-processed {% else %}status-cancelled{% endif %}"
+                >
+                  {{ submission.status.upper() }}
+                </span>
+              </td>
+              <td>{{ submission.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <div class="empty-state">
+          <i class="fas fa-inbox"></i>
+          <h3>No submissions yet</h3>
+          <p>You haven't submitted any global courier tracking requests.</p>
+          <a
+            href="{{ url_for('user.global_courier') }}"
+            class="submit-btn"
+            style="display: inline-block; margin-top: 15px"
+          >
+            <span>Submit New Request</span>
+            <i class="fas fa-plus"></i>
+          </a>
+        </div>
+        {% endif %} {% if courier_submissions %}
+        <div style="margin-top: 20px; text-align: center">
+          <a
+            href="{{ url_for('user.global_courier') }}"
+            class="submit-btn"
+            style="display: inline-block"
+          >
+            <span>Submit New Request</span>
+            <i class="fas fa-plus"></i>
+          </a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/flash.js') }}"></script>
+  </body>
+</html>

@@ -1,0 +1,39 @@
+I'm working on one of the services of my logistic web apps, so this particular service is the Global Courier, i need to create a form in it with these inputs:
+
+Name:
+Email: 
+Phone Number:
+Courier Company: provide options: DHL, Fedex, UPS, Aramex
+Tracking Number:
+
+Add a back button with history.back() so users can go back to the previous page
+
+
+this is our color:
+:root {
+  --primary-color: #42b0d5;
+  --primary-light: rgba(66, 176, 213, 0.1);
+  --accent-color: #ff7f50; /* Coral - complements blue nicely */
+  --dark-color: #333;
+  --light-color: #f8f9fa;
+  --text-color: #333;
+  --white: #fff;
+  --gray: #6c757d;
+  --light-gray: #e9ecef;
+  --border-radius: 12px;
+  --transition: all 0.3s ease;
+  --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+this template will serve as a base template for the other services pages
+
+design a modern, sleek, beautiful, attractive, futuristic design, logistic-like form page
+
+The HTML, CSS AND JS files should be in different files
+
+NOTE THAT THE JAVASCRIPT SHOULDN'T RENDER AANYTHING ON THE TEMPLATE, JUST FOR DESIGNS FORM FUNCTIONS (LIKE REGULAR FUNCTIONS FOR THINGS LIKE IF A USER DOESN'T INPUT  FORM IT SHOULD NOT SEND) AND STUFF, WE'RE NOT USING AJAX EITHER
+
+!!remember this is a flask app, don't use jinja yet cause this is just the frontend, but don't also do something complicated that when the backend is here it will desctroy it, be mindful!!
+
+I TRUST YOU ON This
+THANKS
