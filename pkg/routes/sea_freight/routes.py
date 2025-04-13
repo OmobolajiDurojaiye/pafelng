@@ -9,7 +9,7 @@ from werkzeug.utils import secure_filename
 from functools import wraps
 from pkg.models import User, db
 
-air_freight_bp = Blueprint('air_freight', __name__, url_prefix='/air-freight')
+sea_freight_bp = Blueprint('sea_freight', __name__, url_prefix='/sea-freight')
 
 # Login required decorator
 def login_required(f):
@@ -21,13 +21,14 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-@air_freight_bp.route('/air-freight')
+@sea_freight_bp.route('/sea-freight')
 @login_required
-def air_freight():
-    return render_template('user/air_freight.html')
+def sea_freight():
+    return render_template('user/sea_freight.html')
 
-@air_freight_bp.route('/my-air-freight')
+
+@sea_freight_bp.route('/my-sea-freight')
 @login_required
-def my_air_freight():
+def my_sea_freight():
     user_id = session['user_id']
-    return render_template('user/my_air_freight.html')
+    return render_template('user/my_sea_freight.html')

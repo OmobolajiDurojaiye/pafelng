@@ -114,27 +114,3 @@ def dashboard():
         return redirect(url_for('auth.login'))
         
     return render_template('user/dashboard.html', user=user)
-
-
-@user_bp.route('/air-freight')
-@login_required
-def air_freight():
-    return render_template('user/air_freight.html')
-
-@user_bp.route('/my-air-freight')
-@login_required
-def my_air_freight():
-    user_id = session['user_id']
-    return render_template('user/my_air_freight.html')
-
-@user_bp.route('/sea-freight')
-@login_required
-def sea_freight():
-    return render_template('user/sea_freight.html')
-
-
-@user_bp.route('/my-sea-freight')
-@login_required
-def my_sea_freight():
-    user_id = session['user_id']
-    return render_template('user/my_sea_freight.html')
