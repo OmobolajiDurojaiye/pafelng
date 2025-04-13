@@ -20,8 +20,10 @@ get_flashed_messages(with_categories=true) %} {% if messages %}
 <div class="container">
   <div class="form-container">
     <div class="form-header">
-      <h2>Create Account</h2>
-      <p>Join our platform for logistics excellence</p>
+      <h2 style="font-weight: lighter; color: #000">Create Account</h2>
+      <p style="font-weight: bold; color: #000">
+        Join our platform for logistics excellence
+      </p>
     </div>
 
     <form id="signup-form" method="post" action="{{ url_for('auth.signup') }}">

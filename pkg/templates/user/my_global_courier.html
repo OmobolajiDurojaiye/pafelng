@@ -131,7 +131,6 @@
         <table class="submissions-table">
           <thead>
             <tr>
-              <th>ID</th>
               <th>Courier</th>
               <th>Tracking Number</th>
               <th>Recipient</th>
@@ -142,7 +141,6 @@
           <tbody>
             {% for submission in courier_submissions %}
             <tr>
-              <td>#{{ submission.id }}</td>
               <td>{{ submission.courier_company }}</td>
               <td>{{ submission.tracking_number }}</td>
               <td>{{ submission.name }}</td>

@@ -47,7 +47,7 @@ def vehicle_verification():
         
         if not name or not email or not phone or not c_number or not payment_method:
             flash('All required fields must be filled', 'error')
-            return redirect(url_for('car_custom_doc.vehicle_verification'))  # Update blueprint name
+            return redirect(url_for('car_custom_doc.vehicle_verification'))
         
         new_verification = VehicleVerification(
             user_id=user_id,
@@ -81,14 +81,14 @@ def vehicle_verification():
         file_path = os.path.join(upload_folder, new_filename)
         file.save(file_path)
         
-        new_verification.document_path = os.path.join('uploads', 'vehicle_documents', new_filename)
+        new_verification.document_path = 'uploads/vehicle_documents/' + new_filename
         new_verification.original_filename = original_filename
         
         db.session.add(new_verification)
         db.session.commit()
         
         flash('Vehicle verification submitted successfully', 'success')
-        return redirect(url_for('user.dashboard'))
+        return redirect(url_for('car_custom_doc.my_verifications'))
         
     except Exception as e:
         db.session.rollback()

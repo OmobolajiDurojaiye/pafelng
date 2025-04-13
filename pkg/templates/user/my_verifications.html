@@ -233,9 +233,7 @@
         {% for verification in verifications %}
         <div class="verification-card">
           <div class="card-header">
-            <h2 class="card-title">
-              Vehicle Verification #{{ verification.id }}
-            </h2>
+            <h2 class="card-title">Vehicle Verification</h2>
             <span
               class="status-badge status-{{ verification.verification_status }}"
             >
@@ -282,10 +280,10 @@
             {% if verification.document_path %}
             <a
               href="{{ url_for('static', filename=verification.document_path) }}"
-              target="_blank"
+              download="{{ verification.original_filename or 'verification_document' }}"
               class="document-link"
             >
-              <i class="far fa-file-alt"></i> View Document
+              <i class="fas fa-download"></i> Download Document
             </a>
             {% endif %}
           </div>
@@ -297,7 +295,7 @@
         <i class="fas fa-folder-open"></i>
         <p>You haven't submitted any vehicle verifications yet.</p>
         <a
-          href="{{ url_for('user.vehicle_verification') }}"
+          href="{{ url_for('car_custom_doc.vehicle_verification') }}"
           class="new-verification-btn"
         >
           <i class="fas fa-plus"></i> Submit New Verification

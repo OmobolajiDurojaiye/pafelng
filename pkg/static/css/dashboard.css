@@ -21,7 +21,7 @@
 }
 
 body {
-  background-color: #f5f8fa;
+  background-color: #fff;
   color: var(--text-color);
   line-height: 1.6;
 }
@@ -131,16 +131,19 @@ ul {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 20px;
 }
 
 .welcome-section h1 {
-  font-size: 1.8rem;
+  /* font-size: 1.8rem; */
+  font-weight: lighter;
   margin-bottom: 5px;
   color: var(--dark-color);
 }
 
 .welcome-section p {
   color: var(--gray);
+  font-weight: bolder;
 }
 
 .welcome-section span {
