@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verify Admin Account | Logistics Platform</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/admin_signup.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <div class="signup-container verification-container">
+        <div class="left-panel">
+          <div class="logo-container">
+            <h1>PafelNG</h1>
+            <p>Logistics Management Solution</p>
+          </div>
+          <div class="illustration">
+            <img
+              src="{{ url_for('static', filename='images/verification_illustration.svg') }}"
+              alt="Verification Illustration"
+            />
+          </div>
+          <div class="features">
+            <h3>Security First</h3>
+            <p>
+              Our two-step verification ensures only authorized personnel can
+              access admin features.
+            </p>
+          </div>
+        </div>
+        <div class="right-panel">
+          <div class="form-header">
+            <h2>Verify Your Account</h2>
+            <p>Enter the 6-digit verification code sent to the owner's email</p>
+          </div>
+
+          {% with messages = get_flashed_messages(with_categories=true) %} {% if
+          messages %} {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+          {% endfor %} {% endif %} {% endwith %}
+
+          <form
+            id="verification-form"
+            method="POST"
+            action="{{ url_for('admin.verify_code') }}"
+          >
+            <input type="hidden" name="csrf_token" value="{{csrf_token()}}" />
+            <div class="form-group verification-input">
+              <label for="verification_code">Verification Code</label>
+              <div class="verification-code-input">
+                <input
+                  type="text"
+                  id="verification_code"
+                  name="verification_code"
+                  placeholder="Enter 6-digit verification code"
+                  maxlength="6"
+                  required
+                />
+              </div>
+              <span class="error-message" id="code-error"></span>
+            </div>
+
+            <div class="form-info">
+              <p>
+                <i class="fas fa-info-circle"></i> Please ask the owner to check
+                their email for the verification code.
+              </p>
+            </div>
+
+            <div class="form-group">
+              <button type="submit" class="signup-btn">
+                Verify <i class="fas fa-check-circle"></i>
+              </button>
+            </div>
+
+            <div class="form-footer">
+              <p>
+                Need to go back?
+                <a href="{{ url_for('admin.admin_signup') }}"
+                  >Return to signup</a
+                >
+              </p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/verify_code.js') }}"></script>
+  </body>
+</html>

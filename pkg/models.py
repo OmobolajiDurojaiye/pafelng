@@ -40,6 +40,52 @@ class User(db.Model):
             'is_active': self.is_active
         }
 
+class Admin(db.Model):
+    __tablename__ = 'admins'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password_hash = db.Column(db.String(256), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    is_active = db.Column(db.Boolean, default=True)
+    is_verified = db.Column(db.Boolean, default=False)
+    
+    def __init__(self, name, email):
+        self.name = name
+        self.email = email
+    
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+    
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'email': self.email,
+            'created_at': self.created_at,
+            'is_active': self.is_active,
+            'is_verified': self.is_verified
+        }
+
+class VerificationCode(db.Model):
+    __tablename__ = 'verification_codes'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    code = db.Column(db.String(6), nullable=False)
+    admin_email = db.Column(db.String(120), nullable=False)
+    admin_name = db.Column(db.String(100), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    is_used = db.Column(db.Boolean, default=False)
+    
+    def __init__(self, code, admin_email, admin_name):
+        self.code = code
+        self.admin_email = admin_email
+        self.admin_name = admin_name
+
 class VehicleVerification(db.Model):
     __tablename__ = 'vehicle_verifications'
     
@@ -60,6 +106,9 @@ class VehicleVerification(db.Model):
     verification_status = db.Column(db.String(20), default='pending')
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     
+    # Relationship with VehicleVerificationMessage
+    messages = db.relationship('VehicleVerificationMessage', backref='verification', lazy=True, order_by='VehicleVerificationMessage.created_at')
+    
     def to_dict(self):
         return {
             'id': self.id,
@@ -74,7 +123,28 @@ class VehicleVerification(db.Model):
             'verification_status': self.verification_status,
             'created_at': self.created_at
         }
+
+class VehicleVerificationMessage(db.Model):
+    __tablename__ = 'vehicle_verification_messages'
     
+    id = db.Column(db.Integer, primary_key=True)
+    verification_id = db.Column(db.Integer, db.ForeignKey('vehicle_verifications.id'), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    attachment_path = db.Column(db.String(255), nullable=True)
+    original_filename = db.Column(db.String(255), nullable=True)
+    is_admin = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'verification_id': self.verification_id,
+            'content': self.content,
+            'attachment_path': self.attachment_path,
+            'original_filename': self.original_filename,
+            'is_admin': self.is_admin,
+            'created_at': self.created_at
+        }
 
 class GlobalCourier(db.Model):
     __tablename__ = 'global_couriers'
@@ -89,6 +159,8 @@ class GlobalCourier(db.Model):
     status = db.Column(db.String(20), default='pending')
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     
+    # Relationship with GlobalCourierMessage
+    messages = db.relationship('GlobalCourierMessage', backref='courier', lazy=True, order_by='GlobalCourierMessage.created_at')
     
     def to_dict(self):
         return {
@@ -100,5 +172,27 @@ class GlobalCourier(db.Model):
             'courier_company': self.courier_company,
             'tracking_number': self.tracking_number,
             'status': self.status,
+            'created_at': self.created_at
+        }
+
+class GlobalCourierMessage(db.Model):
+    __tablename__ = 'global_courier_messages'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    courier_id = db.Column(db.Integer, db.ForeignKey('global_couriers.id'), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    attachment_path = db.Column(db.String(255), nullable=True)
+    original_filename = db.Column(db.String(255), nullable=True)
+    is_admin = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'courier_id': self.courier_id,
+            'content': self.content,
+            'attachment_path': self.attachment_path,
+            'original_filename': self.original_filename,
+            'is_admin': self.is_admin,
             'created_at': self.created_at
         }

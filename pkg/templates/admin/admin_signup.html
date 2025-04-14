@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Signup | Logistics Platform</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/admin_signup.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <div class="signup-container">
+        <div class="left-panel">
+          <div class="logo-container">
+            <h1>PafelNG</h1>
+            <p>Logistics Management Solution</p>
+          </div>
+          <div class="illustration">
+            <img
+              src="{{ url_for('static', filename='images/logistics_illustration.svg') }}"
+              alt="Logistics Illustration"
+            />
+          </div>
+          <div class="features">
+            <h3>Admin Benefits</h3>
+            <ul>
+              <li><i class="fas fa-chart-line"></i> Real-time Analytics</li>
+              <li><i class="fas fa-truck"></i> Shipment Tracking</li>
+              <li>
+                <i class="fas fa-user-shield"></i> Secure Verification System
+              </li>
+              <li><i class="fas fa-globe"></i> Global Courier Management</li>
+            </ul>
+          </div>
+        </div>
+        <div class="right-panel">
+          <div class="form-header">
+            <h2>Admin Registration</h2>
+            <p>Create your admin account</p>
+          </div>
+
+          {% with messages = get_flashed_messages(with_categories=true) %} {% if
+          messages %} {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+          {% endfor %} {% endif %} {% endwith %}
+
+          <form
+            id="admin-signup-form"
+            method="POST"
+            action="{{ url_for('admin.admin_signup') }}"
+          >
+            <input type="hidden" name="csrf_token" value="{{csrf_token()}}" />
+            <div class="form-group">
+              <label for="name">Full Name</label>
+              <div class="input-group">
+                <i class="fas fa-user"></i>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  placeholder="Enter your full name"
+                  required
+                />
+              </div>
+              <span class="error-message" id="name-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="Enter your email"
+                  required
+                />
+              </div>
+              <span class="error-message" id="email-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="password">Password</label>
+              <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  placeholder="Create a strong password"
+                  required
+                />
+                <i class="fas fa-eye toggle-password" id="toggle-password"></i>
+              </div>
+              <span class="error-message" id="password-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="confirm_password">Confirm Password</label>
+              <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input
+                  type="password"
+                  id="confirm_password"
+                  name="confirm_password"
+                  placeholder="Confirm your password"
+                  required
+                />
+                <i
+                  class="fas fa-eye toggle-password"
+                  id="toggle-confirm-password"
+                ></i>
+              </div>
+              <span class="error-message" id="confirm-password-error"></span>
+            </div>
+
+            <div class="form-info">
+              <p>
+                <i class="fas fa-info-circle"></i> A verification code will be
+                sent to the company owner for approval.
+              </p>
+            </div>
+
+            <div class="form-group">
+              <button type="submit" class="signup-btn">
+                Register <i class="fas fa-arrow-right"></i>
+              </button>
+            </div>
+
+            <div class="form-footer">
+              <p>
+                Already have an account?
+                <a href="{{ url_for('admin.admin_login') }}">Login here</a>
+              </p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/admin_signup.js') }}"></script>
+  </body>
+</html>

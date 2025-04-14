@@ -1,17 +1,31 @@
-I'm working on one of the services of my logistic web apps, so this particular service is the Global Courier, i need to create a form in it with these inputs:
+I'm working on the admin side of my logigstic web app I want to create the signup page for admins to signup, but we have a special way to signup, here is it:
+To secure the admin signup, we'd do this —when a new staff is signing up, a number code will be sent to the email of the owner, so the new staff will inputs the number, if correct, he officially becomes an admin, if not, then a security breach is occurring and that way, not just anyone will be able to signup as an admin on the app.
 
-Name:
-Email: 
-Phone Number:
-Courier Company: provide options: DHL, Fedex, UPS, Aramex
-Tracking Number:
+in my instance folder, i have these codes:
 
-Add a back button with history.back() so users can go back to the previous page
+SECRET_KEY = "bcnneubpwbcyaue7443bvcs643kbbcwex3272fwede"
+SQLALCHEMY_DATABASE_URI="mysql+mysqlconnector://root@127.0.0.1/pafelng"
+
+MAIL_SERVER="smtp.gmail.com"
+MAIL_PORT="465"
+MAIL_USE_TLS=False
+MAIL_USE_SSL=True
+MAIL_USERNAME="durojaiyeomobolaji93@gmail.com"
+MAIL_PASSWORD = "qmdj yttn mwkw qnmj"
+
+for the owner email and the MAIL_PASSWORD
+
+so create the functionality for sending a six number code
+
+so when the new admin signs up using his name, email, password, he'd then be redirected to a new page for him to input the code sent to the owner's email, and if correct, he then gets signed up as an admin of the app
+
+and then he's redirected to the login page to login (we'd work on login later, just do the signup first)
+
 
 
 this is our color:
 :root {
-  --primary-color: #42b0d5;
+  --primary-color:rgb(193, 211, 218);
   --primary-light: rgba(66, 176, 213, 0.1);
   --accent-color: #ff7f50; /* Coral - complements blue nicely */
   --dark-color: #333;
@@ -25,13 +39,12 @@ this is our color:
   --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-this template will serve as a base template for the other services pages
 
-design a modern, sleek, beautiful, attractive, futuristic design, logistic-like form page
+design a modern, sleek, beautiful, attractive, futuristic design, logistic-like page
 
 The HTML, CSS AND JS files should be in different files
 
-NOTE THAT THE JAVASCRIPT SHOULDN'T RENDER AANYTHING ON THE TEMPLATE, JUST FOR DESIGNS FORM FUNCTIONS (LIKE REGULAR FUNCTIONS FOR THINGS LIKE IF A USER DOESN'T INPUT  FORM IT SHOULD NOT SEND) AND STUFF, WE'RE NOT USING AJAX EITHER
+NOTE THAT THE JAVASCRIPT SHOULDN'T RENDER AANYTHING ON THE TEMPLATE, JUST FOR DESIGNS FORM FUNCTIONS (LIKE REGULAR FUNCTIONS FOR THINGS LIKE DESIGNS and FORM VALIDATION) AND STUFF, WE'RE NOT USING AJAX EITHER
 
 !!remember this is a flask app, don't use jinja yet cause this is just the frontend, but don't also do something complicated that when the backend is here it will desctroy it, be mindful!!
 

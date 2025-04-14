@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Global Courier Requests | Pafelng</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/admin_requests.css') }}"
+    />
+  </head>
+
+  <body>
+    <div class="page-container">
+      <header class="page-header">
+        <a href="{{ url_for('admin.admin_dashboard') }}" class="back-button">
+          <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+        <h1>Global Courier Requests</h1>
+      </header>
+
+      <!-- Flash Messages -->
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, message in messages %}
+      <div class="alert alert-{{ category }}">
+        {{ message }}
+        <span class="close-alert">&times;</span>
+      </div>
+      {% endfor %} {% endif %} {% endwith %}
+
+      <div class="content-wrapper">
+        <div class="filters-bar">
+          <div class="search-container">
+            <i class="fas fa-search"></i>
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Search by name, company or tracking..."
+            />
+          </div>
+          <div class="filter-options">
+            <select id="sortFilter">
+              <option value="newest">Newest First</option>
+              <option value="oldest">Oldest First</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="stats-bar">
+          <div class="stat-item">
+            <span class="stat-count"
+              >{{ global_couriers|selectattr('status', 'equalto',
+              'pending')|list|length }}</span
+            >
+            <span class="stat-label">Pending</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-count">{{ global_couriers|length }}</span>
+            <span class="stat-label">Total</span>
+          </div>
+        </div>
+
+        <div class="requests-container">
+          {% if pending_couriers %} {% for courier in pending_couriers %}
+          <div class="request-card" data-id="{{ courier.id }}">
+            <div class="request-header">
+              <div class="request-id">#GC-{{ courier.id }}</div>
+              <div class="request-date">
+                {{ courier.created_at.strftime('%b %d, %Y') }}
+              </div>
+            </div>
+            <div class="request-body">
+              <div class="customer-info">
+                <div class="customer-avatar">{{ courier.name[:1] }}</div>
+                <div class="customer-details">
+                  <h3>{{ courier.name }}</h3>
+                  <p>{{ courier.email }}</p>
+                  <p><i class="fas fa-phone"></i> {{ courier.phone }}</p>
+                </div>
+              </div>
+              <div class="courier-info">
+                <div class="info-item">
+                  <span class="label">Courier Company:</span>
+                  <span class="value">{{ courier.courier_company }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">Tracking Number:</span>
+                  <span class="value tracking-number"
+                    >{{ courier.tracking_number }}</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="request-footer">
+              <span class="status-badge pending">
+                <i class="fas fa-clock"></i> Pending
+              </span>
+              <a
+                href="{{ url_for('admin.global_courier_detail', id=courier.id) }}"
+                class="action-button"
+              >
+                <i class="fas fa-eye"></i> View Details
+              </a>
+            </div>
+          </div>
+          {% endfor %} {% else %}
+          <div class="empty-state">
+            <i class="fas fa-box"></i>
+            <h3>No Pending Courier Requests</h3>
+            <p>There are no pending global courier requests at this time.</p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/admin_requests.js') }}"></script>
+  </body>
+</html>

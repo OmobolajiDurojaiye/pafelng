@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Global Courier Request Details | Pafelng</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_request_details.css') }}" />
+</head>
+
+<body>
+  <div class="page-container">
+    <header class="page-header">
+      <a href="{{ url_for('admin.global_courier') }}" class="back-button">
+        <i class="fas fa-arrow-left"></i> Back to Global Courier Requests
+      </a>
+      <h1>Global Courier Request Details</h1>
+    </header>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %} {% for category, message in messages %}
+    <div class="alert alert-{{ category }}">
+      {{ message }}
+      <span class="close-alert">&times;</span>
+    </div>
+    {% endfor %} {% endif %} {% endwith %}
+
+    <div class="content-wrapper">
+      <div class="details-card">
+        <div class="status-section">
+          <div class="request-id">#GC-{{ courier.id }}</div>
+          <div class="request-date">{{ courier.created_at.strftime('%b %d, %Y at %I:%M %p') }}</div>
+          <div class="status-indicator">
+            <span class="status-badge {{ courier.status }}">
+              <i class="fas fa-{% if courier.status == 'pending' %}clock{% elif courier.status == 'processing' %}cog fa-spin{% elif courier.status == 'completed' %}check-circle{% else %}times-circle{% endif %}"></i>
+              {{ courier.status|capitalize }}
+            </span>
+          </div>
+        </div>
+
+        <div class="customer-section">
+          <div class="section-title">
+            <i class="fas fa-user-circle"></i> Customer Information
+          </div>
+          <div class="customer-info">
+            <div class="customer-avatar">{{ courier.name[:1] }}</div>
+            <div class="customer-details">
+              <h3>{{ courier.name }}</h3>
+              <p><i class="fas fa-envelope"></i> {{ courier.email }}</p>
+              <p><i class="fas fa-phone"></i> {{ courier.phone }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="courier-section">
+          <div class="section-title">
+            <i class="fas fa-shipping-fast"></i> Courier Information
+          </div>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="label">Courier Company:</span>
+              <span class="value">{{ courier.courier_company }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Tracking Number:</span>
+              <span class="value highlight">{{ courier.tracking_number }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="action-section">
+          <div class="section-title">
+            <i class="fas fa-tasks"></i> Actions
+          </div>
+          <form method="POST" action="{{ url_for('admin.update_global_courier_status', id=courier.id) }}" class="status-form">
+            
+            <input type="hidden" name="csrf_token" value="{{csrf_token()}}" />
+            <div class="form-group">
+              <label for="status">Update Status:</label>
+              <select id="status" name="status" class="form-control">
+                <option value="pending" {% if courier.status == 'pending' %}selected{% endif %}>Pending</option>
+                <option value="processing" {% if courier.status == 'processing' %}selected{% endif %}>Processing</option>
+                <option value="completed" {% if courier.status == 'completed' %}selected{% endif %}>Completed</option>
+                <option value="declined" {% if courier.status == 'declined' %}selected{% endif %}>Declined</option>
+              </select>
+            </div>
+            <button type="submit" class="button primary-button">
+              <i class="fas fa-save"></i> Update Status
+            </button>
+          </form>
+        </div>
+
+        <div class="communication-section">
+          <div class="section-title">
+            <i class="fas fa-comments"></i> Communication
+          </div>
+
+          <div class="messages-container">
+            {% if messages %}
+              {% for message in messages %}
+              <div class="message-card {% if message.is_admin %}admin-message{% else %}user-message{% endif %}">
+                <div class="message-header">
+                  <span class="message-sender">{{ 'Admin' if message.is_admin else courier.name }}</span>
+                  <span class="message-time">{{ message.created_at.strftime('%b %d, %Y at %I:%M %p') }}</span>
+                </div>
+                <div class="message-body">
+                  {{ message.content }}
+                </div>
+                {% if message.attachment_path %}
+                <div class="message-attachment">
+                  <a href="{{ url_for('static', filename=message.attachment_path.replace('static/', '')) }}" target="_blank" class="attachment-link">
+                    <i class="fas fa-paperclip"></i> View Attachment
+                  </a>
+                </div>
+                {% endif %}
+              </div>
+              {% endfor %}
+            {% else %}
+              <div class="empty-message">
+                <i class="fas fa-comment-slash"></i>
+                <p>No messages yet.</p>
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="reply-section">
+            <form method="POST" action="{{ url_for('admin.send_global_courier_message', id=courier.id) }}" class="reply-form" enctype="multipart/form-data">
+                
+            <input type="hidden" name="csrf_token" value="{{csrf_token()}}" />
+              <div class="form-group">
+                <label for="message">Send Message:</label>
+                <textarea id="message" name="message" class="form-control" rows="4" placeholder="Type your message here..."></textarea>
+              </div>
+              <div class="form-group">
+                <label for="attachment">Attach Quote or Image (optional):</label>
+                <div class="file-input-wrapper">
+                  <input type="file" id="attachment" name="attachment" class="file-input">
+                  <label for="attachment" class="file-label">
+                    <i class="fas fa-paperclip"></i> Choose File
+                  </label>
+                  <span class="file-name">No file chosen</span>
+                </div>
+              </div>
+              <button type="submit" class="button accent-button">
+                <i class="fas fa-paper-plane"></i> Send Response
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/admin_request_details.js') }}"></script>
+</body>
+
+</html>
