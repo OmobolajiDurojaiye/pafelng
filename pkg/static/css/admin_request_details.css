@@ -336,11 +336,7 @@ body {
 }
 
 .primary-button {
-  background-color: var(--primary-color);
   color: var(--white);
-}
-
-.primary-button:hover {
   background-color: rgba(66, 176, 213, 0.9);
 }
 

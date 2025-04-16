@@ -1,26 +1,7 @@
-I'm working on the admin side of my logigstic web app I want to create the signup page for admins to signup, but we have a special way to signup, here is it:
-To secure the admin signup, we'd do this —when a new staff is signing up, a number code will be sent to the email of the owner, so the new staff will inputs the number, if correct, he officially becomes an admin, if not, then a security breach is occurring and that way, not just anyone will be able to signup as an admin on the app.
-
-in my instance folder, i have these codes:
-
-SECRET_KEY = "bcnneubpwbcyaue7443bvcs643kbbcwex3272fwede"
-SQLALCHEMY_DATABASE_URI="mysql+mysqlconnector://root@127.0.0.1/pafelng"
-
-MAIL_SERVER="smtp.gmail.com"
-MAIL_PORT="465"
-MAIL_USE_TLS=False
-MAIL_USE_SSL=True
-MAIL_USERNAME="durojaiyeomobolaji93@gmail.com"
-MAIL_PASSWORD = "qmdj yttn mwkw qnmj"
-
-for the owner email and the MAIL_PASSWORD
-
-so create the functionality for sending a six number code
-
-so when the new admin signs up using his name, email, password, he'd then be redirected to a new page for him to input the code sent to the owner's email, and if correct, he then gets signed up as an admin of the app
-
-and then he's redirected to the login page to login (we'd work on login later, just do the signup first)
-
+I'm working on the user side of my logigstic app, I want to make the quotes_update template to list out all the quote submitted by the logged in user
+the listed quotes will all be linked to a page where a detailed overview of each quoted are and the user will also be able to perform other actions just like it is in the admin_vehicle_verification_details and global_courier_details template
+so make the quotes_update template list out all the quotes submitted by the signed in user (of course, the service type will be specified in the quote, there could be a dropdown filter for the services too)
+onclick of any quote, it should link to the page where a detailed overview of the quote submitted is, including the messages the admin has sent regarding the quote and users would also be able to respons to these messages too
 
 
 this is our color:
@@ -50,3 +31,5 @@ NOTE THAT THE JAVASCRIPT SHOULDN'T RENDER AANYTHING ON THE TEMPLATE, JUST FOR DE
 
 I TRUST YOU ON This
 THANKS
+
+

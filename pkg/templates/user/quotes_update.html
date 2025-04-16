@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Quotes | Pafelng</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/quotes_update.css') }}"
+    />
+  </head>
+
+  <body>
+    <div class="page-container">
+      <header class="page-header">
+        <a href="{{ url_for('user.dashboard') }}" class="back-button">
+          <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+        <h1>My Quotes</h1>
+      </header>
+
+      <!-- Flash Messages -->
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, message in messages %}
+      <div class="alert alert-{{ category }}">
+        {{ message }}
+        <span class="close-alert">&times;</span>
+      </div>
+      {% endfor %} {% endif %} {% endwith %}
+
+      <div class="content-wrapper">
+        <div class="filters-section">
+          <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input
+              type="text"
+              id="quoteSearch"
+              placeholder="Search quotes..."
+              class="search-input"
+            />
+          </div>
+          <div class="filter-container">
+            <label for="serviceFilter">Filter by Service:</label>
+            <select id="serviceFilter" class="filter-select">
+              <option value="all">All Services</option>
+              <option value="vehicle-verification">Vehicle Verification</option>
+              <option value="global-courier">Global Courier</option>
+            </select>
+          </div>
+          <div class="filter-container">
+            <label for="statusFilter">Filter by Status:</label>
+            <select id="statusFilter" class="filter-select">
+              <option value="all">All Statuses</option>
+              <option value="pending">Pending</option>
+              <option value="processing">Processing</option>
+              <option value="completed">Completed</option>
+              <option value="declined">Declined</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="quotes-container">
+          <div class="quote-stats">
+            <div class="stat-card">
+              <div class="stat-value">{{ total_quotes }}</div>
+              <div class="stat-label">Total Quotes</div>
+            </div>
+            <div class="stat-card pending">
+              <div class="stat-value">{{ pending_quotes }}</div>
+              <div class="stat-label">Pending</div>
+            </div>
+            <div class="stat-card processing">
+              <div class="stat-value">{{ processing_quotes }}</div>
+              <div class="stat-label">Processing</div>
+            </div>
+            <div class="stat-card completed">
+              <div class="stat-value">{{ completed_quotes }}</div>
+              <div class="stat-label">Completed</div>
+            </div>
+          </div>
+
+          {% if quotes %}
+          <div class="quotes-grid">
+            {% for quote in quotes %}
+            <div
+              class="quote-card"
+              data-service="{{ quote.service_type|lower|replace(' ', '-') }}"
+              data-status="{{ quote.status }}"
+            >
+              <div class="quote-header">
+                <div class="quote-id">#{{ quote.prefix }}-{{ quote.id }}</div>
+                <div class="quote-date">
+                  {{ quote.created_at.strftime('%b %d, %Y') }}
+                </div>
+                <span class="status-badge {{ quote.status }}">
+                  <i
+                    class="fas fa-{% if quote.status == 'pending' %}clock{% elif quote.status == 'processing' %}cog{% elif quote.status == 'completed' %}check-circle{% else %}times-circle{% endif %}"
+                  ></i>
+                  {{ quote.status|capitalize }}
+                </span>
+              </div>
+              <div class="quote-body">
+                <div class="service-type">
+                  <i
+                    class="fas fa-{% if quote.service_type == 'Vehicle Verification' %}car{% else %}shipping-fast{% endif %}"
+                  ></i>
+                  {{ quote.service_type }}
+                </div>
+                {% if quote.service_type == 'Vehicle Verification' %}
+                <div class="quote-detail">
+                  <span class="detail-label">Verification Method:</span>
+                  <span class="detail-value"
+                    >{{ 'C-Number' if quote.c_number else 'Document Upload'
+                    }}</span
+                  >
+                </div>
+                {% else %}
+                <div class="quote-detail">
+                  <span class="detail-label">Courier:</span>
+                  <span class="detail-value">{{ quote.courier_company }}</span>
+                </div>
+                {% endif %}
+                <div class="quote-message">
+                  <i
+                    class="fas fa-{% if quote.unread_messages > 0 %}envelope{% else %}check{% endif %}"
+                  ></i>
+                  {% if quote.unread_messages > 0 %}
+                  <span class="unread-count">{{ quote.unread_messages }}</span>
+                  new message{{ 's' if quote.unread_messages > 1 }} {% else %}
+                  No new messages {% endif %}
+                </div>
+              </div>
+              <a
+                href="{{ url_for('user.quote_details', quote_type=quote.service_type|lower|replace(' ', '_'), quote_id=quote.id) }}"
+                class="quote-link"
+                >View Details</a
+              >
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}
+          <div class="empty-state">
+            <i class="fas fa-clipboard-list empty-icon"></i>
+            <h3>No Quotes Found</h3>
+            <p>
+              You haven't submitted any quotes yet. Get started by requesting a
+              service from the dashboard.
+            </p>
+            <a
+              href="{{ url_for('user.dashboard') }}"
+              class="button accent-button"
+              >Return to Dashboard</a
+            >
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/quotes_update.js') }}"></script>
+  </body>
+</html>

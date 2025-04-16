@@ -85,6 +85,19 @@
               <span class="label">Payment Method:</span>
               <span class="value">{{ verification.payment_method }}</span>
             </div>
+
+            <div class="info-item">
+              <span class="label">Assessment Document:</span>
+            {% if verification.document_path %}
+          <a
+            href="{{ url_for('static', filename=verification.document_path) }}"
+            download="{{ verification.original_filename or 'verification_document' }}"
+            class="document-link primary-button"
+          >
+            <i class="fas fa-download"></i> Download Document
+          </a>
+        </div>
+        {% endif %}
           </div>
         </div>
 
@@ -109,6 +122,7 @@
             </button>
           </form>
         </div>
+
 
         <div class="communication-section">
           <div class="section-title">
