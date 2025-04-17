@@ -52,9 +52,9 @@ def global_courier():
             flash('Please enter a valid phone number', 'error')
             return redirect(url_for('global_courier.global_courier'))
         
-        if len(tracking) < 8:
-            flash('Please enter a valid tracking number', 'error')
-            return redirect(url_for('global_courier.global_courier'))
+        # if len(tracking) < 8:
+        #     flash('Please enter a valid tracking number', 'error')
+        #     return redirect(url_for('global_courier.global_courier'))
         
         new_courier = GlobalCourier(
             user_id=user_id,

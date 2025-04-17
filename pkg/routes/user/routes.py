@@ -7,7 +7,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from functools import wraps
-from pkg.models import User, VehicleVerification, GlobalCourier, VehicleVerificationMessage, GlobalCourierMessage, db
+from pkg.models import User, VehicleVerification, GlobalCourier, VehicleVerificationMessage, GlobalCourierMessage, AirFreight, SeaFreight, AirFreightMessage, SeaFreightMessage, db
 from flask_mail import Mail, Message
 
 # Create blueprints
@@ -158,11 +158,11 @@ def quotes_update():
         flash('User not found', 'error')
         return redirect(url_for('auth.login'))
     
-    # Get all vehicle verifications for this user
+    # Get all quotes for this user
     vehicle_verifications = VehicleVerification.query.filter_by(user_id=user.id).all()
-    
-    # Get all global couriers for this user
     global_couriers = GlobalCourier.query.filter_by(user_id=user.id).all()
+    air_freights = AirFreight.query.filter_by(user_id=user.id).all()
+    sea_freights = SeaFreight.query.filter_by(user_id=user.id).all()
     
     # Combine and format for template
     quotes = []
@@ -198,6 +198,44 @@ def quotes_update():
             'status': gc.status,
             'created_at': gc.created_at,
             'courier_company': gc.courier_company,
+            'unread_messages': unread_messages
+        })
+    
+    # Add Air Freight quotes
+    for af in air_freights:
+        # Count unread messages (from admin)
+        unread_messages = AirFreightMessage.query.filter_by(
+            freight_id=af.id, 
+            is_admin=True
+        ).count()
+        
+        quotes.append({
+            'id': af.id,
+            'prefix': 'AF',
+            'service_type': 'Air Freight',
+            'status': af.status,
+            'created_at': af.created_at,
+            'freight_type': af.freight_type,  # Import or Export
+            'airwaybill_number': af.airwaybill_number,
+            'unread_messages': unread_messages
+        })
+    
+    # Add Sea Freight quotes
+    for sf in sea_freights:
+        # Count unread messages (from admin)
+        unread_messages = SeaFreightMessage.query.filter_by(
+            freight_id=sf.id, 
+            is_admin=True
+        ).count()
+        
+        quotes.append({
+            'id': sf.id,
+            'prefix': 'SF',
+            'service_type': 'Sea Freight',
+            'status': sf.status,
+            'created_at': sf.created_at,
+            'freight_type': sf.freight_type,  # Import or Export
+            'tracking_number': sf.tracking_number,
             'unread_messages': unread_messages
         })
     
@@ -238,6 +276,12 @@ def quote_details(quote_type, quote_id):
     elif quote_type == 'global_courier':
         quote = GlobalCourier.query.filter_by(id=quote_id, user_id=user.id).first_or_404()
         messages = GlobalCourierMessage.query.filter_by(courier_id=quote_id).order_by(GlobalCourierMessage.created_at).all()
+    elif quote_type == 'air_freight':
+        quote = AirFreight.query.filter_by(id=quote_id, user_id=user.id).first_or_404()
+        messages = AirFreightMessage.query.filter_by(freight_id=quote_id).order_by(AirFreightMessage.created_at).all()
+    elif quote_type == 'sea_freight':
+        quote = SeaFreight.query.filter_by(id=quote_id, user_id=user.id).first_or_404()
+        messages = SeaFreightMessage.query.filter_by(freight_id=quote_id).order_by(SeaFreightMessage.created_at).all()
     else:
         flash('Invalid quote type', 'error')
         return redirect(url_for('user.quotes_update'))
@@ -264,6 +308,10 @@ def send_message(quote_type, quote_id):
         quote = VehicleVerification.query.filter_by(id=quote_id, user_id=user.id).first_or_404()
     elif quote_type == 'global_courier':
         quote = GlobalCourier.query.filter_by(id=quote_id, user_id=user.id).first_or_404()
+    elif quote_type == 'air_freight':
+        quote = AirFreight.query.filter_by(id=quote_id, user_id=user.id).first_or_404()
+    elif quote_type == 'sea_freight':
+        quote = SeaFreight.query.filter_by(id=quote_id, user_id=user.id).first_or_404()
     else:
         flash('Invalid quote type', 'error')
         return redirect(url_for('user.quotes_update'))
@@ -297,9 +345,25 @@ def send_message(quote_type, quote_id):
                 original_filename=original_filename,
                 is_admin=False
             )
-        else:  # global_courier
+        elif quote_type == 'global_courier':
             new_message = GlobalCourierMessage(
                 courier_id=quote_id,
+                content=message_content,
+                attachment_path=attachment_path,
+                original_filename=original_filename,
+                is_admin=False
+            )
+        elif quote_type == 'air_freight':
+            new_message = AirFreightMessage(
+                freight_id=quote_id,
+                content=message_content,
+                attachment_path=attachment_path,
+                original_filename=original_filename,
+                is_admin=False
+            )
+        elif quote_type == 'sea_freight':
+            new_message = SeaFreightMessage(
+                freight_id=quote_id,
                 content=message_content,
                 attachment_path=attachment_path,
                 original_filename=original_filename,

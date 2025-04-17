@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sea Freight Service | Logistics App</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/flash.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/sea_freight.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <a href="{{ url_for('user.dashboard') }}" class="back-link">
+        <i class="fas fa-arrow-left"></i> Back to Dashboard
+      </a>
+
+      <div class="form-container">
+        <div class="form-header">
+          <div class="header-icon">
+            <i class="fas fa-ship"></i>
+          </div>
+          <h1>Sea Freight Service</h1>
+          <p>Fill out the form below to request our sea freight services</p>
+        </div>
+
+        <form
+          id="seaFreightForm"
+          action="{{ url_for('sea_freight.submit_sea_freight') }}"
+          method="POST"
+        >
+          <input type="hidden" name="csrf_token" value="{{csrf_token()}}" />
+          <div class="form-section">
+            <h2>Contact Information</h2>
+            <div class="form-group">
+              <label for="name">Name of Contact Person</label>
+              <input type="text" id="name" name="name" required />
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" required />
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Phone Number</label>
+              <input type="text" id="phone" name="phone" required />
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h2>Freight Details</h2>
+            <div class="form-group">
+              <label>Freight Option</label>
+              <div class="radio-group">
+                <div class="radio-option">
+                  <input
+                    type="radio"
+                    id="import"
+                    name="freight_type"
+                    value="import"
+                    checked
+                  />
+                  <label for="import">Import</label>
+                </div>
+                <div class="radio-option">
+                  <input
+                    type="radio"
+                    id="export"
+                    name="freight_type"
+                    value="export"
+                  />
+                  <label for="export">Export</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Import Type options - Only shown when Import is selected -->
+            <div id="importOptions" class="conditional-section">
+              <div class="form-group">
+                <label>Import Type</label>
+                <div class="radio-group">
+                  <div class="radio-option">
+                    <input
+                      type="radio"
+                      id="pickupDelivery"
+                      name="import_type"
+                      value="pickup_delivery"
+                      checked
+                    />
+                    <label for="pickupDelivery">Pick up and Delivery</label>
+                  </div>
+                  <div class="radio-option">
+                    <input
+                      type="radio"
+                      id="tracking"
+                      name="import_type"
+                      value="tracking"
+                    />
+                    <label for="tracking">Import with Tracking Number</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tracking Number specific fields - Only shown when Import with Tracking Number is selected -->
+            <div id="trackingFields" class="conditional-section hidden">
+              <div class="form-group">
+                <label for="tracking_number">Tracking Number</label>
+                <input
+                  type="text"
+                  id="tracking_number"
+                  name="tracking_number"
+                />
+              </div>
+
+              <div class="form-group">
+                <label>Invoice in Shipment</label>
+                <div class="radio-group">
+                  <div class="radio-option">
+                    <input
+                      type="radio"
+                      id="invoice_yes"
+                      name="has_invoice"
+                      value="yes"
+                      checked
+                    />
+                    <label for="invoice_yes">Yes</label>
+                  </div>
+                  <div class="radio-option">
+                    <input
+                      type="radio"
+                      id="invoice_no"
+                      name="has_invoice"
+                      value="no"
+                    />
+                    <label for="invoice_no">No</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Common fields for Import (pickup and delivery) and Export -->
+            <div id="commonFields">
+              <div class="form-group">
+                <label for="pickup_address">Pick up Address</label>
+                <textarea
+                  id="pickup_address"
+                  name="pickup_address"
+                  rows="3"
+                ></textarea>
+              </div>
+
+              <div class="form-group">
+                <label for="delivery_address">Delivery Address</label>
+                <textarea
+                  id="delivery_address"
+                  name="delivery_address"
+                  rows="3"
+                ></textarea>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group half">
+                  <label for="weight">Weight (kg)</label>
+                  <input type="text" id="weight" name="weight" />
+                </div>
+
+                <div class="form-group half">
+                  <label for="volumetric_dimension"
+                    >Volumetric Dimension (cm)</label
+                  >
+                  <input
+                    type="text"
+                    id="volumetric_dimension"
+                    name="volumetric_dimension"
+                    placeholder="L x W x H"
+                  />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="description">Description of Shipment</label>
+                <textarea
+                  id="description"
+                  name="description"
+                  rows="3"
+                ></textarea>
+              </div>
+
+              <div class="form-group">
+                <label for="invoice_value">Invoice Value</label>
+                <input type="text" id="invoice_value" name="invoice_value" />
+              </div>
+
+              <div class="form-group">
+                <label for="num_boxes">Number of Boxes</label>
+                <input
+                  type="number"
+                  id="num_boxes"
+                  name="num_boxes"
+                  min="1"
+                  value="1"
+                />
+              </div>
+
+              <div id="multipleBoxesField" class="form-group hidden">
+                <label for="multiple_boxes_details"
+                  >Details of Multiple Boxes (weight and dimension of
+                  each)</label
+                >
+                <textarea
+                  id="multiple_boxes_details"
+                  name="multiple_boxes_details"
+                  rows="4"
+                  placeholder="Example: Box 1: 5kg, 30x20x15cm; Box 2: 3kg, 25x20x10cm..."
+                ></textarea>
+              </div>
+
+              <div class="form-group">
+                <label for="shipping_choice">Choice of Shipping</label>
+                <select id="shipping_choice" name="shipping_choice">
+                  <option value="dhl">DHL</option>
+                  <option value="air_freight">Air Freight</option>
+                  <option value="sea_freight">Sea Freight</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="submit-btn">
+              <span>Submit Request</span>
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/flash.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/sea_freight.js') }}"></script>
+  </body>
+</html>

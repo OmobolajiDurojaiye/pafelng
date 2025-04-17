@@ -208,7 +208,10 @@
             </a>
 
             <!-- My Air Freight Card -->
-            <a href="#" class="dashboard-card">
+            <a
+              href="{{ url_for('air_freight.my_air_freight') }}"
+              class="dashboard-card"
+            >
               <div class="card-icon">
                 <i class="fas fa-plane"></i>
               </div>
@@ -222,7 +225,10 @@
             </a>
 
             <!-- My Sea Freight Card -->
-            <a href="#" class="dashboard-card">
+            <a
+              href="{{ url_for('sea_freight.my_sea_freight') }}"
+              class="dashboard-card"
+            >
               <div class="card-icon">
                 <i class="fas fa-ship"></i>
               </div>

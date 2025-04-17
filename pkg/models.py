@@ -20,6 +20,9 @@ class User(db.Model):
 
     # Relationship with GlobalCourier
     global_couriers = db.relationship('GlobalCourier', backref='user', lazy=True)
+
+    # User.air_freights = db.relationship('AirFreight', backref='user', lazy=True)
+    # User.sea_freights = db.relationship('SeaFreight', backref='user', lazy=True)
     
     def __init__(self, name, email):
         self.name = name
@@ -190,6 +193,166 @@ class GlobalCourierMessage(db.Model):
         return {
             'id': self.id,
             'courier_id': self.courier_id,
+            'content': self.content,
+            'attachment_path': self.attachment_path,
+            'original_filename': self.original_filename,
+            'is_admin': self.is_admin,
+            'created_at': self.created_at
+        }
+
+# Add these to your models.py file
+
+class AirFreight(db.Model):
+    __tablename__ = 'air_freights'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(120), nullable=False)
+    phone = db.Column(db.String(20), nullable=False)
+    freight_type = db.Column(db.String(10), nullable=False)  # Import or Export
+    
+    # For Import with Airwaybill
+    airwaybill_number = db.Column(db.String(50), nullable=True)
+    has_invoice = db.Column(db.Boolean, nullable=True)
+    
+    # For Import (pick up and delivery) and Export
+    pickup_address = db.Column(db.Text, nullable=True)
+    delivery_address = db.Column(db.Text, nullable=True)
+    weight = db.Column(db.String(50), nullable=True)
+    volumetric_dimension = db.Column(db.String(100), nullable=True)
+    description = db.Column(db.Text, nullable=True)
+    invoice_value = db.Column(db.String(50), nullable=True)
+    num_boxes = db.Column(db.Integer, nullable=True)
+    multiple_boxes_details = db.Column(db.Text, nullable=True)
+    shipping_choice = db.Column(db.String(50), nullable=True)
+    
+    status = db.Column(db.String(20), default='pending')
+    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    
+    # Relationship with User
+    user = db.relationship('User', backref=db.backref('air_freights', lazy=True))
+    
+    # Relationship with Messages
+    messages = db.relationship('AirFreightMessage', backref='freight', lazy=True, order_by='AirFreightMessage.created_at')
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'name': self.name,
+            'email': self.email,
+            'phone': self.phone,
+            'freight_type': self.freight_type,
+            'airwaybill_number': self.airwaybill_number,
+            'has_invoice': self.has_invoice,
+            'pickup_address': self.pickup_address,
+            'delivery_address': self.delivery_address,
+            'weight': self.weight,
+            'volumetric_dimension': self.volumetric_dimension,
+            'description': self.description,
+            'invoice_value': self.invoice_value,
+            'num_boxes': self.num_boxes,
+            'multiple_boxes_details': self.multiple_boxes_details,
+            'shipping_choice': self.shipping_choice,
+            'status': self.status,
+            'created_at': self.created_at
+        }
+
+class AirFreightMessage(db.Model):
+    __tablename__ = 'air_freight_messages'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    freight_id = db.Column(db.Integer, db.ForeignKey('air_freights.id'), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    attachment_path = db.Column(db.String(255), nullable=True)
+    original_filename = db.Column(db.String(255), nullable=True)
+    is_admin = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'freight_id': self.freight_id,
+            'content': self.content,
+            'attachment_path': self.attachment_path,
+            'original_filename': self.original_filename,
+            'is_admin': self.is_admin,
+            'created_at': self.created_at
+        }
+
+class SeaFreight(db.Model):
+    __tablename__ = 'sea_freights'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(120), nullable=False)
+    phone = db.Column(db.String(20), nullable=False)
+    freight_type = db.Column(db.String(10), nullable=False)  # Import or Export
+    
+    # For Import with tracking number
+    tracking_number = db.Column(db.String(50), nullable=True)
+    has_invoice = db.Column(db.Boolean, nullable=True)
+    
+    # For Import (pick up and delivery) and Export
+    pickup_address = db.Column(db.Text, nullable=True)
+    delivery_address = db.Column(db.Text, nullable=True)
+    weight = db.Column(db.String(50), nullable=True)
+    volumetric_dimension = db.Column(db.String(100), nullable=True)
+    description = db.Column(db.Text, nullable=True)
+    invoice_value = db.Column(db.String(50), nullable=True)
+    num_boxes = db.Column(db.Integer, nullable=True)
+    multiple_boxes_details = db.Column(db.Text, nullable=True)
+    shipping_choice = db.Column(db.String(50), nullable=True)
+    
+    status = db.Column(db.String(20), default='pending')
+    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    
+    # Relationship with User
+    user = db.relationship('User', backref=db.backref('sea_freights', lazy=True))
+    
+    # Relationship with Messages
+    messages = db.relationship('SeaFreightMessage', backref='freight', lazy=True, order_by='SeaFreightMessage.created_at')
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'name': self.name,
+            'email': self.email,
+            'phone': self.phone,
+            'freight_type': self.freight_type,
+            'tracking_number': self.tracking_number,
+            'has_invoice': self.has_invoice,
+            'pickup_address': self.pickup_address,
+            'delivery_address': self.delivery_address,
+            'weight': self.weight,
+            'volumetric_dimension': self.volumetric_dimension,
+            'description': self.description,
+            'invoice_value': self.invoice_value,
+            'num_boxes': self.num_boxes,
+            'multiple_boxes_details': self.multiple_boxes_details,
+            'shipping_choice': self.shipping_choice,
+            'status': self.status,
+            'created_at': self.created_at
+        }
+
+class SeaFreightMessage(db.Model):
+    __tablename__ = 'sea_freight_messages'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    freight_id = db.Column(db.Integer, db.ForeignKey('sea_freights.id'), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    attachment_path = db.Column(db.String(255), nullable=True)
+    original_filename = db.Column(db.String(255), nullable=True)
+    is_admin = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'freight_id': self.freight_id,
             'content': self.content,
             'attachment_path': self.attachment_path,
             'original_filename': self.original_filename,

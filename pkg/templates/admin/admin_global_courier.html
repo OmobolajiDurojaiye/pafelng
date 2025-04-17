@@ -43,6 +43,13 @@
             />
           </div>
           <div class="filter-options">
+            <select id="statusFilter">
+              <option value="all">All Requests</option>
+              <option value="pending">Pending</option>
+              <option value="processing">Processing</option>
+              <option value="completed">Completed</option>
+              <option value="declined">Declined</option>
+            </select>
             <select id="sortFilter">
               <option value="newest">Newest First</option>
               <option value="oldest">Oldest First</option>
@@ -66,7 +73,7 @@
 
         <div class="requests-container">
           {% if pending_couriers %} {% for courier in pending_couriers %}
-          <div class="request-card" data-id="{{ courier.id }}">
+          <div class="request-card" data-id="{{ courier.id }}" data-status="{{ courier.status }}">
             <div class="request-header">
               <div class="request-id">#GC-{{ courier.id }}</div>
               <div class="request-date">

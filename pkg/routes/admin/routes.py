@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session, current_app
-from pkg.models import db, Admin, VerificationCode, VehicleVerification, GlobalCourier, VehicleVerificationMessage, GlobalCourierMessage
+from pkg.models import db, Admin, VerificationCode, VehicleVerification, GlobalCourier, VehicleVerificationMessage, GlobalCourierMessage, AirFreight, SeaFreight
 from werkzeug.security import generate_password_hash
 from werkzeug.utils import secure_filename
 import random
@@ -76,6 +76,14 @@ def admin_dashboard():
     # Fetch data for dashboard (pending verifications, etc.)
     vehicle_verifications = VehicleVerification.query.all()
     global_couriers = GlobalCourier.query.all()
+    air_freights = AirFreight.query.all()
+    sea_freights = SeaFreight.query.all()
+    
+    # Sort and slice for recent items
+    recent_vehicle_verifications = sorted(vehicle_verifications, key=lambda x: x.created_at, reverse=True)[:5]
+    recent_global_couriers = sorted(global_couriers, key=lambda x: x.created_at, reverse=True)[:5]
+    recent_air_freights = sorted(air_freights, key=lambda x: x.created_at, reverse=True)[:5]
+    recent_sea_freights = sorted(sea_freights, key=lambda x: x.created_at, reverse=True)[:5]
     
     # Get admin info
     admin = Admin.query.get(session['admin_id'])
@@ -84,7 +92,13 @@ def admin_dashboard():
         'admin/admin_dashboard.html',
         admin=admin,
         vehicle_verifications=vehicle_verifications,
-        global_couriers=global_couriers
+        global_couriers=global_couriers,
+        air_freights=air_freights,
+        sea_freights=sea_freights,
+        recent_vehicle_verifications=recent_vehicle_verifications,
+        recent_global_couriers=recent_global_couriers,
+        recent_air_freights=recent_air_freights,
+        recent_sea_freights=recent_sea_freights
     )
 
 @admin_bp.route('/signup', methods=['GET', 'POST'])

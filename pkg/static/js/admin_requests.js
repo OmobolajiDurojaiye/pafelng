@@ -17,47 +17,15 @@ document.addEventListener("DOMContentLoaded", function () {
   const searchInput = document.getElementById("searchInput");
   if (searchInput) {
     searchInput.addEventListener("input", function () {
-      const searchValue = this.value.toLowerCase();
-      const requestCards = document.querySelectorAll(".request-card");
+      filterRequests();
+    });
+  }
 
-      requestCards.forEach((card) => {
-        const cardText = card.textContent.toLowerCase();
-        if (cardText.includes(searchValue)) {
-          card.style.display = "block";
-        } else {
-          card.style.display = "none";
-        }
-      });
-
-      // Check if no results and show message
-      const visibleCards = document.querySelectorAll(
-        '.request-card[style="display: block"]'
-      );
-      const emptyState = document.querySelector(".empty-state");
-
-      if (visibleCards.length === 0 && !document.querySelector(".no-results")) {
-        const noResults = document.createElement("div");
-        noResults.className = "empty-state no-results";
-        noResults.innerHTML = `
-                    <i class="fas fa-search"></i>
-                    <h3>No Results Found</h3>
-                    <p>No requests matching "${searchValue}" were found.</p>
-                `;
-
-        const container = document.querySelector(".requests-container");
-        if (emptyState) {
-          emptyState.style.display = "none";
-        }
-        container.appendChild(noResults);
-      } else if (visibleCards.length > 0) {
-        const noResults = document.querySelector(".no-results");
-        if (noResults) {
-          noResults.remove();
-        }
-        if (emptyState) {
-          emptyState.style.display = "none";
-        }
-      }
+  // Status filter functionality
+  const statusFilter = document.getElementById("statusFilter");
+  if (statusFilter) {
+    statusFilter.addEventListener("change", function () {
+      filterRequests();
     });
   }
 
@@ -65,26 +33,88 @@ document.addEventListener("DOMContentLoaded", function () {
   const sortFilter = document.getElementById("sortFilter");
   if (sortFilter) {
     sortFilter.addEventListener("change", function () {
-      const sortValue = this.value;
-      const requestCards = Array.from(
-        document.querySelectorAll(".request-card")
-      );
-      const container = document.querySelector(".requests-container");
-
-      requestCards.sort((a, b) => {
-        const dateA = new Date(a.querySelector(".request-date").textContent);
-        const dateB = new Date(b.querySelector(".request-date").textContent);
-
-        if (sortValue === "newest") {
-          return dateB - dateA;
-        } else {
-          return dateA - dateB;
-        }
-      });
-
-      // Clear and re-append sorted cards
-      requestCards.forEach((card) => container.appendChild(card));
+      sortRequests();
     });
+  }
+
+  // Combined filtering function
+  function filterRequests() {
+    const searchValue = searchInput ? searchInput.value.toLowerCase() : "";
+    const statusValue = statusFilter ? statusFilter.value : "all";
+    const requestCards = document.querySelectorAll(".request-card");
+    let visibleCount = 0;
+
+    requestCards.forEach((card) => {
+      const cardText = card.textContent.toLowerCase();
+      const cardStatus = card.dataset.status || "pending"; // Default to pending if not set
+
+      const matchesSearch = cardText.includes(searchValue);
+      const matchesStatus = statusValue === "all" || cardStatus === statusValue;
+
+      if (matchesSearch && matchesStatus) {
+        card.style.display = "block";
+        visibleCount++;
+      } else {
+        card.style.display = "none";
+      }
+    });
+
+    // Check if no results and show message
+    handleEmptyState(visibleCount, searchValue);
+  }
+
+  // Sorting function
+  function sortRequests() {
+    const sortValue = sortFilter.value;
+    const requestCards = Array.from(document.querySelectorAll(".request-card"));
+    const container = document.querySelector(".requests-container");
+
+    requestCards.sort((a, b) => {
+      const dateA = new Date(a.querySelector(".request-date").textContent);
+      const dateB = new Date(b.querySelector(".request-date").textContent);
+
+      if (sortValue === "newest") {
+        return dateB - dateA;
+      } else {
+        return dateA - dateB;
+      }
+    });
+
+    // Clear and re-append sorted cards
+    requestCards.forEach((card) => container.appendChild(card));
+  }
+
+  // Handle empty state display
+  function handleEmptyState(visibleCount, searchValue) {
+    const emptyState = document.querySelector(".empty-state:not(.no-results)");
+    let noResults = document.querySelector(".no-results");
+
+    if (visibleCount === 0) {
+      if (!noResults) {
+        noResults = document.createElement("div");
+        noResults.className = "empty-state no-results";
+        noResults.innerHTML = `
+          <i class="fas fa-search"></i>
+          <h3>No Results Found</h3>
+          <p>No requests matching "${searchValue}" were found.</p>
+        `;
+
+        const container = document.querySelector(".requests-container");
+        container.appendChild(noResults);
+      }
+
+      if (emptyState) {
+        emptyState.style.display = "none";
+      }
+    } else {
+      if (noResults) {
+        noResults.remove();
+      }
+
+      if (emptyState && document.querySelectorAll(".request-card").length > 0) {
+        emptyState.style.display = "none";
+      }
+    }
   }
 
   // Add hover effect for request cards
@@ -100,4 +130,9 @@ document.addEventListener("DOMContentLoaded", function () {
       this.style.boxShadow = "0 3px 10px rgba(0, 0, 0, 0.05)";
     });
   });
+
+  // Initial filter on page load
+  if (statusFilter || searchInput) {
+    filterRequests();
+  }
 });

@@ -1,8 +1,26 @@
-I'm working on the user side of my logigstic app, I want to make the quotes_update template to list out all the quote submitted by the logged in user
-the listed quotes will all be linked to a page where a detailed overview of each quoted are and the user will also be able to perform other actions just like it is in the admin_vehicle_verification_details and global_courier_details template
-so make the quotes_update template list out all the quotes submitted by the signed in user (of course, the service type will be specified in the quote, there could be a dropdown filter for the services too)
-onclick of any quote, it should link to the page where a detailed overview of the quote submitted is, including the messages the admin has sent regarding the quote and users would also be able to respons to these messages too
+I'm working on the user side of my logistic app, I want to make the remaining 2 services form for (air freight and sea freight), i have done for global courier and vehicle verification as attached
+these are the inputs for the forms:
 
+
+Name of Contact Person:
+Email: 
+Phone Number:
+Option: Import or Export 
+If Import for pick up and delivery, all the below questions apply. But if it is Import with Airwaybill number available, the above questions apply with Airwaybill number request and Invoice in shipment, Yes or No)
+Pick up Address:
+Delivery Address:
+Weight: 
+Volumetric Dimension: 
+Description of Shipment: 
+Invoice Value:
+No of Boxes:
+If Number of Boxes exceeds one, Input weight and Dimension of each box:(this can be a text box where they can type details)
+Choice of Shipping: DHL or Airline shipping or Sea shipping 
+SUBMIT
+
+If the user chooses export all these questions applies. For choice of shipping only include DHL, Air Freight, Sea Freight do not include the days of delivery.
+
+This form applies to both air and sea export
 
 this is our color:
 :root {
@@ -21,15 +39,11 @@ this is our color:
 }
 
 
-design a modern, sleek, beautiful, attractive, futuristic design, logistic-like page
+design a modern, sleek, beautiful, attractive, futuristic design, logistic-like form page
 
 The HTML, CSS AND JS files should be in different files
 
 NOTE THAT THE JAVASCRIPT SHOULDN'T RENDER AANYTHING ON THE TEMPLATE, JUST FOR DESIGNS FORM FUNCTIONS (LIKE REGULAR FUNCTIONS FOR THINGS LIKE DESIGNS and FORM VALIDATION) AND STUFF, WE'RE NOT USING AJAX EITHER
 
-!!remember this is a flask app, don't use jinja yet cause this is just the frontend, but don't also do something complicated that when the backend is here it will desctroy it, be mindful!!
-
 I TRUST YOU ON This
 THANKS
-
-

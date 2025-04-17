@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sea Freight Request Details | Pafelng</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_request_details.css') }}" />
+  <style>
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-top: 16px;
+    }
+    
+    .info-item.full-width {
+      grid-column: 1 / -1;
+    }
+    
+    .label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 4px;
+      color: #555;
+    }
+    
+    .value {
+      display: block;
+      word-break: break-word;
+    }
+    
+    .highlight {
+      color: #0056b3;
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page-container">
+    <header class="page-header">
+      <a href="{{ url_for('admin_air_sea.sea_freight') }}" class="back-button">
+        <i class="fas fa-arrow-left"></i> Back to Sea Freight Requests
+      </a>
+      <h1>Sea Freight Request Details</h1>
+    </header>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %} 
+    {% if messages %} 
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }}">
+      {{ message }}
+      <span class="close-alert">&times;</span>
+    </div>
+    {% endfor %} 
+    {% endif %} 
+    {% endwith %}
+
+    <div class="content-wrapper">
+      <div class="details-card">
+        <div class="status-section">
+          <div class="request-id">#SF-{{ freight.id }}</div>
+          <div class="request-date">{{ freight.created_at.strftime('%b %d, %Y at %I:%M %p') }}</div>
+          <div class="status-indicator">
+            <span class="status-badge {{ freight.status }}">
+              <i class="fas fa-{% if freight.status == 'pending' %}clock{% elif freight.status == 'processing' %}cog fa-spin{% elif freight.status == 'completed' %}check-circle{% else %}times-circle{% endif %}"></i>
+              {{ freight.status|capitalize }}
+            </span>
+          </div>
+        </div>
+
+        <div class="customer-section">
+          <div class="section-title">
+            <i class="fas fa-user-circle"></i> Customer Information
+          </div>
+          <div class="customer-info">
+            <div class="customer-avatar">{{ freight.name[:1] }}</div>
+            <div class="customer-details">
+              <h3>{{ freight.name }}</h3>
+              <p><i class="fas fa-envelope"></i> {{ freight.email }}</p>
+              <p><i class="fas fa-phone"></i> {{ freight.phone }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="freight-section">
+          <div class="section-title">
+            <i class="fas fa-ship"></i> Sea Freight Information
+          </div>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="label">Freight Type:</span>
+              <span class="value highlight">{{ freight.freight_type }}</span>
+            </div>
+            
+            {% if freight.freight_type == 'Import' and freight.tracking_number %}
+            <div class="info-item">
+              <span class="label">Tracking Number:</span>
+              <span class="value">{{ freight.tracking_number }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Has Invoice:</span>
+              <span class="value">{{ 'Yes' if freight.has_invoice else 'No' }}</span>
+            </div>
+            {% endif %}
+            
+            {% if freight.pickup_address %}
+            <div class="info-item full-width">
+              <span class="label">Pickup Address:</span>
+              <span class="value">{{ freight.pickup_address }}</span>
+            </div>
+            {% endif %}
+            
+            {% if freight.delivery_address %}
+            <div class="info-item full-width">
+              <span class="label">Delivery Address:</span>
+              <span class="value">{{ freight.delivery_address }}</span>
+            </div>
+            {% endif %}
+            
+            {% if freight.weight %}
+            <div class="info-item">
+              <span class="label">Weight:</span>
+              <span class="value">{{ freight.weight }}</span>
+            </div>
+            {% endif %}
+            
+            {% if freight.volumetric_dimension %}
+            <div class="info-item">
+              <span class="label">Volumetric Dimension:</span>
+              <span class="value">{{ freight.volumetric_dimension }}</span>
+            </div>
+            {% endif %}
+            
+            {% if freight.description %}
+            <div class="info-item full-width">
+              <span class="label">Description:</span>
+              <span class="value">{{ freight.description }}</span>
+            </div>
+            {% endif %}
+            
+            {% if freight.invoice_value %}
+            <div class="info-item">
+              <span class="label">Invoice Value:</span>
+              <span class="value">{{ freight.invoice_value }}</span>
+            </div>
+            {% endif %}
+            
+            {% if freight.num_boxes %}
+            <div class="info-item">
+              <span class="label">Number of Boxes:</span>
+              <span class="value">{{ freight.num_boxes }}</span>
+            </div>
+            {% endif %}
+            
+            {% if freight.multiple_boxes_details %}
+            <div class="info-item full-width">
+              <span class="label">Multiple Boxes Details:</span>
+              <span class="value">{{ freight.multiple_boxes_details }}</span>
+            </div>
+            {% endif %}
+            
+            {% if freight.shipping_choice %}
+            <div class="info-item">
+              <span class="label">Shipping Choice:</span>
+              <span class="value">{{ freight.shipping_choice }}</span>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="action-section">
+          <div class="section-title">
+            <i class="fas fa-tasks"></i> Actions
+          </div>
+          <form method="POST" action="{{ url_for('admin_air_sea.update_sea_freight_status', id=freight.id) }}" class="status-form">
+            <input type="hidden" name="csrf_token" value="{{csrf_token()}}" />
+            <div class="form-group">
+              <label for="status">Update Status:</label>
+              <select id="status" name="status" class="form-control">
+                <option value="pending" {% if freight.status == 'pending' %}selected{% endif %}>Pending</option>
+                <option value="processing" {% if freight.status == 'processing' %}selected{% endif %}>Processing</option>
+                <option value="completed" {% if freight.status == 'completed' %}selected{% endif %}>Completed</option>
+                <option value="declined" {% if freight.status == 'declined' %}selected{% endif %}>Declined</option>
+              </select>
+            </div>
+            <button type="submit" class="button primary-button">
+              <i class="fas fa-save"></i> Update Status
+            </button>
+          </form>
+        </div>
+
+        <div class="communication-section">
+          <div class="section-title">
+            <i class="fas fa-comments"></i> Communication
+          </div>
+
+          <div class="messages-container">
+            {% if messages %}
+              {% for message in messages %}
+              <div class="message-card {% if message.is_admin %}admin-message{% else %}user-message{% endif %}">
+                <div class="message-header">
+                  <span class="message-sender">{{ 'Admin' if message.is_admin else freight.name }}</span>
+                  <span class="message-time">{{ message.created_at.strftime('%b %d, %Y at %I:%M %p') }}</span>
+                </div>
+                <div class="message-body">
+                  {{ message.content }}
+                </div>
+                {% if message.attachment_path %}
+                <div class="message-attachment">
+                  <a href="{{ url_for('static', filename=message.attachment_path.replace('static/', '')) }}" target="_blank" class="attachment-link">
+                    <i class="fas fa-paperclip"></i> {{ message.original_filename if message.original_filename else 'View Attachment' }}
+                  </a>
+                </div>
+                {% endif %}
+              </div>
+              {% endfor %}
+            {% else %}
+              <div class="empty-message">
+                <i class="fas fa-comment-slash"></i>
+                <p>No messages yet.</p>
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="reply-section">
+            <form method="POST" action="{{ url_for('admin_air_sea.send_sea_freight_message', id=freight.id) }}" class="reply-form" enctype="multipart/form-data">
+              <input type="hidden" name="csrf_token" value="{{csrf_token()}}" />
+              <div class="form-group">
+                <label for="message">Send Message:</label>
+                <textarea id="message" name="message" class="form-control" rows="4" placeholder="Type your message here..."></textarea>
+              </div>
+              <div class="form-group">
+                <label for="attachment">Attach Quote or Image (optional):</label>
+                <div class="file-input-wrapper">
+                  <input type="file" id="attachment" name="attachment" class="file-input">
+                  <label for="attachment" class="file-label">
+                    <i class="fas fa-paperclip"></i> Choose File
+                  </label>
+                  <span class="file-name">No file chosen</span>
+                </div>
+              </div>
+              <button type="submit" class="button accent-button">
+                <i class="fas fa-paper-plane"></i> Send Response
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/admin_request_details.js') }}"></script>
+  
+  
+</body>
+
+</html>

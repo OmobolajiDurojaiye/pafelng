@@ -56,6 +56,16 @@
               >
             </li>
             <li>
+              <a href="#air-freight"
+                ><i class="fas fa-plane"></i><span>Air Freight</span></a
+              >
+            </li>
+            <li>
+              <a href="#sea-freight"
+                ><i class="fas fa-ship"></i><span>Sea Freight</span></a
+              >
+            </li>
+            <li>
               <a href="#customers"
                 ><i class="fas fa-users"></i><span>Customers</span></a
               >
@@ -112,7 +122,8 @@
               <div class="kpi-info">
                 <h3>Total Quotes Requests</h3>
                 <p class="count">
-                  {{ vehicle_verifications|length + global_couriers|length }}
+                  {{ vehicle_verifications|length + global_couriers|length +
+                  air_freights|length + sea_freights|length }}
                 </p>
               </div>
             </div>
@@ -126,7 +137,27 @@
                   {{ vehicle_verifications|selectattr('verification_status',
                   'equalto', 'pending')|list|length +
                   global_couriers|selectattr('status', 'equalto',
+                  'pending')|list|length + air_freights|selectattr('status',
+                  'equalto', 'pending')|list|length +
+                  sea_freights|selectattr('status', 'equalto',
                   'pending')|list|length }}
+                </p>
+              </div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-icon">
+                <i class="fas fa-sync"></i>
+              </div>
+              <div class="kpi-info">
+                <h3>Processing</h3>
+                <p class="count">
+                  {{ vehicle_verifications|selectattr('verification_status',
+                  'equalto', 'processing')|list|length +
+                  global_couriers|selectattr('status', 'equalto',
+                  'processing')|list|length + air_freights|selectattr('status',
+                  'equalto', 'processing')|list|length +
+                  sea_freights|selectattr('status', 'equalto',
+                  'processing')|list|length }}
                 </p>
               </div>
             </div>
@@ -140,7 +171,27 @@
                   {{ vehicle_verifications|selectattr('verification_status',
                   'equalto', 'approved')|list|length +
                   global_couriers|selectattr('status', 'equalto',
+                  'completed')|list|length + air_freights|selectattr('status',
+                  'equalto', 'completed')|list|length +
+                  sea_freights|selectattr('status', 'equalto',
                   'completed')|list|length }}
+                </p>
+              </div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-icon">
+                <i class="fas fa-times-circle"></i>
+              </div>
+              <div class="kpi-info">
+                <h3>Declined</h3>
+                <p class="count">
+                  {{ vehicle_verifications|selectattr('verification_status',
+                  'equalto', 'declined')|list|length +
+                  global_couriers|selectattr('status', 'equalto',
+                  'declined')|list|length + air_freights|selectattr('status',
+                  'equalto', 'declined')|list|length +
+                  sea_freights|selectattr('status', 'equalto',
+                  'declined')|list|length }}
                 </p>
               </div>
             </div>
@@ -192,26 +243,40 @@
               </div>
             </a>
 
-            <a href="#air" class="service-card" data-service="air-freight">
+            <a
+              href="{{ url_for('admin_air_sea.air_freight') }}"
+              class="service-card"
+              data-service="air-freight"
+            >
               <div class="service-icon">
                 <i class="fas fa-plane"></i>
               </div>
               <div class="service-info">
                 <h3>Air Freight</h3>
-                <p>Coming Soon</p>
+                <p>
+                  {{ air_freights|selectattr('status', 'equalto',
+                  'pending')|list|length }} pending requests
+                </p>
               </div>
               <div class="service-link">
                 <i class="fas fa-arrow-right"></i>
               </div>
             </a>
 
-            <a href="#sea" class="service-card" data-service="sea-freight">
+            <a
+              href="{{ url_for('admin_air_sea.sea_freight') }}"
+              class="service-card"
+              data-service="sea-freight"
+            >
               <div class="service-icon">
                 <i class="fas fa-ship"></i>
               </div>
               <div class="service-info">
                 <h3>Sea Freight</h3>
-                <p>Coming Soon</p>
+                <p>
+                  {{ sea_freights|selectattr('status', 'equalto',
+                  'pending')|list|length }} pending requests
+                </p>
               </div>
               <div class="service-link">
                 <i class="fas fa-arrow-right"></i>
@@ -239,7 +304,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    {% for verification in vehicle_verifications[:5] %}
+                    {% for verification in recent_vehicle_verifications %}
                     <tr>
                       <td>#VV-{{ verification.id }}</td>
                       <td>
@@ -271,7 +336,7 @@
                             class="btn-icon"
                             title="View Details"
                           >
-                            <i class="fas fa-eye"></i>
+                            <i class="fas fa-eye"></i>view
                           </a>
                         </div>
                       </td>
@@ -307,7 +372,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    {% for courier in global_couriers[:5] %}
+                    {% for courier in recent_global_couriers %}
                     <tr>
                       <td>#GC-{{ courier.id }}</td>
                       <td>
@@ -333,7 +398,7 @@
                             class="btn-icon"
                             title="View Details"
                           >
-                            <i class="fas fa-eye"></i>
+                            <i class="fas fa-eye"></i>View
                           </a>
                         </div>
                       </td>
@@ -342,6 +407,124 @@
                     <tr>
                       <td colspan="7" class="empty-table">
                         No global courier requests found
+                      </td>
+                    </tr>
+                    {% endif %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Air Freight Requests Section -->
+            <div class="recent-quotes">
+              <div class="section-header">
+                <h2>Recent Air Freight Requests</h2>
+              </div>
+
+              <div class="data-table">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Customer</th>
+                      <th>Type</th>
+                      <th>Airwaybill/Reference</th>
+                      <th>Date</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for freight in recent_air_freights %}
+                    <tr>
+                      <td>#AF-{{ freight.id }}</td>
+                      <td>
+                        <div class="customer-info">
+                          <div class="customer-avatar">
+                            {{ freight.name[:1] }}
+                          </div>
+                          <div>{{ freight.name }}</div>
+                        </div>
+                      </td>
+                      <td>{{ freight.freight_type }}</td>
+                      <td>{{ freight.airwaybill_number or 'N/A' }}</td>
+                      <td>{{ freight.created_at.strftime('%b %d, %Y') }}</td>
+                      <td>
+                        <span class="status {{ freight.status }}"
+                          >{{ freight.status.capitalize() }}</span
+                        >
+                      </td>
+                      <td>
+                        <div class="actions">
+                          <a href="#" class="btn-icon" title="View Details">
+                            <i class="fas fa-eye"></i>View
+                          </a>
+                        </div>
+                      </td>
+                    </tr>
+                    {% endfor %} {% if not air_freights %}
+                    <tr>
+                      <td colspan="7" class="empty-table">
+                        No air freight requests found
+                      </td>
+                    </tr>
+                    {% endif %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Sea Freight Requests Section -->
+            <div class="recent-quotes">
+              <div class="section-header">
+                <h2>Recent Sea Freight Requests</h2>
+              </div>
+
+              <div class="data-table">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Customer</th>
+                      <th>Type</th>
+                      <th>Tracking Number</th>
+                      <th>Date</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for freight in recent_sea_freights %}
+                    <tr>
+                      <td>#SF-{{ freight.id }}</td>
+                      <td>
+                        <div class="customer-info">
+                          <div class="customer-avatar">
+                            {{ freight.name[:1] }}
+                          </div>
+                          <div>{{ freight.name }}</div>
+                        </div>
+                      </td>
+                      <td>{{ freight.freight_type }}</td>
+                      <td>{{ freight.tracking_number or 'N/A' }}</td>
+                      <td>{{ freight.created_at.strftime('%b %d, %Y') }}</td>
+                      <td>
+                        <span class="status {{ freight.status }}"
+                          >{{ freight.status.capitalize() }}</span
+                        >
+                      </td>
+                      <td>
+                        <div class="actions">
+                          <a href="#" class="btn-icon" title="View Details">
+                            <i class="fas fa-eye"></i>View
+                          </a>
+                        </div>
+                      </td>
+                    </tr>
+                    {% endfor %} {% if not sea_freights %}
+                    <tr>
+                      <td colspan="7" class="empty-table">
+                        No sea freight requests found
                       </td>
                     </tr>
                     {% endif %}
