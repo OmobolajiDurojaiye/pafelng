@@ -40,7 +40,7 @@ dashboard_active %}{% endblock %} {% block content %}
               {% if post.cover_image %}
               <div class="post-thumbnail">
                 <img
-                  src="{{ url_for('static', filename=post.cover_image) }}"
+                  src="{{ url_for('static', filename=post.cover_image.replace('\\', '/')) }}"
                   alt="{{ post.title }}"
                 />
               </div>
@@ -75,6 +75,11 @@ dashboard_active %}{% endblock %} {% block content %}
                 action="{{ url_for('blog_admin.toggle_publish', id=post.id) }}"
                 class="inline-form"
               >
+                <input
+                  type="hidden"
+                  name="csrf_token"
+                  value="{{ csrf_token() }}"
+                />
                 <button
                   type="submit"
                   class="btn-icon"

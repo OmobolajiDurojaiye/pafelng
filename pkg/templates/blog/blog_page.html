@@ -46,7 +46,7 @@
           {% if post.cover_image %}
           <div class="blog-cover">
             <img
-              src="{{ url_for('static', filename='uploads/blog/' + post.cover_image) }}"
+              src="{{ url_for('static', filename=post.cover_image.replace('\\', '/')) }}"
               alt="{{ post.title }}"
             />
           </div>
@@ -95,7 +95,7 @@
                 <div class="post-image-container">
                   {% if related_post.cover_image %}
                   <img
-                    src="{{ url_for('static', filename='uploads/blog/' + related_post.cover_image) }}"
+                    src="{{ url_for('static', filename=related_post.cover_image.replace('\\', '/')) }}"
                     alt="{{ related_post.title }}"
                     class="post-image"
                   />

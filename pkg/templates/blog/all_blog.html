@@ -49,7 +49,7 @@
                 {%
                 if
                 newest_post.cover_image
-                %}style="background-image: url('{{ url_for('static', filename='uploads/blog/' + newest_post.cover_image) }}');"
+                %}style="background-image: url('{{ url_for('static', filename=newest_post.cover_image.replace('\\', '/')) }}');"
                 {%
                 endif
                 %}
@@ -82,7 +82,7 @@
                 <div class="post-image-container">
                   {% if post.cover_image %}
                   <img
-                    src="{{ url_for('static', filename='uploads/blog/' + post.cover_image) }}"
+                    src="{{ url_for('static', filename=post.cover_image.replace('\\', '/')) }}"
                     alt="{{ post.title }}"
                     class="post-image"
                   />

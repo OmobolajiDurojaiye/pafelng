@@ -82,7 +82,7 @@ def new_post():
                 file_path = os.path.join(upload_folder, new_filename)
                 file.save(file_path)
                 
-                post.cover_image = os.path.join('uploads', 'blog_images', new_filename)
+                post.cover_image = 'uploads/blog_images/' + new_filename
                 post.original_filename = original_filename
         
         db.session.add(post)
