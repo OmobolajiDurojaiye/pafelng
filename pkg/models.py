@@ -359,3 +359,48 @@ class SeaFreightMessage(db.Model):
             'is_admin': self.is_admin,
             'created_at': self.created_at
         }
+    
+
+class BlogPost(db.Model):
+    __tablename__ = 'blog_posts'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    slug = db.Column(db.String(200), unique=True, nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    cover_image = db.Column(db.String(255), nullable=True)
+    original_filename = db.Column(db.String(255), nullable=True)
+    is_published = db.Column(db.Boolean, default=True)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
+    
+    def __init__(self, title, content, slug=None):
+        self.title = title
+        self.content = content
+        if slug is None:
+            self.slug = self.generate_slug(title)
+        else:
+            self.slug = slug
+    
+    @staticmethod
+    def generate_slug(title):
+        # Convert to lowercase and replace spaces with hyphens
+        slug = title.lower().replace(' ', '-')
+        # Remove special characters
+        slug = re.sub(r'[^a-z0-9-]', '', slug)
+        # Replace multiple hyphens with single hyphen
+        slug = re.sub(r'-+', '-', slug)
+        return slug
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'slug': self.slug,
+            'content': self.content,
+            'cover_image': self.cover_image,
+            'original_filename': self.original_filename,
+            'is_published': self.is_published,
+            'created_at': self.created_at,
+            'updated_at': self.updated_at
+        }

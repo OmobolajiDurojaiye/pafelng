@@ -1,0 +1,202 @@
+{% extends "admin/admin_dashboard.html" %} {% block title %}{{ 'Edit Blog Post'
+if post else 'Create New Blog Post' }} | PafelNG{% endblock %} {% block
+additional_css %}
+<link
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+  rel="stylesheet"
+/>
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/blog_admin.css') }}"
+/>
+{% endblock %} {% block blog_active %}class="active"{% endblock %} {% block
+dashboard_active %}{% endblock %} {% block content %}
+<div class="page-header">
+  <h1>{{ 'Edit Blog Post' if post else 'Create New Blog Post' }}</h1>
+  <p>
+    {{ 'Update the existing blog post' if post else 'Write a new blog post to
+    enhance your SEO' }}
+  </p>
+</div>
+
+<div class="blog-form-container">
+  <form method="POST" enctype="multipart/form-data" class="blog-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+    <div class="form-group">
+      <label for="title">Blog Title</label>
+      <input
+        type="text"
+        id="title"
+        name="title"
+        class="form-control"
+        value="{{ post.title if post else '' }}"
+        required
+        placeholder="Enter blog title"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="cover_image">Cover Image</label>
+      <div class="file-upload-wrapper">
+        <label for="cover_image" class="file-upload-label">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <span id="file-name"
+            >{{ post.original_filename if post and post.original_filename else
+            'Choose file' }}</span
+          >
+        </label>
+        <input
+          type="file"
+          id="cover_image"
+          name="cover_image"
+          class="file-upload"
+          accept="image/*"
+        />
+      </div>
+
+      {% if post and post.cover_image %}
+      <div class="current-image">
+        <p>Current image:</p>
+        <img
+          src="{{ url_for('static', filename=post.cover_image) }}"
+          alt="{{ post.title }}"
+          class="cover-image-preview"
+        />
+      </div>
+      {% endif %}
+
+      <div
+        id="image-preview-container"
+        style="display: none"
+        class="image-preview-container"
+      >
+        <p>Preview:</p>
+        <img
+          id="image-preview"
+          src="#"
+          alt="Image Preview"
+          class="cover-image-preview"
+        />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="content">Content</label>
+      <textarea id="content" name="content" class="form-control">
+{{ post.content if post else '' }}</textarea
+      >
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">
+        <i class="fas fa-save"></i>
+        {{ 'Update Post' if post else 'Create Post' }}
+      </button>
+      <a href="{{ url_for('blog_admin.all_posts') }}" class="btn btn-secondary">
+        <i class="fas fa-times"></i>
+        Cancel
+      </a>
+    </div>
+  </form>
+</div>
+{% endblock %} {% block additional_scripts %}
+<script src="https://cdn.ckeditor.com/ckeditor5/38.0.1/classic/ckeditor.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Initialize CKEditor
+    if (document.getElementById("content")) {
+      ClassicEditor.create(document.getElementById("content"), {
+        toolbar: [
+          "heading",
+          "|",
+          "bold",
+          "italic",
+          "link",
+          "bulletedList",
+          "numberedList",
+          "blockQuote",
+          "insertTable",
+          "undo",
+          "redo",
+        ],
+        heading: {
+          options: [
+            {
+              model: "paragraph",
+              title: "Paragraph",
+              class: "ck-heading_paragraph",
+            },
+            {
+              model: "heading1",
+              view: "h1",
+              title: "Heading 1",
+              class: "ck-heading_heading1",
+            },
+            {
+              model: "heading2",
+              view: "h2",
+              title: "Heading 2",
+              class: "ck-heading_heading2",
+            },
+            {
+              model: "heading3",
+              view: "h3",
+              title: "Heading 3",
+              class: "ck-heading_heading3",
+            },
+          ],
+        },
+      }).catch((error) => {
+        console.error(error);
+      });
+    }
+
+    // File upload preview
+    const fileInput = document.getElementById("cover_image");
+    const fileNameDisplay = document.getElementById("file-name");
+    const previewContainer = document.getElementById("image-preview-container");
+    const previewImage = document.getElementById("image-preview");
+
+    if (fileInput) {
+      fileInput.addEventListener("change", function () {
+        if (this.files && this.files[0]) {
+          const file = this.files[0];
+          fileNameDisplay.textContent = file.name;
+
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            previewImage.src = e.target.result;
+            previewContainer.style.display = "block";
+          };
+          reader.readAsDataURL(file);
+        } else {
+          fileNameDisplay.textContent = "Choose file";
+          previewContainer.style.display = "none";
+        }
+      });
+    }
+
+    // Close alerts
+    const closeAlerts = document.querySelectorAll(".close-alert");
+    if (closeAlerts.length > 0) {
+      closeAlerts.forEach((closeBtn) => {
+        closeBtn.addEventListener("click", function () {
+          this.parentElement.style.opacity = "0";
+          setTimeout(() => {
+            this.parentElement.style.display = "none";
+          }, 300);
+        });
+      });
+    }
+
+    // Add smooth transition to alerts
+    const alerts = document.querySelectorAll(".alert");
+    if (alerts.length > 0) {
+      alerts.forEach((alert) => {
+        alert.style.transition = "opacity 0.3s ease";
+      });
+    }
+  });
+</script>
+{% endblock %}

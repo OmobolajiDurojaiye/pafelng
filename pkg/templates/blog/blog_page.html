@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ post.title }} | PafelNG Blogs</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/blog.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header class="header">
+      <div class="container">
+        <div class="logo">
+          <a href="{{ url_for('blog.all_blogs') }}">PafelNG Blogs</a>
+        </div>
+        <form
+          class="search-form"
+          action="{{ url_for('blog.search_blogs') }}"
+          method="get"
+        >
+          <input type="text" name="query" placeholder="Search blogs..." />
+          <button type="submit"><i class="fas fa-search"></i></button>
+        </form>
+      </div>
+    </header>
+
+    <main class="main blog-page">
+      <div class="container">
+        <article class="blog-post">
+          <div class="blog-header">
+            <div class="blog-meta">
+              <span class="blog-date"
+                >{{ post.created_at.strftime('%B %d, %Y') }}</span
+              >
+              <span class="blog-author">PafelNG</span>
+            </div>
+            <h1 class="blog-title">{{ post.title }}</h1>
+          </div>
+
+          {% if post.cover_image %}
+          <div class="blog-cover">
+            <img
+              src="{{ url_for('static', filename='uploads/blog/' + post.cover_image) }}"
+              alt="{{ post.title }}"
+            />
+          </div>
+          {% endif %}
+
+          <div class="blog-content">{{ post.content|safe }}</div>
+
+          <div class="blog-share">
+            <span>Share this article:</span>
+            <div class="share-buttons">
+              <a
+                href="https://twitter.com/intent/tweet?url={{ request.url }}&text={{ post.title }}"
+                target="_blank"
+                class="share-button twitter"
+              >
+                <i class="fab fa-twitter"></i>
+              </a>
+              <a
+                href="https://www.facebook.com/sharer/sharer.php?u={{ request.url }}"
+                target="_blank"
+                class="share-button facebook"
+              >
+                <i class="fab fa-facebook-f"></i>
+              </a>
+              <a
+                href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.url }}&title={{ post.title }}"
+                target="_blank"
+                class="share-button linkedin"
+              >
+                <i class="fab fa-linkedin-in"></i>
+              </a>
+            </div>
+          </div>
+        </article>
+
+        {% if related_posts %}
+        <section class="related-posts">
+          <h2 class="section-title">Related Posts</h2>
+          <div class="posts-grid">
+            {% for related_post in related_posts %}
+            <article class="post-card">
+              <a
+                href="{{ url_for('blog.blog_post', slug=related_post.slug) }}"
+                class="post-link"
+              >
+                <div class="post-image-container">
+                  {% if related_post.cover_image %}
+                  <img
+                    src="{{ url_for('static', filename='uploads/blog/' + related_post.cover_image) }}"
+                    alt="{{ related_post.title }}"
+                    class="post-image"
+                  />
+                  {% else %}
+                  <div class="post-image post-image-placeholder"></div>
+                  {% endif %}
+                  <div class="post-overlay">
+                    <h3 class="post-title">{{ related_post.title }}</h3>
+                    <span class="post-date"
+                      >{{ related_post.created_at.strftime('%B %d, %Y') }}</span
+                    >
+                  </div>
+                </div>
+              </a>
+            </article>
+            {% endfor %}
+          </div>
+        </section>
+        {% endif %}
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <p>&copy; {{ current_year }} PafelNG. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/blog.js') }}"></script>
+  </body>
+</html>

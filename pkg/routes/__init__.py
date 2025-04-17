@@ -7,6 +7,8 @@ from pkg.routes.sea_freight.routes import sea_freight_bp
 from pkg.routes.car_custom_doc.routes import car_doc_bp
 from pkg.routes.global_courier.routes import global_route_bp
 from pkg.routes.admin.air_sea_freight import admin_air_sea_bp
+from pkg.routes.blog.blog_admin import blog_admin_bp
+from pkg.routes.blog.routes import blog_bp
 
 def register_blueprints(app):
     app.register_blueprint(index_bp)
@@ -18,3 +20,5 @@ def register_blueprints(app):
     app.register_blueprint(car_doc_bp)
     app.register_blueprint(global_route_bp)
     app.register_blueprint(admin_air_sea_bp)
+    app.register_blueprint(blog_admin_bp)
+    app.register_blueprint(blog_bp)

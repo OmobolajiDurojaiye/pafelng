@@ -1,5 +1,3 @@
-# Update your sea_freight_bp routes in routes.py
-
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session, jsonify
 from werkzeug.utils import secure_filename
 from functools import wraps

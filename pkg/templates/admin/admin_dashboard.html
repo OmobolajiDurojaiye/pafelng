@@ -3,11 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin Dashboard | Pafelng</title>
+    <title>{% block title %}Admin Dashboard | Pafelng{% endblock %}</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
+    {% block additional_css %}{% endblock %}
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/admin_dashboard.css') }}"
@@ -31,55 +32,63 @@
           <div class="avatar">
             <i class="fas fa-user-circle"></i>
           </div>
+          {% block sidebar_user_info %}
           <div class="user-info">
+            {#
             <h3>{{ admin.name }}</h3>
             <p>Administrator</p>
+            #}
           </div>
+          {% endblock %}
         </div>
 
         <nav class="sidebar-nav">
           <ul>
-            <li class="active">
-              <a href="{{ url_for('admin.admin_dashboard') }}"
-                ><i class="fas fa-th-large"></i><span>Dashboard</span></a
-              >
+            <li {% block dashboard_active %}class="active" {% endblock %}>
+              <a href="{{ url_for('admin.admin_dashboard') }}">
+                <i class="fas fa-th-large"></i><span>Dashboard</span>
+              </a>
             </li>
 
-            <li>
-              <a href="{{ url_for('admin.vehicle_verification') }}"
-                ><i class="fas fa-car"></i><span>Vehicle Verification</span></a
-              >
+            <li {% block vehicle_verification_active %}{% endblock %}>
+              <a href="{{ url_for('admin.vehicle_verification') }}">
+                <i class="fas fa-car"></i><span>Vehicle Verification</span>
+              </a>
             </li>
-            <li>
-              <a href="{{ url_for('admin.global_courier') }}"
-                ><i class="fas fa-box"></i><span>Global Courier</span></a
-              >
+            <li {% block global_courier_active %}{% endblock %}>
+              <a href="{{ url_for('admin.global_courier') }}">
+                <i class="fas fa-box"></i><span>Global Courier</span>
+              </a>
             </li>
-            <li>
-              <a href="#air-freight"
-                ><i class="fas fa-plane"></i><span>Air Freight</span></a
-              >
+            <li {% block air_freight_active %}{% endblock %}>
+              <a href="#air-freight">
+                <i class="fas fa-plane"></i><span>Air Freight</span>
+              </a>
             </li>
-            <li>
-              <a href="#sea-freight"
-                ><i class="fas fa-ship"></i><span>Sea Freight</span></a
-              >
+            <li {% block sea_freight_active %}{% endblock %}>
+              <a href="#sea-freight">
+                <i class="fas fa-ship"></i><span>Sea Freight</span>
+              </a>
             </li>
-            <li>
-              <a href="#customers"
-                ><i class="fas fa-users"></i><span>Customers</span></a
-              >
+            <li {% block blog_active %}{% endblock %}>
+              <a href="{{ url_for('blog_admin.all_posts') }}">
+                <i class="fas fa-blog"></i><span>Blog Management</span>
+              </a>
             </li>
-
-            <li>
-              <a href="#settings"
-                ><i class="fas fa-cog"></i><span>Settings</span></a
-              >
+            <li {% block customers_active %}{% endblock %}>
+              <a href="#customers">
+                <i class="fas fa-users"></i><span>Customers</span>
+              </a>
+            </li>
+            <li {% block settings_active %}{% endblock %}>
+              <a href="#settings">
+                <i class="fas fa-cog"></i><span>Settings</span>
+              </a>
             </li>
             <li class="logout">
-              <a href="{{ url_for('admin.logout') }}"
-                ><i class="fas fa-sign-out-alt"></i><span>Logout</span></a
-              >
+              <a href="{{ url_for('admin.logout') }}">
+                <i class="fas fa-sign-out-alt"></i><span>Logout</span>
+              </a>
             </li>
           </ul>
         </nav>
@@ -90,7 +99,9 @@
         <header class="top-header">
           <div class="header-actions">
             <div class="profile">
-              <!-- <a href="#profile">Profile</a> -->
+              {% block header_actions %}
+              <!-- Profile actions if needed -->
+              {% endblock %}
             </div>
           </div>
         </header>
@@ -105,6 +116,7 @@
         {% endfor %} {% endif %} {% endwith %}
 
         <div class="dashboard-content">
+          {% block content %}
           <div class="page-header">
             <h1>Admin Dashboard</h1>
             <p>
@@ -533,10 +545,12 @@
               </div>
             </div>
           </div>
+          {% endblock %}
         </div>
       </main>
     </div>
 
     <script src="{{ url_for('static', filename='js/admin_dashboard.js') }}"></script>
+    {% block additional_scripts %}{% endblock %}
   </body>
 </html>

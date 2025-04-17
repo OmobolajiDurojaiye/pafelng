@@ -1,27 +1,3 @@
-I'm working on the user side of my logistic app, I want to make the remaining 2 services form for (air freight and sea freight), i have done for global courier and vehicle verification as attached
-these are the inputs for the forms:
-
-
-Name of Contact Person:
-Email: 
-Phone Number:
-Option: Import or Export 
-If Import for pick up and delivery, all the below questions apply. But if it is Import with Airwaybill number available, the above questions apply with Airwaybill number request and Invoice in shipment, Yes or No)
-Pick up Address:
-Delivery Address:
-Weight: 
-Volumetric Dimension: 
-Description of Shipment: 
-Invoice Value:
-No of Boxes:
-If Number of Boxes exceeds one, Input weight and Dimension of each box:(this can be a text box where they can type details)
-Choice of Shipping: DHL or Airline shipping or Sea shipping 
-SUBMIT
-
-If the user chooses export all these questions applies. For choice of shipping only include DHL, Air Freight, Sea Freight do not include the days of delivery.
-
-This form applies to both air and sea export
-
 this is our color:
 :root {
   --primary-color:rgb(193, 211, 218);
