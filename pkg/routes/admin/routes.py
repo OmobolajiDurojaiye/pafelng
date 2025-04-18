@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session, current_app
-from pkg.models import db, Admin, VerificationCode, VehicleVerification, GlobalCourier, VehicleVerificationMessage, GlobalCourierMessage, AirFreight, SeaFreight
+from pkg.models import db, Admin, VerificationCode, VehicleVerification, GlobalCourier, VehicleVerificationMessage, GlobalCourierMessage, AirFreight, SeaFreight, User
 from werkzeug.security import generate_password_hash
 from werkzeug.utils import secure_filename
 import random
@@ -595,3 +595,35 @@ def send_global_courier_message(id):
         flash(f'An error occurred: {str(e)}', 'error')
     
     return redirect(url_for('admin.global_courier_detail', id=id))
+
+@admin_bp.route('/customers')
+@login_required
+def admin_customers():
+    # Get all users
+    users = User.query.order_by(User.name).all()
+    
+    # Get user statistics
+    user_stats = {}
+    for user in users:
+        stats = {
+            'vehicle_verifications': len(user.vehicle_verifications),
+            'global_couriers': len(user.global_couriers),
+            'air_freights': len(AirFreight.query.filter_by(user_id=user.id).all()),
+            'sea_freights': len(SeaFreight.query.filter_by(user_id=user.id).all()),
+            'total_requests': 0
+        }
+        stats['total_requests'] = (stats['vehicle_verifications'] + 
+                                 stats['global_couriers'] + 
+                                 stats['air_freights'] + 
+                                 stats['sea_freights'])
+        user_stats[user.id] = stats
+    
+    # Get admin info
+    admin = Admin.query.get(session['admin_id'])
+    
+    return render_template(
+        'admin/admin_customers.html',
+        admin=admin,
+        users=users,
+        user_stats=user_stats
+    )

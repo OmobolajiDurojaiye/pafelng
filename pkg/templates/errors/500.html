@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>500 - Server Error</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/error.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="{{url_for('static', filename='/apple-icon-180x180.png')}}"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="192x192"
+      href="{{url_for('static', filename='/android-icon-192x192.png')}}"
+    />
+    <meta name="theme-color" content="#ffffff" />
+  </head>
+  <body class="error-500">
+    <div class="container">
+      <div class="error-container">
+        <div class="error-icon">
+          <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <h1 class="error-code">500</h1>
+        <h2 class="error-title">Server Error</h2>
+        <p class="error-message">
+          Oops! Our logistics system is experiencing technical difficulties. Our
+          team has been notified and is working to resolve the issue.
+        </p>
+        <div class="tracking-animation">
+          <div class="tracking-line"></div>
+          <div class="tracking-dot"></div>
+        </div>
+        <div class="buttons">
+          <a href="/" class="btn btn-primary">
+            <i class="fas fa-home"></i> Back to Dashboard
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/error.js') }}"></script>
+  </body>
+</html>

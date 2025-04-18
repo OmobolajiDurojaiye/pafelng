@@ -1,0 +1,319 @@
+:root {
+  --primary-color: rgb(193, 211, 218);
+  --primary-light: rgba(66, 176, 213, 0.1);
+  --accent-color: #ff7f50;
+  --dark-color: #333;
+  --light-color: #f8f9fa;
+  --text-color: #333;
+  --white: #fff;
+  --gray: #6c757d;
+  --light-gray: #e9ecef;
+  --border-radius: 12px;
+  --transition: all 0.3s ease;
+  --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: var(--light-color);
+  color: var(--text-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  background: linear-gradient(135deg, var(--primary-light), var(--light-color));
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 20px;
+}
+
+.error-container {
+  background-color: var(--white);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  padding: 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  max-width: 600px;
+  margin: 0 auto;
+  transform: translateY(0);
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.error-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  color: var(--accent-color);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.error-code {
+  font-size: 6rem;
+  font-weight: 700;
+  margin: 0;
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--accent-color)
+  );
+  /* -webkit-background-clip: text; */
+  -webkit-text-fill-color: transparent;
+  line-height: 1;
+}
+
+.error-title {
+  font-size: 2rem;
+  margin: 10px 0 20px;
+  color: var(--dark-color);
+}
+
+.error-message {
+  font-size: 1.2rem;
+  color: var(--gray);
+  margin-bottom: 30px;
+  line-height: 1.6;
+}
+
+.tracking-animation {
+  height: 60px;
+  position: relative;
+  margin: 30px 0;
+}
+
+.tracking-line {
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+  border-radius: 4px;
+  position: absolute;
+  width: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.tracking-dot {
+  height: 16px;
+  width: 16px;
+  background-color: var(--accent-color);
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  animation: move 3s infinite linear;
+  box-shadow: 0 0 10px rgba(255, 127, 80, 0.6);
+}
+
+@keyframes move {
+  0% {
+    left: 0;
+  }
+  100% {
+    left: calc(100% - 16px);
+  }
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 10px;
+}
+
+.btn {
+  padding: 12px 24px;
+  border-radius: var(--border-radius);
+  border: none;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: var(--dark-color);
+}
+
+.btn-primary:hover {
+  background-color: var(--accent-color);
+  color: var(--white);
+  transform: translateY(-3px);
+}
+
+.btn-secondary {
+  background-color: var(--light-gray);
+  color: var(--dark-color);
+}
+
+.btn-secondary:hover {
+  background-color: var(--gray);
+  color: var(--white);
+  transform: translateY(-3px);
+}
+
+/* Modal styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background-color: var(--white);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  padding: 30px;
+  width: 100%;
+  max-width: 500px;
+  position: relative;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.close-btn {
+  position: absolute;
+  right: 20px;
+  top: 15px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--gray);
+}
+
+.close-btn:hover {
+  color: var(--dark-color);
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: var(--dark-color);
+  text-align: left;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--light-gray);
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  transition: var(--transition);
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+.form-group textarea {
+  height: 120px;
+  resize: vertical;
+}
+
+/* Responsive styles */
+@media screen and (max-width: 768px) {
+  .error-code {
+    font-size: 4rem;
+  }
+
+  .error-title {
+    font-size: 1.5rem;
+  }
+
+  .error-message {
+    font-size: 1rem;
+  }
+
+  .buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .error-container {
+    padding: 30px 20px;
+  }
+}
+
+/* For 403 page specific styling */
+body.error-403 .error-icon i {
+  color: #e74c3c;
+}
+
+/* For 500 page specific styling */
+body.error-500 .error-icon i {
+  color: #e74c3c;
+}
+
+body.error-500 .tracking-animation .tracking-line {
+  background: linear-gradient(90deg, #e74c3c, var(--accent-color));
+}
+
+body.error-500 .tracking-dot {
+  background-color: #e74c3c;
+}

@@ -13,6 +13,18 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='css/admin_dashboard.css') }}"
     />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="{{url_for('static', filename='/apple-icon-180x180.png')}}"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="192x192"
+      href="{{url_for('static', filename='/android-icon-192x192.png')}}"
+    />
+    <meta name="theme-color" content="#ffffff" />
   </head>
   <body>
     <div class="dashboard-container">
@@ -61,12 +73,12 @@
               </a>
             </li>
             <li {% block air_freight_active %}{% endblock %}>
-              <a href="#air-freight">
+              <a href="{{ url_for('admin_air_sea.air_freight') }}">
                 <i class="fas fa-plane"></i><span>Air Freight</span>
               </a>
             </li>
             <li {% block sea_freight_active %}{% endblock %}>
-              <a href="#sea-freight">
+              <a href="{{ url_for('admin_air_sea.sea_freight') }}">
                 <i class="fas fa-ship"></i><span>Sea Freight</span>
               </a>
             </li>
@@ -76,15 +88,17 @@
               </a>
             </li>
             <li {% block customers_active %}{% endblock %}>
-              <a href="#customers">
+              <a href="{{ url_for('admin.admin_customers') }}">
                 <i class="fas fa-users"></i><span>Customers</span>
               </a>
             </li>
+            {#
             <li {% block settings_active %}{% endblock %}>
               <a href="#settings">
                 <i class="fas fa-cog"></i><span>Settings</span>
               </a>
             </li>
+            #}
             <li class="logout">
               <a href="{{ url_for('admin.logout') }}">
                 <i class="fas fa-sign-out-alt"></i><span>Logout</span>

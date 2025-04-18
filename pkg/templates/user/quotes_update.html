@@ -12,6 +12,18 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='css/quotes_update.css') }}"
     />
+    <link
+    rel="apple-touch-icon"
+    sizes="180x180"
+    href="{{url_for('static', filename='/apple-icon-180x180.png')}}"
+  />
+  <link
+    rel="icon"
+    type="image/png"
+    sizes="192x192"
+    href="{{url_for('static', filename='/android-icon-192x192.png')}}"
+  />
+  <meta name="theme-color" content="#ffffff" />
   </head>
 
   <body>
@@ -49,6 +61,8 @@
               <option value="all">All Services</option>
               <option value="vehicle-verification">Vehicle Verification</option>
               <option value="global-courier">Global Courier</option>
+              <option value="air-freight">Air Freight</option>
+              <option value="sea-freight">Sea Freight</option>
             </select>
           </div>
           <div class="filter-container">
@@ -106,7 +120,7 @@
               <div class="quote-body">
                 <div class="service-type">
                   <i
-                    class="fas fa-{% if quote.service_type == 'Vehicle Verification' %}car{% else %}shipping-fast{% endif %}"
+                    class="fas fa-{% if quote.service_type == 'Vehicle Verification' %}car{% elif quote.service_type == 'Global Courier' %}shipping-fast{% elif quote.service_type == 'Air Freight' %}plane{% elif quote.service_type == 'Sea Freight' %}ship{% endif %}"
                   ></i>
                   {{ quote.service_type }}
                 </div>
@@ -118,10 +132,20 @@
                     }}</span
                   >
                 </div>
-                {% else %}
+                {% elif quote.service_type == 'Global Courier' %}
                 <div class="quote-detail">
                   <span class="detail-label">Courier:</span>
                   <span class="detail-value">{{ quote.courier_company }}</span>
+                </div>
+                {% elif quote.service_type == 'Air Freight' %}
+                <div class="quote-detail">
+                  <span class="detail-label">Type:</span>
+                  <span class="detail-value">{{ quote.freight_type }}</span>
+                </div>
+                {% elif quote.service_type == 'Sea Freight' %}
+                <div class="quote-detail">
+                  <span class="detail-label">Type:</span>
+                  <span class="detail-value">{{ quote.freight_type }}</span>
                 </div>
                 {% endif %}
                 <div class="quote-message">
