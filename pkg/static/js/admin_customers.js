@@ -2,380 +2,435 @@
 
 // DOM Elements
 document.addEventListener("DOMContentLoaded", function () {
-  // Main elements
+  // Search and filter elements
   const customerSearch = document.getElementById("customerSearch");
-  const sortOptions = document.getElementById("sortOptions");
+  const sortFilter = document.getElementById("sortFilter");
   const statusFilter = document.getElementById("statusFilter");
-  const customersTable = document.getElementById("customersTable");
-  const customerRows = document.querySelectorAll(".customer-row");
+
+  // Table elements
+  const customersTable = document.querySelector(".customers-table");
+  const customerRows = document.querySelectorAll(".customers-table tbody tr");
 
   // Modal elements
-  const customerDetailsModal = document.getElementById("customerDetailsModal");
-  const customerName = document.querySelector(".customer-name");
-  const customerEmail = document.querySelector(".customer-email span");
-  const customerJoined = document.querySelector(".customer-joined span");
-
-  // Stats elements
-  const vehicleRequestCount = document.getElementById("vehicleRequestCount");
-  const courierRequestCount = document.getElementById("courierRequestCount");
-  const airFreightCount = document.getElementById("airFreightCount");
-  const seaFreightCount = document.getElementById("seaFreightCount");
-
-  // Tables
-  const vehicleVerificationsTable = document.querySelector(
-    "#vehicleVerificationsTable tbody"
+  const customerModal = document.getElementById("customerModal");
+  const modalCustomerName = document.getElementById("modalCustomerName");
+  const modalCustomerEmail = document.getElementById("modalCustomerEmail");
+  const modalCustomerJoined = document.getElementById("modalCustomerJoined");
+  const modalCustomerRequests = document.getElementById(
+    "modalCustomerRequests"
   );
-  const globalCouriersTable = document.querySelector(
-    "#globalCouriersTable tbody"
-  );
-  const airFreightsTable = document.querySelector("#airFreightsTable tbody");
-  const seaFreightsTable = document.querySelector("#seaFreightsTable tbody");
+  const modalCustomerStatus = document.getElementById("modalCustomerStatus");
+  const modalActivityList = document.getElementById("modalActivityList");
 
-  // Error messages
-  const noVehicleData = document.getElementById("noVehicleData");
-  const noCourierData = document.getElementById("noCourierData");
-  const noAirData = document.getElementById("noAirData");
-  const noSeaData = document.getElementById("noSeaData");
+  // Pagination elements
+  const paginationButtons = document.querySelectorAll(".pagination-btn");
+  const paginationInfo = document.querySelector(".pagination-info");
+
+  // Tab elements
+  const navTabs = document.querySelectorAll(".nav-tab");
+
+  // Current state variables
+  let currentPage = 1;
+  const itemsPerPage = 10;
+  let filteredRows = Array.from(customerRows);
 
   // Search functionality
-  customerSearch.addEventListener("input", function () {
-    const searchTerm = this.value.toLowerCase().trim();
-
-    customerRows.forEach((row) => {
-      const name = row
-        .querySelector("td:nth-child(2)")
-        .textContent.toLowerCase();
-      const email = row
-        .querySelector("td:nth-child(3)")
-        .textContent.toLowerCase();
-      const date = row
-        .querySelector("td:nth-child(4)")
-        .textContent.toLowerCase();
-
-      if (
-        name.includes(searchTerm) ||
-        email.includes(searchTerm) ||
-        date.includes(searchTerm)
-      ) {
-        row.style.display = "";
-      } else {
-        row.style.display = "none";
-      }
+  if (customerSearch) {
+    customerSearch.addEventListener("input", function () {
+      filterTable();
     });
-  });
+  }
+
+  // Sorting functionality
+  if (sortFilter) {
+    sortFilter.addEventListener("change", function () {
+      filterTable();
+    });
+  }
 
   // Status filter functionality
-  statusFilter.addEventListener("change", function () {
-    const selectedStatus = this.value;
+  if (statusFilter) {
+    statusFilter.addEventListener("change", function () {
+      filterTable();
+    });
+  }
 
-    customerRows.forEach((row) => {
-      const statusElement = row.querySelector("td:nth-child(5) .badge");
-      const isActive = statusElement.classList.contains("badge-success");
+  // Tab navigation
+  navTabs.forEach((tab) => {
+    tab.addEventListener("click", function () {
+      // Remove active class from all tabs
+      navTabs.forEach((t) => t.classList.remove("active"));
 
-      if (
-        selectedStatus === "all" ||
-        (selectedStatus === "active" && isActive) ||
-        (selectedStatus === "inactive" && !isActive)
-      ) {
-        row.style.display = "";
+      // Add active class to clicked tab
+      this.classList.add("active");
+
+      // Get the tab value (All, Active, Inactive)
+      const tabValue = this.textContent.trim().toLowerCase();
+
+      // Set status filter based on tab
+      if (tabValue === "active") {
+        statusFilter.value = "active";
+      } else if (tabValue === "inactive") {
+        statusFilter.value = "inactive";
       } else {
-        row.style.display = "none";
+        statusFilter.value = "all";
+      }
+
+      // Apply filters
+      filterTable();
+    });
+  });
+
+  // View customer details functionality
+  document.querySelectorAll(".view-btn").forEach((btn, index) => {
+    btn.addEventListener("click", function () {
+      const row = this.closest("tr");
+      openCustomerModal(row);
+    });
+  });
+
+  // Edit functionality
+  document.querySelectorAll(".action-btn:nth-child(2)").forEach((btn) => {
+    btn.addEventListener("click", function () {
+      const row = this.closest("tr");
+      const customerName = row.querySelector(
+        ".customer-info div:first-child"
+      ).textContent;
+      alert(`Edit functionality for ${customerName} will be implemented soon.`);
+    });
+  });
+
+  // Delete functionality with confirmation
+  document.querySelectorAll(".delete-btn").forEach((btn) => {
+    btn.addEventListener("click", function () {
+      const row = this.closest("tr");
+      const customerName = row.querySelector(
+        ".customer-info div:first-child"
+      ).textContent;
+      if (
+        confirm(
+          `Are you sure you want to delete customer ${customerName}? This action cannot be undone.`
+        )
+      ) {
+        alert(
+          `Delete functionality for ${customerName} will be implemented soon.`
+        );
       }
     });
   });
 
-  // Sort functionality
-  sortOptions.addEventListener("change", function () {
-    const sortBy = this.value;
-    const rows = Array.from(customerRows);
+  // Pagination functionality
+  paginationButtons.forEach((btn) => {
+    btn.addEventListener("click", function () {
+      if (this.classList.contains("disabled")) {
+        return;
+      }
 
-    rows.sort((a, b) => {
-      if (sortBy === "name") {
+      // If it's a number button
+      if (!isNaN(parseInt(this.textContent))) {
+        currentPage = parseInt(this.textContent);
+      }
+      // If it's next button
+      else if (this.querySelector(".fa-chevron-right")) {
+        currentPage++;
+      }
+      // If it's previous button
+      else if (this.querySelector(".fa-chevron-left")) {
+        currentPage--;
+      }
+
+      updateTable();
+    });
+  });
+
+  // Filter table function
+  function filterTable() {
+    const searchTerm = customerSearch ? customerSearch.value.toLowerCase() : "";
+    const statusValue = statusFilter ? statusFilter.value : "all";
+    const sortValue = sortFilter ? sortFilter.value : "name";
+
+    // Filter based on search and status
+    filteredRows = Array.from(customerRows).filter((row) => {
+      const customerName = row
+        .querySelector(".customer-name")
+        .textContent.toLowerCase();
+      const customerEmail = row
+        .querySelector(".customer-email")
+        .textContent.toLowerCase();
+      const customerStatus = row
+        .querySelector(".badge")
+        .textContent.toLowerCase();
+
+      const matchesSearch =
+        customerName.includes(searchTerm) || customerEmail.includes(searchTerm);
+      const matchesStatus =
+        statusValue === "all" || customerStatus === statusValue;
+
+      return matchesSearch && matchesStatus;
+    });
+
+    // Sort the data
+    filteredRows.sort((a, b) => {
+      if (sortValue === "name") {
         const nameA = a
-          .querySelector("td:nth-child(2)")
+          .querySelector(".customer-info div:first-child")
           .textContent.toLowerCase();
         const nameB = b
-          .querySelector("td:nth-child(2)")
+          .querySelector(".customer-info div:first-child")
           .textContent.toLowerCase();
         return nameA.localeCompare(nameB);
-      } else if (sortBy === "date") {
-        const dateA = new Date(a.querySelector("td:nth-child(4)").textContent);
-        const dateB = new Date(b.querySelector("td:nth-child(4)").textContent);
-        return dateB - dateA; // Newest first
-      } else if (sortBy === "requests") {
-        const requestsA = parseInt(
-          a.querySelector("td:nth-child(6)").textContent
-        );
-        const requestsB = parseInt(
-          b.querySelector("td:nth-child(6)").textContent
-        );
+      } else if (sortValue === "date") {
+        const dateA = new Date(a.querySelectorAll("td")[1].textContent);
+        const dateB = new Date(b.querySelectorAll("td")[1].textContent);
+        return dateB - dateA; // Most recent first
+      } else if (sortValue === "requests") {
+        const requestsA =
+          parseInt(a.querySelectorAll("td")[2].textContent) +
+          parseInt(a.querySelectorAll("td")[3].textContent) +
+          parseInt(a.querySelectorAll("td")[4].textContent) +
+          parseInt(a.querySelectorAll("td")[5].textContent);
+        const requestsB =
+          parseInt(b.querySelectorAll("td")[2].textContent) +
+          parseInt(b.querySelectorAll("td")[3].textContent) +
+          parseInt(b.querySelectorAll("td")[4].textContent) +
+          parseInt(b.querySelectorAll("td")[5].textContent);
         return requestsB - requestsA; // Most requests first
       }
       return 0;
     });
 
-    // Remove existing rows
-    rows.forEach((row) => row.remove());
+    // Reset to first page
+    currentPage = 1;
 
-    // Add sorted rows
-    const tbody = customersTable.querySelector("tbody");
-    rows.forEach((row) => tbody.appendChild(row));
-  });
+    // Update the table
+    updateTable();
+  }
 
-  // View details functionality
-  document.querySelectorAll(".view-details-btn").forEach((btn) => {
-    btn.addEventListener("click", function (e) {
-      e.stopPropagation(); // Prevent row click event from firing
-      const userId = this.getAttribute("data-userid");
-      openCustomerDetails(userId);
+  // Update table display based on filters and pagination
+  function updateTable() {
+    // Hide all rows
+    customerRows.forEach((row) => {
+      row.style.display = "none";
     });
-  });
 
-  customerRows.forEach((row) => {
-    row.addEventListener("click", function () {
-      const userId = this.getAttribute("data-userid");
-      openCustomerDetails(userId);
-    });
-  });
+    // Calculate start and end index
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = Math.min(startIndex + itemsPerPage, filteredRows.length);
 
-  function openCustomerDetails(userId) {
-    // In a real implementation, this would fetch data from the server
-    // For design purposes, we'll simulate with the available data
+    // Display current page rows
+    for (let i = startIndex; i < endIndex; i++) {
+      filteredRows[i].style.display = "table-row";
+    }
 
-    const userRow = document.querySelector(
-      `.customer-row[data-userid="${userId}"]`
+    // Update pagination info
+    if (paginationInfo) {
+      paginationInfo.innerHTML = `Showing <span>${
+        filteredRows.length > 0 ? startIndex + 1 : 0
+      }</span> to <span>${endIndex}</span> of <span>${
+        filteredRows.length
+      }</span> entries`;
+    }
+
+    // Update pagination buttons
+    updatePaginationButtons();
+  }
+
+  // Update pagination buttons based on current page and total pages
+  function updatePaginationButtons() {
+    const totalPages = Math.ceil(filteredRows.length / itemsPerPage);
+
+    // Clear pagination controls
+    const paginationControls = document.querySelector(".pagination-controls");
+    paginationControls.innerHTML = "";
+
+    // Previous button
+    const prevBtn = document.createElement("button");
+    prevBtn.className = `pagination-btn ${currentPage === 1 ? "disabled" : ""}`;
+    prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+    if (currentPage > 1) {
+      prevBtn.addEventListener("click", () => {
+        currentPage--;
+        updateTable();
+      });
+    }
+    paginationControls.appendChild(prevBtn);
+
+    // Page buttons
+    const maxVisibleButtons = 5;
+    let startPage = Math.max(
+      1,
+      currentPage - Math.floor(maxVisibleButtons / 2)
     );
-    if (!userRow) return;
+    let endPage = Math.min(totalPages, startPage + maxVisibleButtons - 1);
 
-    const name = userRow.querySelector("td:nth-child(2)").textContent;
-    const email = userRow.querySelector("td:nth-child(3)").textContent;
-    const joinedDate = userRow.querySelector("td:nth-child(4)").textContent;
-    const totalRequests = userRow.querySelector("td:nth-child(6)").textContent;
+    if (endPage - startPage + 1 < maxVisibleButtons) {
+      startPage = Math.max(1, endPage - maxVisibleButtons + 1);
+    }
 
-    // Set customer details in modal
-    customerName.textContent = name;
-    customerEmail.textContent = email;
-    customerJoined.textContent = joinedDate;
+    for (let i = startPage; i <= endPage; i++) {
+      const pageBtn = document.createElement("button");
+      pageBtn.className = `pagination-btn ${i === currentPage ? "active" : ""}`;
+      pageBtn.textContent = i;
+      pageBtn.addEventListener("click", () => {
+        currentPage = i;
+        updateTable();
+      });
+      paginationControls.appendChild(pageBtn);
+    }
 
-    // For design purposes, distribute the total requests among the different services
-    const totalReq = parseInt(totalRequests);
-    const vehicleReq = Math.floor(totalReq * 0.4);
-    const courierReq = Math.floor(totalReq * 0.3);
-    const airReq = Math.floor(totalReq * 0.2);
-    const seaReq = totalReq - vehicleReq - courierReq - airReq;
+    // Ellipsis
+    if (endPage < totalPages) {
+      const ellipsisBtn = document.createElement("button");
+      ellipsisBtn.className = "pagination-btn";
+      ellipsisBtn.innerHTML = '<i class="fas fa-ellipsis-h"></i>';
+      paginationControls.appendChild(ellipsisBtn);
+    }
 
-    // Update stats
-    vehicleRequestCount.textContent = vehicleReq;
-    courierRequestCount.textContent = courierReq;
-    airFreightCount.textContent = airReq;
-    seaFreightCount.textContent = seaReq;
+    // Next button
+    const nextBtn = document.createElement("button");
+    nextBtn.className = `pagination-btn ${
+      currentPage === totalPages || totalPages === 0 ? "disabled" : ""
+    }`;
+    nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+    if (currentPage < totalPages) {
+      nextBtn.addEventListener("click", () => {
+        currentPage++;
+        updateTable();
+      });
+    }
+    paginationControls.appendChild(nextBtn);
+  }
 
-    // Toggle empty states based on counts
-    toggleEmptyState(
-      noVehicleData,
-      vehicleVerificationsTable,
-      vehicleReq === 0
+  // Open customer modal with data
+  function openCustomerModal(row) {
+    // Extract customer data from the row
+    const customerName = row.querySelector(
+      ".customer-info div:first-child"
+    ).textContent;
+    const customerEmail = row.querySelector(".customer-email").textContent;
+    const joinedDate = row.querySelectorAll("td")[1].textContent;
+
+    // Count total requests
+    const vehicleVerifications = parseInt(
+      row.querySelectorAll("td")[2].textContent
     );
-    toggleEmptyState(noCourierData, globalCouriersTable, courierReq === 0);
-    toggleEmptyState(noAirData, airFreightsTable, airReq === 0);
-    toggleEmptyState(noSeaData, seaFreightsTable, seaReq === 0);
+    const globalCouriers = parseInt(row.querySelectorAll("td")[3].textContent);
+    const airFreights = parseInt(row.querySelectorAll("td")[4].textContent);
+    const seaFreights = parseInt(row.querySelectorAll("td")[5].textContent);
+    const totalRequests =
+      vehicleVerifications + globalCouriers + airFreights + seaFreights;
 
-    // Simulate data for tables (for design purposes only)
-    if (vehicleReq > 0)
-      populateVehicleTable(vehicleVerificationsTable, vehicleReq, userId);
-    if (courierReq > 0)
-      populateCourierTable(globalCouriersTable, courierReq, userId);
-    if (airReq > 0) populateAirTable(airFreightsTable, airReq, userId);
-    if (seaReq > 0) populateSeaTable(seaFreightsTable, seaReq, userId);
+    const status = row.querySelector(".badge").textContent;
+    const statusClass = row
+      .querySelector(".badge")
+      .classList.contains("badge-active")
+      ? "badge-active"
+      : "badge-inactive";
+
+    // Populate modal with data
+    modalCustomerName.textContent = customerName;
+    modalCustomerEmail.textContent = customerEmail;
+    modalCustomerJoined.textContent = joinedDate;
+    modalCustomerRequests.textContent = `${totalRequests} total requests`;
+    modalCustomerStatus.textContent = status;
+    modalCustomerStatus.className = `badge ${statusClass}`;
+
+    // Create activity items based on service usage
+    modalActivityList.innerHTML = "";
+
+    if (vehicleVerifications > 0) {
+      const activityItem = createActivityItem(
+        "Vehicle Verification",
+        `${customerName} has ${vehicleVerifications} vehicle verification requests.`
+      );
+      modalActivityList.appendChild(activityItem);
+    }
+
+    if (globalCouriers > 0) {
+      const activityItem = createActivityItem(
+        "Global Courier",
+        `${customerName} has ${globalCouriers} global courier requests.`
+      );
+      modalActivityList.appendChild(activityItem);
+    }
+
+    if (airFreights > 0) {
+      const activityItem = createActivityItem(
+        "Air Freight",
+        `${customerName} has ${airFreights} air freight requests.`
+      );
+      modalActivityList.appendChild(activityItem);
+    }
+
+    if (seaFreights > 0) {
+      const activityItem = createActivityItem(
+        "Sea Freight",
+        `${customerName} has ${seaFreights} sea freight requests.`
+      );
+      modalActivityList.appendChild(activityItem);
+    }
+
+    // If no activities, show message
+    if (modalActivityList.children.length === 0) {
+      const noActivity = document.createElement("div");
+      noActivity.className = "activity-item";
+      noActivity.innerHTML =
+        '<div class="activity-details">No activity recorded for this customer.</div>';
+      modalActivityList.appendChild(noActivity);
+    }
 
     // Show modal
-    $(customerDetailsModal).modal("show");
+    customerModal.style.display = "flex";
   }
 
-  function toggleEmptyState(emptyStateElement, tableElement, isEmpty) {
-    if (isEmpty) {
-      tableElement.parentElement.style.display = "none";
-      emptyStateElement.style.display = "block";
-    } else {
-      tableElement.parentElement.style.display = "block";
-      emptyStateElement.style.display = "none";
-    }
-  }
+  // Create activity item element
+  function createActivityItem(type, details) {
+    const item = document.createElement("div");
+    item.className = "activity-item";
 
-  // Simulate populating tables for design purposes
-  function populateVehicleTable(tableElement, count, userId) {
-    tableElement.innerHTML = "";
+    const header = document.createElement("div");
+    header.className = "activity-header";
 
-    const statuses = ["pending", "completed", "in-progress"];
-    const statusClasses = {
-      pending: "badge-warning",
-      completed: "badge-success",
-      "in-progress": "badge-info",
-    };
+    const typeSpan = document.createElement("span");
+    typeSpan.className = "activity-type";
+    typeSpan.textContent = type;
 
-    for (let i = 1; i <= count; i++) {
-      const randomStatus =
-        statuses[Math.floor(Math.random() * statuses.length)];
-      const date = new Date();
-      date.setDate(date.getDate() - Math.floor(Math.random() * 30));
-
-      const row = document.createElement("tr");
-      row.innerHTML = `
-          <td>V${userId}${i}</td>
-          <td>${date.toLocaleDateString()}</td>
-          <td>C-${Math.floor(1000000 + Math.random() * 9000000)}</td>
-          <td>+234 ${Math.floor(7000000000 + Math.random() * 999999999)}</td>
-          <td><span class="badge ${
-            statusClasses[randomStatus]
-          }">${randomStatus}</span></td>
-          <td>
-            <button class="btn btn-sm btn-primary action-btn">View</button>
-          </td>
-        `;
-      tableElement.appendChild(row);
-    }
-  }
-
-  function populateCourierTable(tableElement, count, userId) {
-    tableElement.innerHTML = "";
-
-    const companies = ["DHL", "FedEx", "UPS", "USPS", "TNT Express"];
-    const statuses = ["pending", "delivered", "in-transit"];
-    const statusClasses = {
-      pending: "badge-warning",
-      delivered: "badge-success",
-      "in-transit": "badge-info",
-    };
-
-    for (let i = 1; i <= count; i++) {
-      const randomCompany =
-        companies[Math.floor(Math.random() * companies.length)];
-      const randomStatus =
-        statuses[Math.floor(Math.random() * statuses.length)];
-      const date = new Date();
-      date.setDate(date.getDate() - Math.floor(Math.random() * 30));
-
-      const row = document.createElement("tr");
-      row.innerHTML = `
-          <td>C${userId}${i}</td>
-          <td>${date.toLocaleDateString()}</td>
-          <td>${randomCompany}</td>
-          <td>${randomCompany.substring(0, 2)}${Math.floor(
-        10000000 + Math.random() * 90000000
-      )}</td>
-          <td><span class="badge ${
-            statusClasses[randomStatus]
-          }">${randomStatus}</span></td>
-          <td>
-            <button class="btn btn-sm btn-primary action-btn">View</button>
-          </td>
-        `;
-      tableElement.appendChild(row);
-    }
-  }
-
-  function populateAirTable(tableElement, count, userId) {
-    tableElement.innerHTML = "";
-
-    const types = ["Import", "Export"];
-    const statuses = ["pending", "cleared", "in-transit"];
-    const statusClasses = {
-      pending: "badge-warning",
-      cleared: "badge-success",
-      "in-transit": "badge-info",
-    };
-
-    for (let i = 1; i <= count; i++) {
-      const randomType = types[Math.floor(Math.random() * types.length)];
-      const randomStatus =
-        statuses[Math.floor(Math.random() * statuses.length)];
-      const date = new Date();
-      date.setDate(date.getDate() - Math.floor(Math.random() * 30));
-
-      const row = document.createElement("tr");
-      row.innerHTML = `
-          <td>A${userId}${i}</td>
-          <td>${date.toLocaleDateString()}</td>
-          <td>${randomType}</td>
-          <td>${Math.floor(100000000 + Math.random() * 900000000)}</td>
-          <td><span class="badge ${
-            statusClasses[randomStatus]
-          }">${randomStatus}</span></td>
-          <td>
-            <button class="btn btn-sm btn-primary action-btn">View</button>
-          </td>
-        `;
-      tableElement.appendChild(row);
-    }
-  }
-
-  function populateSeaTable(tableElement, count, userId) {
-    tableElement.innerHTML = "";
-
-    const types = ["Import", "Export"];
-    const statuses = ["pending", "cleared", "in-transit"];
-    const statusClasses = {
-      pending: "badge-warning",
-      cleared: "badge-success",
-      "in-transit": "badge-info",
-    };
-
-    for (let i = 1; i <= count; i++) {
-      const randomType = types[Math.floor(Math.random() * types.length)];
-      const randomStatus =
-        statuses[Math.floor(Math.random() * statuses.length)];
-      const date = new Date();
-      date.setDate(date.getDate() - Math.floor(Math.random() * 30));
-
-      const row = document.createElement("tr");
-      row.innerHTML = `
-          <td>S${userId}${i}</td>
-          <td>${date.toLocaleDateString()}</td>
-          <td>${randomType}</td>
-          <td>MSCU${Math.floor(1000000 + Math.random() * 9000000)}</td>
-          <td><span class="badge ${
-            statusClasses[randomStatus]
-          }">${randomStatus}</span></td>
-          <td>
-            <button class="btn btn-sm btn-primary action-btn">View</button>
-          </td>
-        `;
-      tableElement.appendChild(row);
-    }
-  }
-
-  // Add form validation if needed
-  function validateForm(form) {
-    const inputs = form.querySelectorAll(
-      "input[required], select[required], textarea[required]"
-    );
-    let isValid = true;
-
-    inputs.forEach((input) => {
-      if (!input.value.trim()) {
-        input.classList.add("is-invalid");
-        isValid = false;
-      } else {
-        input.classList.remove("is-invalid");
-      }
+    const dateSpan = document.createElement("span");
+    dateSpan.className = "activity-date";
+    // Generate a random date within the last month
+    const randomDate = new Date();
+    randomDate.setDate(randomDate.getDate() - Math.floor(Math.random() * 30));
+    dateSpan.textContent = randomDate.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
 
-    return isValid;
+    header.appendChild(typeSpan);
+    header.appendChild(dateSpan);
+
+    const activityDetails = document.createElement("div");
+    activityDetails.className = "activity-details";
+    activityDetails.textContent = details;
+
+    item.appendChild(header);
+    item.appendChild(activityDetails);
+
+    return item;
   }
 
-  // Add animation effects
-  function addHoverAnimation() {
-    document.querySelectorAll(".info-card").forEach((card) => {
-      card.addEventListener("mouseenter", function () {
-        this.style.animation = "pulse 1.5s infinite";
-      });
+  // Close modal function
+  window.closeModal = function () {
+    customerModal.style.display = "none";
+  };
 
-      card.addEventListener("mouseleave", function () {
-        this.style.animation = "";
-      });
-    });
-  }
+  // Close modal when clicking outside
+  window.addEventListener("click", function (event) {
+    if (event.target === customerModal) {
+      closeModal();
+    }
+  });
 
-  // Initialize animations
-  addHoverAnimation();
+  // Initialize the table
+  updateTable();
 });

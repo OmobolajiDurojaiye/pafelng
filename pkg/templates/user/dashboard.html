@@ -17,17 +17,17 @@
       href="{{ url_for('static', filename='css/flash.css') }}"
     />
     <link
-    rel="apple-touch-icon"
-    sizes="180x180"
-    href="{{url_for('static', filename='/apple-icon-180x180.png')}}"
-  />
-  <link
-    rel="icon"
-    type="image/png"
-    sizes="192x192"
-    href="{{url_for('static', filename='/android-icon-192x192.png')}}"
-  />
-  <meta name="theme-color" content="#ffffff" />
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="{{url_for('static', filename='/apple-icon-180x180.png')}}"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="192x192"
+      href="{{url_for('static', filename='/android-icon-192x192.png')}}"
+    />
+    <meta name="theme-color" content="#ffffff" />
   </head>
   <body>
     <div class="dashboard-container">
@@ -56,15 +56,17 @@
             <li>
               <a href="{{ url_for('user.quotes_update') }}">
                 <i class="fas fa-comments"></i>
-                <span>Quotes Updates</span>
+                <span>Trackng Updates</span>
               </a>
             </li>
+            {#
             <li>
               <a href="#">
                 <i class="fas fa-map-marker-alt"></i>
                 <span>Tracking Update</span>
               </a>
             </li>
+            #}
             <li>
               <a href="#">
                 <i class="fas fa-history"></i>

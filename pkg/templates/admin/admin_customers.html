@@ -1,405 +1,989 @@
-{% extends "admin/admin_dashboard.html" %} {% block title %}Admin - Customers |
-PafelNG{% endblock %} {% block additional_css %}
-<link
-  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-  rel="stylesheet"
-/>
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='css/admin_customers.css') }}"
-/>
-{% endblock %} {% block customers_active %}class="active"{% endblock %} {% block
-dashboard_active %}{% endblock %} {% block content %}
-<div class="content-header">
-  <div class="container-fluid">
-    <div class="row mb-2">
-      <div class="col-sm-6">
-        <h1 class="m-0 text-primary">Customer Management</h1>
-      </div>
-      <div class="col-sm-6">
-        <ol class="breadcrumb float-sm-right">
-          <li class="breadcrumb-item">
-            <a href="{{ url_for('admin.admin_dashboard') }}">Dashboard</a>
-          </li>
-          <li class="breadcrumb-item active">Customers</li>
-        </ol>
-      </div>
-    </div>
-  </div>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pafelng Admin - Customer Management</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="{{url_for('static', filename='/apple-icon-180x180.png')}}"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="192x192"
+      href="{{url_for('static', filename='/android-icon-192x192.png')}}"
+    />
+    <meta name="theme-color" content="#ffffff" />
+    <style>
+      :root {
+        --primary-color: #4078a5; /* Stronger blue */
+        --primary-light: rgba(64, 120, 165, 0.1);
+        --primary-dark: #305d80; /* Darker blue for hover states */
+        --accent-color: #ff7f50; /* Coral - complements blue nicely */
+        --dark-color: #2c3e50; /* Slightly darker for better contrast */
+        --light-color: #f8f9fa;
+        --text-color: #333;
+        --white: #fff;
+        --gray: #6c757d;
+        --light-gray: #e9ecef;
+        --border-radius: 12px;
+        --card-border-radius: 16px;
+        --transition: all 0.3s ease;
+        --box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+        --card-hover-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
 
-<section class="content">
-  <div class="container-fluid">
-    <!-- Statistics Cards -->
-    <div class="row mb-4">
-      <div class="col-lg-3 col-6">
-        <div class="info-card">
-          <div class="info-card-content">
-            <h5>Total Customers</h5>
-            <h2>{{ users|length }}</h2>
-          </div>
-          <div class="info-card-icon">
-            <i class="fas fa-users"></i>
-          </div>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background-color: #f5f8fa; /* Slightly cooler background */
+        color: var(--text-color);
+        min-height: 100vh;
+      }
+
+      /* Header styles */
+      .header {
+        background: linear-gradient(
+          135deg,
+          var(--primary-color),
+          var(--primary-dark)
+        );
+        color: var(--white);
+        padding: 1.25rem 2.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: var(--box-shadow);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+
+      .back-btn {
+        font-size: 1rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background-color: rgba(255, 255, 255, 0.15);
+        padding: 0.6rem 1.2rem;
+        border-radius: var(--border-radius);
+        text-decoration: none;
+        color: var(--white);
+        transition: var(--transition);
+        border: none;
+        cursor: pointer;
+      }
+
+      .back-btn:hover {
+        background-color: rgba(255, 255, 255, 0.25);
+        transform: translateY(-2px);
+      }
+
+      .user-info {
+        display: flex;
+        align-items: center;
+        gap: 1.2rem;
+      }
+
+      .user-avatar {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--white);
+        font-weight: bold;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .user-name {
+        font-weight: 600;
+      }
+
+      .logout-btn {
+        background-color: rgba(255, 255, 255, 0.15);
+        color: var(--white);
+        border: none;
+        padding: 0.6rem 1.2rem;
+        border-radius: var(--border-radius);
+        cursor: pointer;
+        transition: var(--transition);
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .logout-btn:hover {
+        background-color: rgba(255, 255, 255, 0.25);
+        transform: translateY(-2px);
+      }
+
+      /* Main content */
+      .container {
+        max-width: 1400px;
+        margin: 2rem auto;
+        padding: 0 2.5rem;
+      }
+
+      .page-title {
+        margin-bottom: 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .page-title h1 {
+        font-size: 2.2rem;
+        color: var(--dark-color);
+        font-weight: 700;
+      }
+
+      .breadcrumb {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+        font-size: 0.95rem;
+        color: var(--gray);
+        background-color: var(--white);
+        padding: 0.5rem 1rem;
+        border-radius: var(--border-radius);
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03);
+      }
+
+      .breadcrumb a {
+        color: var(--primary-color);
+        text-decoration: none;
+        transition: var(--transition);
+      }
+
+      .breadcrumb a:hover {
+        color: var(--accent-color);
+      }
+
+      /* Stats cards */
+      .stats-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.8rem;
+        margin-bottom: 2.5rem;
+      }
+
+      .stat-card {
+        background-color: var(--white);
+        border-radius: var(--card-border-radius);
+        padding: 1.8rem;
+        box-shadow: var(--box-shadow);
+        display: flex;
+        flex-direction: column;
+        gap: 1.2rem;
+        transition: var(--transition);
+        border-top: 5px solid var(--primary-color);
+      }
+
+      .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--card-hover-shadow);
+      }
+
+      .stat-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .stat-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background-color: var(--primary-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: var(--primary-color);
+        box-shadow: 0 5px 15px rgba(64, 120, 165, 0.15);
+      }
+
+      .stat-title {
+        font-size: 1.1rem;
+        color: var(--gray);
+        font-weight: 500;
+      }
+
+      .stat-value {
+        font-size: 2.4rem;
+        font-weight: 700;
+        color: var(--dark-color);
+      }
+
+      /* Search and filter */
+      .actions-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+        gap: 1.2rem;
+        background-color: var(--white);
+        padding: 1.5rem;
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--box-shadow);
+      }
+
+      .search-container {
+        flex-grow: 1;
+        max-width: 500px;
+        position: relative;
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 0.9rem 1.2rem 0.9rem 3.2rem;
+        border: 1px solid var(--light-gray);
+        border-radius: var(--border-radius);
+        font-size: 1rem;
+        transition: var(--transition);
+        background-color: #f9fbfd;
+      }
+
+      .search-input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px var(--primary-light);
+        background-color: var(--white);
+      }
+
+      .search-icon {
+        position: absolute;
+        left: 1.2rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--gray);
+      }
+
+      .filter-container {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+      }
+
+      .filter-select {
+        padding: 0.9rem 1.2rem;
+        border: 1px solid var(--light-gray);
+        border-radius: var(--border-radius);
+        background-color: #f9fbfd;
+        font-size: 1rem;
+        min-width: 160px;
+        transition: var(--transition);
+        color: var(--dark-color);
+        cursor: pointer;
+      }
+
+      .filter-select:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px var(--primary-light);
+        background-color: var(--white);
+      }
+
+      /* Nav tabs */
+      .nav-tabs {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--light-gray);
+        padding-bottom: 0.5rem;
+      }
+
+      .nav-tab {
+        padding: 0.9rem 1.8rem;
+        border-radius: var(--border-radius) var(--border-radius) 0 0;
+        cursor: pointer;
+        transition: var(--transition);
+        color: var(--gray);
+        border-bottom: 3px solid transparent;
+        font-weight: 500;
+      }
+
+      .nav-tab:hover {
+        color: var(--primary-color);
+        background-color: var(--primary-light);
+      }
+
+      .nav-tab.active {
+        color: var(--primary-color);
+        border-bottom-color: var(--primary-color);
+        font-weight: 600;
+        background-color: var(--primary-light);
+      }
+
+      /* Customers table */
+      .customers-table-container {
+        background-color: var(--white);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--box-shadow);
+        overflow: hidden;
+      }
+
+      .customers-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .customers-table thead {
+        background-color: var(--primary-light);
+      }
+
+      .customers-table th {
+        text-align: left;
+        padding: 1.3rem 1.2rem;
+        font-weight: 600;
+        color: var(--primary-color);
+        border-bottom: 2px solid rgba(64, 120, 165, 0.2);
+      }
+
+      .customers-table td {
+        padding: 1.2rem;
+        border-top: 1px solid var(--light-gray);
+      }
+
+      .customers-table tr:hover {
+        background-color: rgba(64, 120, 165, 0.05);
+      }
+
+      .customer-name {
+        display: flex;
+        align-items: center;
+        gap: 0.9rem;
+      }
+
+      .customer-avatar {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background-color: var(--primary-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary-color);
+        font-weight: 600;
+        font-size: 1rem;
+        text-transform: uppercase;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      .customer-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+      }
+
+      .customer-email {
+        font-size: 0.85rem;
+        color: var(--gray);
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 0.4rem 0.9rem;
+        border-radius: 2rem;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-align: center;
+      }
+
+      .badge-active {
+        background-color: rgba(25, 135, 84, 0.15);
+        color: #198754;
+      }
+
+      .badge-inactive {
+        background-color: rgba(220, 53, 69, 0.15);
+        color: #dc3545;
+      }
+
+      .action-btn {
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        color: var(--gray);
+        transition: var(--transition);
+        font-size: 1rem;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .action-btn:hover {
+        background-color: var(--primary-light);
+        color: var(--primary-color);
+      }
+
+      .view-btn {
+        color: var(--primary-color);
+      }
+
+      .delete-btn {
+        color: #dc3545;
+      }
+
+      .pagination {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.2rem 1.5rem;
+        border-top: 1px solid var(--light-gray);
+      }
+
+      .pagination-info {
+        color: var(--gray);
+        font-weight: 500;
+      }
+
+      .pagination-controls {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .pagination-btn {
+        width: 38px;
+        height: 38px;
+        border-radius: var(--border-radius);
+        background-color: var(--white);
+        border: 1px solid var(--light-gray);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: var(--transition);
+        font-weight: 500;
+      }
+
+      .pagination-btn:hover,
+      .pagination-btn.active {
+        background-color: var(--primary-color);
+        color: var(--white);
+        border-color: var(--primary-color);
+      }
+
+      .pagination-btn.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      /* Customer details modal */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 100;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .modal-content {
+        background-color: var(--white);
+        border-radius: var(--card-border-radius);
+        max-width: 800px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+        position: relative;
+        animation: modalFadeIn 0.3s;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+      }
+
+      @keyframes modalFadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .modal-header {
+        padding: 1.8rem;
+        border-bottom: 1px solid var(--light-gray);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: var(--primary-light);
+        border-radius: var(--card-border-radius) var(--card-border-radius) 0 0;
+      }
+
+      .modal-title {
+        font-size: 1.6rem;
+        color: var(--primary-color);
+        font-weight: 600;
+      }
+
+      .close-modal {
+        background: transparent;
+        border: none;
+        font-size: 1.8rem;
+        cursor: pointer;
+        color: var(--gray);
+        width: 42px;
+        height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: var(--transition);
+      }
+
+      .close-modal:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+        color: var(--dark-color);
+      }
+
+      .modal-body {
+        padding: 2rem;
+      }
+
+      .customer-profile {
+        display: flex;
+        gap: 2rem;
+        margin-bottom: 2.5rem;
+      }
+
+      .profile-avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background-color: var(--primary-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary-color);
+        font-size: 2.2rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .profile-details {
+        flex-grow: 1;
+      }
+
+      .profile-name {
+        font-size: 1.8rem;
+        font-weight: 600;
+        margin-bottom: 0.8rem;
+        color: var(--dark-color);
+      }
+
+      .profile-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.8rem;
+        margin-bottom: 1.2rem;
+      }
+
+      .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        font-size: 1rem;
+        color: var(--gray);
+      }
+
+      .history-section {
+        margin-top: 2.5rem;
+      }
+
+      .section-title {
+        font-size: 1.4rem;
+        margin-bottom: 1.2rem;
+        color: var(--primary-color);
+        font-weight: 600;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid var(--primary-light);
+      }
+
+      .activity-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1.2rem;
+      }
+
+      .activity-item {
+        padding: 1.2rem;
+        border-radius: var(--border-radius);
+        background-color: #f9fbfd;
+        border-left: 4px solid var(--primary-color);
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03);
+        transition: var(--transition);
+      }
+
+      .activity-item:hover {
+        transform: translateX(3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      }
+
+      .activity-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.6rem;
+      }
+
+      .activity-type {
+        font-weight: 600;
+        color: var(--primary-color);
+      }
+
+      .activity-date {
+        font-size: 0.9rem;
+        color: var(--gray);
+      }
+
+      .activity-details {
+        font-size: 0.95rem;
+        color: var(--dark-color);
+      }
+
+      /* Responsive design */
+      @media (max-width: 992px) {
+        .stats-container {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .container {
+          padding: 0 1.5rem;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 0 1rem;
+        }
+
+        .stats-container {
+          grid-template-columns: 1fr;
+        }
+
+        .customers-table {
+          display: block;
+          overflow-x: auto;
+        }
+
+        .actions-bar {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .search-container {
+          max-width: 100%;
+        }
+
+        .filter-container {
+          justify-content: space-between;
+        }
+
+        .header {
+          padding: 1rem 1.5rem;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .header {
+          flex-direction: column;
+          gap: 1rem;
+          text-align: center;
+        }
+
+        .user-info {
+          flex-direction: column;
+        }
+
+        .page-title {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 1rem;
+        }
+
+        .modal-content {
+          width: 95%;
+        }
+
+        .customer-profile {
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+        }
+
+        .profile-meta {
+          justify-content: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <a href="{{ url_for('admin.admin_dashboard') }}" class="back-btn">
+        <i class="fas fa-chevron-left"></i> Back to Dashboard
+      </a>
+      <div class="user-info">
+        <div class="user-avatar">{{ admin.name[0] }}</div>
+        <span class="user-name">{{ admin.name }}</span>
+        <a href="{{ url_for('admin.logout') }}" class="logout-btn">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+      </div>
+    </header>
+
+    <!-- Main content -->
+    <div class="container">
+      <div class="page-title">
+        <h1>Customer Management</h1>
+        <div class="breadcrumb">
+          <a href="{{ url_for('admin.admin_dashboard') }}">Dashboard</a>
+          <i class="fas fa-chevron-right"></i>
+          <span>Customers</span>
         </div>
       </div>
 
-      <div class="col-lg-3 col-6">
-        <div class="info-card">
-          <div class="info-card-content">
-            <h5>Active Customers</h5>
-            <h2>
-              {{ users|selectattr('is_active', 'equalto', True)|list|length }}
-            </h2>
-          </div>
-          <div class="info-card-icon">
-            <i class="fas fa-user-check"></i>
-          </div>
-        </div>
+      <!-- Navigation tabs -->
+      <div class="nav-tabs">
+        <div class="nav-tab active">All Customers</div>
+        <div class="nav-tab">Active</div>
+        <div class="nav-tab">Inactive</div>
       </div>
 
-      <div class="col-lg-3 col-6">
-        <div class="info-card">
-          <div class="info-card-content">
-            <h5>Inactive Customers</h5>
-            <h2>
-              {{ users|selectattr('is_active', 'equalto', False)|list|length }}
-            </h2>
-          </div>
-          <div class="info-card-icon">
-            <i class="fas fa-user-slash"></i>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-lg-3 col-6">
-        <div class="info-card">
-          <div class="info-card-content">
-            <h5>New This Month</h5>
-            <h2>
-              {{ users|selectattr('created_at.month', 'equalto',
-              this_month)|selectattr('created_at.year', 'equalto',
-              this_year)|list|length }}
-            </h2>
-          </div>
-          <div class="info-card-icon">
-            <i class="fas fa-user-plus"></i>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Search and Filter -->
-    <div class="card customer-search-card mb-4">
-      <div class="card-body">
-        <div class="row">
-          <div class="col-md-6">
-            <div class="input-group">
-              <input
-                type="text"
-                class="form-control"
-                id="customerSearch"
-                placeholder="Search customers..."
-              />
-              <div class="input-group-append">
-                <button class="btn btn-primary" type="button">
-                  <i class="fas fa-search"></i>
-                </button>
-              </div>
+      <!-- Stats cards -->
+      <div class="stats-container">
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-icon">
+              <i class="fas fa-users"></i>
             </div>
           </div>
-          <div class="col-md-6">
-            <div class="d-flex justify-content-end">
-              <select
-                id="sortOptions"
-                class="form-control mr-2"
-                style="width: auto"
-              >
-                <option value="name">Sort by Name</option>
-                <option value="date">Sort by Date</option>
-                <option value="requests">Sort by Requests</option>
-              </select>
-              <select
-                id="statusFilter"
-                class="form-control"
-                style="width: auto"
-              >
-                <option value="all">All Status</option>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-              </select>
+          <div class="stat-title">Total Customers</div>
+          <div class="stat-value">{{ users|length }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-icon">
+              <i class="fas fa-user-check"></i>
             </div>
           </div>
+          <div class="stat-title">Active Customers</div>
+          <div class="stat-value">
+            {{ users|selectattr('is_active', 'equalto', True)|list|length }}
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-icon">
+              <i class="fas fa-clipboard-list"></i>
+            </div>
+          </div>
+          <div class="stat-title">Total Requests</div>
+          <div class="stat-value">
+            {{ user_stats.values()|map(attribute='total_requests')|sum }}
+          </div>
+        </div>
+        {#
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-icon">
+              <i class="fas fa-calendar-alt"></i>
+            </div>
+          </div>
+          <div class="stat-title">New This Month</div>
+          <div class="stat-value">
+            {{ users|selectattr('created_at', 'ge',
+            now().replace(day=1))|list|length }}
+          </div>
+        </div>
+        #}
+      </div>
+
+      <!-- Search and filter bar -->
+      <div class="actions-bar">
+        <div class="search-container">
+          <i class="fas fa-search search-icon"></i>
+          <input
+            type="text"
+            class="search-input"
+            id="customerSearch"
+            placeholder="Search customers..."
+          />
+        </div>
+        <div class="filter-container">
+          <select class="filter-select" id="sortFilter">
+            <option value="name">Sort by Name</option>
+            <option value="date">Sort by Date</option>
+            <option value="requests">Sort by Requests</option>
+          </select>
+          <select class="filter-select" id="statusFilter">
+            <option value="all">All Status</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
         </div>
       </div>
-    </div>
 
-    <!-- Customers Table -->
-    <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">All Customers</h3>
-      </div>
-      <div class="card-body table-responsive p-0">
-        <table class="table table-hover text-nowrap" id="customersTable">
+      <!-- Customers table -->
+      <div class="customers-table-container">
+        <table class="customers-table">
           <thead>
             <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Email</th>
+              <th>Customer</th>
               <th>Joined Date</th>
+              <th>Vehicle Verifications</th>
+              <th>Global Couriers</th>
+              <th>Air Freights</th>
+              <th>Sea Freights</th>
               <th>Status</th>
-              <th>Total Requests</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {% for user in users %}
-            <tr class="customer-row" data-userid="{{ user.id }}">
-              <td>{{ user.id }}</td>
-              <td>{{ user.name }}</td>
-              <td>{{ user.email }}</td>
-              <td>{{ user.created_at.strftime('%d %b, %Y') }}</td>
+            <tr>
+              <td>
+                <div class="customer-name">
+                  <div class="customer-avatar">{{ user.name[0] }}</div>
+                  <div class="customer-info">
+                    <div>{{ user.name }}</div>
+                    <div class="customer-email">{{ user.email }}</div>
+                  </div>
+                </div>
+              </td>
+              <td>{{ user.created_at.strftime('%b %d, %Y') }}</td>
+              <td>{{ user_stats[user.id]['vehicle_verifications'] }}</td>
+              <td>{{ user_stats[user.id]['global_couriers'] }}</td>
+              <td>{{ user_stats[user.id]['air_freights'] }}</td>
+              <td>{{ user_stats[user.id]['sea_freights'] }}</td>
               <td>
                 {% if user.is_active %}
-                <span class="badge badge-success">Active</span>
+                <span class="badge badge-active">Active</span>
                 {% else %}
-                <span class="badge badge-danger">Inactive</span>
+                <span class="badge badge-inactive">Inactive</span>
                 {% endif %}
               </td>
-              <td>{{ user_stats[user.id]['total_requests'] }}</td>
               <td>
-                <button
-                  class="btn btn-sm btn-primary view-details-btn"
-                  data-userid="{{ user.id }}"
-                >
-                  <i class="fas fa-eye"></i> View
-                </button>
+                <div style="display: flex; gap: 0.5rem">
+                  <button class="action-btn view-btn">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="action-btn">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="action-btn delete-btn">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </div>
               </td>
             </tr>
             {% endfor %}
           </tbody>
         </table>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- Customer Details Modal -->
-<div
-  class="modal fade"
-  id="customerDetailsModal"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="customerDetailsModalLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-xl" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="customerDetailsModalLabel">
-          Customer Details
-        </h5>
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="customer-profile-header">
-          <div class="row">
-            <div class="col-md-6">
-              <h3 class="customer-name">Customer Name</h3>
-              <p class="customer-email">
-                <i class="fas fa-envelope"></i> <span></span>
-              </p>
-              <p class="customer-joined">
-                <i class="fas fa-calendar-alt"></i> Joined: <span></span>
-              </p>
-            </div>
-            <div class="col-md-6">
-              <div class="customer-stats">
-                <div class="stat-item">
-                  <span class="stat-value" id="vehicleRequestCount">0</span>
-                  <span class="stat-label">Vehicle Verifications</span>
-                </div>
-                <div class="stat-item">
-                  <span class="stat-value" id="courierRequestCount">0</span>
-                  <span class="stat-label">Global Couriers</span>
-                </div>
-                <div class="stat-item">
-                  <span class="stat-value" id="airFreightCount">0</span>
-                  <span class="stat-label">Air Freights</span>
-                </div>
-                <div class="stat-item">
-                  <span class="stat-value" id="seaFreightCount">0</span>
-                  <span class="stat-label">Sea Freights</span>
-                </div>
-              </div>
-            </div>
+        <!-- Pagination -->
+        <div class="pagination">
+          <div class="pagination-info">
+            Showing <span>1</span> to
+            <span>{{ users|length if users|length < 10 else 10 }}</span> of
+            <span>{{ users|length }}</span> entries
+          </div>
+          <div class="pagination-controls">
+            <button class="pagination-btn disabled">
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="pagination-btn active">1</button>
+            {% if users|length > 10 %}
+            <button class="pagination-btn">2</button>
+            {% endif %} {% if users|length > 20 %}
+            <button class="pagination-btn">3</button>
+            {% endif %} {% if users|length > 30 %}
+            <button class="pagination-btn">
+              <i class="fas fa-ellipsis-h"></i>
+            </button>
+            {% endif %}
+            <button
+              class="pagination-btn{% if users|length <= 10 %} disabled{% endif %}"
+            >
+              <i class="fas fa-chevron-right"></i>
+            </button>
           </div>
         </div>
+      </div>
+    </div>
 
-        <ul class="nav nav-tabs" id="customerDetailsTabs" role="tablist">
-          <li class="nav-item">
-            <a
-              class="nav-link active"
-              id="vehicle-tab"
-              data-toggle="tab"
-              href="#vehicle"
-              role="tab"
-              >Vehicle Verifications</a
-            >
-          </li>
-          <li class="nav-item">
-            <a
-              class="nav-link"
-              id="courier-tab"
-              data-toggle="tab"
-              href="#courier"
-              role="tab"
-              >Global Couriers</a
-            >
-          </li>
-          <li class="nav-item">
-            <a
-              class="nav-link"
-              id="air-tab"
-              data-toggle="tab"
-              href="#air"
-              role="tab"
-              >Air Freights</a
-            >
-          </li>
-          <li class="nav-item">
-            <a
-              class="nav-link"
-              id="sea-tab"
-              data-toggle="tab"
-              href="#sea"
-              role="tab"
-              >Sea Freights</a
-            >
-          </li>
-        </ul>
-
-        <div class="tab-content mt-3" id="customerDetailsTabsContent">
-          <div class="tab-pane fade show active" id="vehicle" role="tabpanel">
-            <div class="table-responsive" id="vehicleVerificationsTable">
-              <table class="table table-hover">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Date</th>
-                    <th>C-Number</th>
-                    <th>Phone</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <!-- Will be populated via JavaScript -->
-                </tbody>
-              </table>
+    <!-- Customer Details Modal -->
+    <div class="modal" id="customerModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title">Customer Details</h2>
+          <button class="close-modal" onclick="closeModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="customer-profile">
+            <div class="profile-avatar">
+              <i class="fas fa-user"></i>
             </div>
-            <div class="no-data-message" id="noVehicleData">
-              <div class="empty-state">
-                <i class="fas fa-car-side fa-3x"></i>
-                <p>No vehicle verification requests found</p>
+            <div class="profile-details">
+              <h3 class="profile-name" id="modalCustomerName">Customer Name</h3>
+              <div class="profile-meta">
+                <div class="meta-item">
+                  <i class="fas fa-envelope"></i>
+                  <span id="modalCustomerEmail">example@email.com</span>
+                </div>
+                <div class="meta-item">
+                  <i class="fas fa-calendar"></i>
+                  <span id="modalCustomerJoined">January 1, 2025</span>
+                </div>
+                <div class="meta-item">
+                  <i class="fas fa-clipboard-list"></i>
+                  <span id="modalCustomerRequests">12 total requests</span>
+                </div>
+              </div>
+              <div id="modalCustomerStatus" class="badge badge-active">
+                Active
               </div>
             </div>
           </div>
 
-          <div class="tab-pane fade" id="courier" role="tabpanel">
-            <div class="table-responsive" id="globalCouriersTable">
-              <table class="table table-hover">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Date</th>
-                    <th>Company</th>
-                    <th>Tracking Number</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <!-- Will be populated via JavaScript -->
-                </tbody>
-              </table>
-            </div>
-            <div class="no-data-message" id="noCourierData">
-              <div class="empty-state">
-                <i class="fas fa-box fa-3x"></i>
-                <p>No global courier requests found</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="tab-pane fade" id="air" role="tabpanel">
-            <div class="table-responsive" id="airFreightsTable">
-              <table class="table table-hover">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Date</th>
-                    <th>Type</th>
-                    <th>Airwaybill</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <!-- Will be populated via JavaScript -->
-                </tbody>
-              </table>
-            </div>
-            <div class="no-data-message" id="noAirData">
-              <div class="empty-state">
-                <i class="fas fa-plane fa-3x"></i>
-                <p>No air freight requests found</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="tab-pane fade" id="sea" role="tabpanel">
-            <div class="table-responsive" id="seaFreightsTable">
-              <table class="table table-hover">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Date</th>
-                    <th>Type</th>
-                    <th>Tracking Number</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <!-- Will be populated via JavaScript -->
-                </tbody>
-              </table>
-            </div>
-            <div class="no-data-message" id="noSeaData">
-              <div class="empty-state">
-                <i class="fas fa-ship fa-3x"></i>
-                <p>No sea freight requests found</p>
-              </div>
+          <div class="history-section">
+            <h3 class="section-title">Request History</h3>
+            <div class="activity-list" id="modalActivityList">
+              <!-- Activity items will be inserted here by JavaScript -->
             </div>
           </div>
         </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-          Close
-        </button>
-      </div>
     </div>
-  </div>
-</div>
-{% endblock %} {% block additional_scripts %}
-<script src="{{ url_for('static', filename='js/admin_customers.js') }}"></script>
-{% endblock %}
+
+    <script src="{{ url_for('static', filename='js/admin_customers.js') }}"></script>
+  </body>
+</html>
