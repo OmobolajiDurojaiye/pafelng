@@ -13,17 +13,17 @@
       href="{{ url_for('static', filename='css/admin_requests.css') }}"
     />
     <link
-    rel="apple-touch-icon"
-    sizes="180x180"
-    href="{{url_for('static', filename='/apple-icon-180x180.png')}}"
-  />
-  <link
-    rel="icon"
-    type="image/png"
-    sizes="192x192"
-    href="{{url_for('static', filename='/android-icon-192x192.png')}}"
-  />
-  <meta name="theme-color" content="#ffffff" />
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="{{url_for('static', filename='/apple-icon-180x180.png')}}"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="192x192"
+      href="{{url_for('static', filename='/android-icon-192x192.png')}}"
+    />
+    <meta name="theme-color" content="#ffffff" />
   </head>
 
   <body>
@@ -84,8 +84,8 @@
         </div>
 
         <div class="requests-container">
-          {% if pending_verifications %} {% for verification in
-          pending_verifications %}
+          {% if vehicle_verifications %} {% for verification in
+          vehicle_verifications %}
           <div
             class="request-card"
             data-id="{{ verification.id }}"
@@ -136,8 +136,15 @@
               </div>
             </div>
             <div class="request-footer">
-              <span class="status-badge pending">
-                <i class="fas fa-clock"></i> Pending
+              <span class="status-badge {{ verification.verification_status }}">
+                {% if verification.verification_status == 'pending' %}
+                <i class="fas fa-clock"></i> Pending {% elif
+                verification.verification_status == 'processing' %}
+                <i class="fas fa-spinner"></i> Processing {% elif
+                verification.verification_status == 'completed' %}
+                <i class="fas fa-check-circle"></i> Completed {% elif
+                verification.verification_status == 'declined' %}
+                <i class="fas fa-times-circle"></i> Declined {% endif %}
               </span>
               <a
                 href="{{ url_for('admin.vehicle_verification_detail', id=verification.id) }}"
@@ -150,10 +157,8 @@
           {% endfor %} {% else %}
           <div class="empty-state">
             <i class="fas fa-clipboard-check"></i>
-            <h3>No Pending Verification Requests</h3>
-            <p>
-              There are no pending vehicle verification requests at this time.
-            </p>
+            <h3>No Verification Requests</h3>
+            <p>There are no vehicle verification requests at this time.</p>
           </div>
           {% endif %}
         </div>

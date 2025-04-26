@@ -1,7 +1,7 @@
 :root {
   --primary-color: #42b0d5;
   --primary-light: rgba(66, 176, 213, 0.1);
-  --accent-color: #ff7f50;
+  --accent-color: #42b0d5b3;
   --dark-color: #333;
   --light-color: #f8f9fa;
   --text-color: #333;
@@ -234,7 +234,7 @@ button {
 .slider-features span {
   color: var(--white);
   font-size: 1.1rem;
-  background-color: rgba(66, 176, 213, 0.7);
+  background-color: #42b0d5b3;
   padding: 0.4rem 1rem;
   border-radius: 20px;
   /* font-weight: 500; */

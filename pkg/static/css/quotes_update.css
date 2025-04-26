@@ -2,7 +2,7 @@
 :root {
   --primary-color: #42b0d5;
   --primary-light: rgba(66, 176, 213, 0.1);
-  --accent-color: #ff7f50; /* Coral - complements blue nicely */
+  --accent-color: #42b0d5b3;
   --accent-light: rgba(255, 127, 80, 0.1);
   --dark-color: #333;
   --light-color: #f8f9fa;

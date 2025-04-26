@@ -1,7 +1,7 @@
 :root {
   --primary-color: rgb(193, 211, 218);
   --primary-light: rgba(66, 176, 213, 0.1);
-  --accent-color: #ff7f50;
+  --accent-color: #42b0d5b3;
   --dark-color: #333;
   --light-color: #f8f9fa;
   --text-color: #333;
@@ -332,6 +332,16 @@ body {
 .status-badge.pending {
   background-color: rgba(255, 193, 7, 0.1);
   color: var(--pending-color);
+}
+
+.status-badge.completed {
+  background-color: rgba(7, 255, 102, 0.219);
+  color: var(--approved-color);
+}
+
+.status-badge.declined {
+  background-color: rgba(255, 7, 7, 0.1);
+  color: var(--rejected-color);
 }
 
 .action-button {

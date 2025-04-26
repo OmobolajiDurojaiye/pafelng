@@ -396,3 +396,110 @@ def send_message(quote_type, quote_id):
         flash(f'An error occurred: {str(e)}', 'error')
     
     return redirect(url_for('user.quote_details', quote_type=quote_type, quote_id=quote_id))
+
+@user_bp.route('/history')
+@login_required
+def user_history():
+    user = User.query.get(session['user_id'])
+    if not user:
+        session.clear()
+        flash('User not found', 'error')
+        return redirect(url_for('auth.login'))
+    
+    # Get all quotes for this user
+    vehicle_verifications = VehicleVerification.query.filter_by(user_id=user.id).all()
+    global_couriers = GlobalCourier.query.filter_by(user_id=user.id).all()
+    air_freights = AirFreight.query.filter_by(user_id=user.id).all()
+    sea_freights = SeaFreight.query.filter_by(user_id=user.id).all()
+    
+    # Combine and format for template
+    quotes = []
+    
+    for vv in vehicle_verifications:
+        # Count unread messages (from admin)
+        unread_messages = VehicleVerificationMessage.query.filter_by(
+            verification_id=vv.id, 
+            is_admin=True
+        ).count()  # In a real app, you'd track read status
+        
+        quotes.append({
+            'id': vv.id,
+            'prefix': 'VV',
+            'service_type': 'Vehicle Verification',
+            'status': vv.verification_status,
+            'created_at': vv.created_at,
+            'c_number': vv.c_number,
+            'unread_messages': unread_messages
+        })
+    
+    for gc in global_couriers:
+        # Count unread messages (from admin)
+        unread_messages = GlobalCourierMessage.query.filter_by(
+            courier_id=gc.id, 
+            is_admin=True
+        ).count()  # In a real app, you'd track read status
+        
+        quotes.append({
+            'id': gc.id,
+            'prefix': 'GC',
+            'service_type': 'Global Courier',
+            'status': gc.status,
+            'created_at': gc.created_at,
+            'courier_company': gc.courier_company,
+            'unread_messages': unread_messages
+        })
+    
+    # Add Air Freight quotes
+    for af in air_freights:
+        unread_messages = AirFreightMessage.query.filter_by(
+            freight_id=af.id, 
+            is_admin=True
+        ).count()
+        
+        quotes.append({
+            'id': af.id,
+            'prefix': 'AF',
+            'service_type': 'Air Freight',
+            'status': af.status,
+            'created_at': af.created_at,
+            'freight_type': af.freight_type,
+            'airwaybill_number': af.airwaybill_number,
+            'unread_messages': unread_messages
+        })
+    
+    # Add Sea Freight quotes
+    for sf in sea_freights:
+        unread_messages = SeaFreightMessage.query.filter_by(
+            freight_id=sf.id, 
+            is_admin=True
+        ).count()
+        
+        quotes.append({
+            'id': sf.id,
+            'prefix': 'SF',
+            'service_type': 'Sea Freight',
+            'status': sf.status,
+            'created_at': sf.created_at,
+            'freight_type': sf.freight_type,
+            'tracking_number': sf.tracking_number,
+            'unread_messages': unread_messages
+        })
+    
+    # Sort by creation date, newest first
+    quotes.sort(key=lambda x: x['created_at'], reverse=True)
+    
+    # Count quotes by status
+    total_quotes = len(quotes)
+    pending_quotes = sum(1 for q in quotes if q['status'] == 'pending')
+    processing_quotes = sum(1 for q in quotes if q['status'] == 'processing')
+    completed_quotes = sum(1 for q in quotes if q['status'] == 'completed')
+    
+    return render_template(
+        'user/user_history.html',  # Change the template name to match your file
+        user=user,
+        quotes=quotes,
+        total_quotes=total_quotes,
+        pending_quotes=pending_quotes,
+        processing_quotes=processing_quotes,
+        completed_quotes=completed_quotes
+    )

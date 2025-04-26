@@ -26,11 +26,10 @@
     <meta name="theme-color" content="#ffffff" />
     <style>
       :root {
-        --primary-color: #4078a5; /* Stronger blue */
-        --primary-light: rgba(64, 120, 165, 0.1);
-        --primary-dark: #305d80; /* Darker blue for hover states */
-        --accent-color: #ff7f50; /* Coral - complements blue nicely */
-        --dark-color: #2c3e50; /* Slightly darker for better contrast */
+        --primary-color: #42b0d5;
+        --primary-light: rgba(66, 176, 213, 0.1);
+        --accent-color: #42b0d5b3;
+        --dark-color: #333;
         --light-color: #f8f9fa;
         --text-color: #333;
         --white: #fff;
@@ -51,18 +50,14 @@
       }
 
       body {
-        background-color: #f5f8fa; /* Slightly cooler background */
+        background-color: #f5f8fa;
         color: var(--text-color);
         min-height: 100vh;
       }
 
       /* Header styles */
       .header {
-        background: linear-gradient(
-          135deg,
-          var(--primary-color),
-          var(--primary-dark)
-        );
+        background: var(--primary-color);
         color: var(--white);
         padding: 1.25rem 2.5rem;
         display: flex;
