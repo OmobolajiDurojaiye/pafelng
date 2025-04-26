@@ -6,6 +6,10 @@
     <title>My Sea Freight Submissions | Logistics App</title>
     <link
       rel="stylesheet"
+      href="{{ url_for('static', filename='css/preloader.css') }}"
+    />
+    <link
+      rel="stylesheet"
       href="{{ url_for('static', filename='css/flash.css') }}"
     />
     <link
@@ -270,6 +274,7 @@
     </div>
 
     <script src="{{ url_for('static', filename='js/flash.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/preloader.js') }}"></script>
     <script>
       function toggleDetails(id) {
         const element = document.getElementById(id);

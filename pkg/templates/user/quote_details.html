@@ -10,20 +10,24 @@
     />
     <link
       rel="stylesheet"
+      href="{{ url_for('static', filename='css/preloader.css') }}"
+    />
+    <link
+      rel="stylesheet"
       href="{{ url_for('static', filename='css/quotes_update.css') }}"
     />
     <link
-    rel="apple-touch-icon"
-    sizes="180x180"
-    href="{{url_for('static', filename='/apple-icon-180x180.png')}}"
-  />
-  <link
-    rel="icon"
-    type="image/png"
-    sizes="192x192"
-    href="{{url_for('static', filename='/android-icon-192x192.png')}}"
-  />
-  <meta name="theme-color" content="#ffffff" />
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="{{url_for('static', filename='/apple-icon-180x180.png')}}"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="192x192"
+      href="{{url_for('static', filename='/android-icon-192x192.png')}}"
+    />
+    <meta name="theme-color" content="#ffffff" />
   </head>
 
   <body>
@@ -234,5 +238,6 @@
     </div>
 
     <script src="{{ url_for('static', filename='js/quotes_update.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/preloader.js') }}"></script>
   </body>
 </html>

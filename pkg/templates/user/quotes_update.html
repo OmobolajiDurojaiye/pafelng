@@ -10,6 +10,10 @@
     />
     <link
       rel="stylesheet"
+      href="{{ url_for('static', filename='css/preloader.css') }}"
+    />
+    <link
+      rel="stylesheet"
       href="{{ url_for('static', filename='css/quotes_update.css') }}"
     />
     <link
@@ -186,5 +190,6 @@
     </div>
 
     <script src="{{ url_for('static', filename='js/quotes_update.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/preloader.js') }}"></script>
   </body>
 </html>
