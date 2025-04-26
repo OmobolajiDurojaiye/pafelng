@@ -9,6 +9,10 @@
     </title>
     <link
       rel="stylesheet"
+      href="{{ url_for('static', filename='css/preloader.css') }}"
+    />
+    <link
+      rel="stylesheet"
       href="{{ url_for('static', filename='css/home.css') }}"
     />
 
@@ -540,5 +544,6 @@
 
     {% block script %} {% endblock script %}
     <script src="{{ url_for('static', filename='js/home.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/preloader.js') }}"></script>
   </body>
 </html>
