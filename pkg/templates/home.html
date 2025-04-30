@@ -58,7 +58,7 @@
         </div>
         <ul class="nav-links">
           <li>
-            <a href="about.html"> About Us</a>
+            <a href="{{ url_for('index.about') }}">About Us</a>
           </li>
           <li>
             <a href="/#vehicle-doc"> Vehicle Doc Check</a>
@@ -164,21 +164,21 @@
           <div class="stat-icon">
             <i class="fas fa-globe"></i>
           </div>
-          <div class="stat-number" data-count="50">0</div>
+          <div class="stat-number" data-count="6">0</div>
           <div class="stat-label">Countries Served</div>
         </div>
         <div class="stat-item">
           <div class="stat-icon">
             <i class="fas fa-shipping-fast"></i>
           </div>
-          <div class="stat-number" data-count="10000">0</div>
+          <div class="stat-number" data-count="10">0</div>
           <div class="stat-label">Successful Deliveries</div>
         </div>
         <div class="stat-item">
           <div class="stat-icon">
             <i class="fas fa-users"></i>
           </div>
-          <div class="stat-number" data-count="500">0</div>
+          <div class="stat-number" data-count="3">0</div>
           <div class="stat-label">Happy Clients</div>
         </div>
         <div class="stat-item">
@@ -507,7 +507,7 @@
         <div class="footer-links">
           <h3>Quick Links</h3>
           <ul>
-            <li><a href="about.html">About Us</a></li>
+            <li><a href="{{ url_for('index.about') }}">About Us</a></li>
             <li><a href="/#services">Services</a></li>
             <li><a href="contact.html">Contact Us</a></li>
             <li><a href="{{ url_for('blog.all_blogs') }}">Blog</a></li>

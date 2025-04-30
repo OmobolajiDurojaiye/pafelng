@@ -19,6 +19,11 @@
   box-sizing: border-box;
 }
 
+a {
+  text-decoration: underline !important;
+  color: var(--accent-color) !important;
+}
+
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   line-height: 1.6;

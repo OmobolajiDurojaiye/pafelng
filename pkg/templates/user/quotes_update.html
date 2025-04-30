@@ -17,24 +17,24 @@
       href="{{ url_for('static', filename='css/quotes_update.css') }}"
     />
     <link
-    rel="apple-touch-icon"
-    sizes="180x180"
-    href="{{url_for('static', filename='/apple-icon-180x180.png')}}"
-  />
-  <link
-    rel="icon"
-    type="image/png"
-    sizes="192x192"
-    href="{{url_for('static', filename='/android-icon-192x192.png')}}"
-  />
-  <meta name="theme-color" content="#ffffff" />
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="{{url_for('static', filename='/apple-icon-180x180.png')}}"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="192x192"
+      href="{{url_for('static', filename='/android-icon-192x192.png')}}"
+    />
+    <meta name="theme-color" content="#ffffff" />
   </head>
 
   <body>
     <div class="page-container">
       <header class="page-header">
-        <a href="{{ url_for('user.dashboard') }}" class="back-button">
-          <i class="fas fa-arrow-left"></i> Back to Dashboard
+        <a href="javascript:history.back()" class="back-button">
+          <i class="fas fa-arrow-left"></i> Back
         </a>
         <h1>My Quotes</h1>
       </header>

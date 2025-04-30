@@ -164,12 +164,19 @@ ul {
   gap: 10px;
 }
 
-.profile-img img {
-  width: 40px;
-  height: 40px;
+.profile-avatar {
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid var(--primary-color);
+  background-color: var(--primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-color);
+  font-weight: lighter;
+  font-size: 3rem;
+  text-transform: uppercase;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
 }
 
 /* Service Cards */
@@ -467,5 +474,166 @@ ul {
 
   .stats-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* Main content hamburger menu toggle */
+.main-menu-toggle {
+  display: none;
+  cursor: pointer;
+  padding: 10px;
+  font-size: 1.5rem;
+  color: var(--primary-color);
+  position: relative;
+  z-index: 5;
+}
+
+/* Sidebar Overlay */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 99;
+  display: none;
+}
+
+/* Show overlay when active */
+.sidebar.active + .sidebar-overlay {
+  display: block;
+}
+
+/* Responsive Media Queries */
+@media (max-width: 992px) {
+  /* Sidebar styles for mobile */
+  .sidebar {
+    transform: translateX(-100%);
+    width: 250px;
+    z-index: 1000;
+    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .sidebar.active {
+    transform: translateX(0);
+  }
+
+  /* Make the toggle button visible and positioned correctly */
+  .mobile-toggle {
+    display: block;
+    font-size: 1.5rem;
+  }
+
+  /* Show the main content hamburger menu */
+  .main-menu-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+  }
+
+  .main-header .header-content {
+    position: relative;
+    padding-left: 50px;
+  }
+
+  .main-menu-toggle {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  /* Ensure main content takes up full width */
+  .main-content {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  /* Show overlay when sidebar is active */
+  .sidebar-overlay {
+    display: block;
+  }
+
+  /* Add a hamburger menu in the main header for larger mobile */
+  .main-header .mobile-toggle {
+    display: inline-block;
+    margin-right: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Adjustments for smaller screens */
+  .header-content {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+
+  .profile-section {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  /* Adjust service cards to stack vertically */
+  .service-cards,
+  .dashboard-cards {
+    grid-template-columns: 1fr;
+  }
+
+  /* Make sidebar take more width on very small screens */
+  .sidebar {
+    width: 80%;
+    max-width: 300px;
+  }
+
+  /* Ensure main content has appropriate padding */
+  .main-content {
+    padding: 15px;
+  }
+
+  /* Adjust card paddings for smaller screens */
+  .service-card,
+  .dashboard-card {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Extra small device adjustments */
+  .main-header {
+    padding: 15px 10px;
+  }
+
+  .header-content {
+    padding: 10px;
+  }
+
+  .welcome-section h1 {
+    font-size: 1.4rem;
+  }
+
+  /* Reduce sizes for better fit */
+  .service-icon,
+  .card-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .service-icon i,
+  .card-icon i {
+    font-size: 1.2rem;
+  }
+
+  .profile-avatar {
+    width: 50px;
+    height: 50px;
+    font-size: 2rem;
+  }
+
+  /* Make the sidebar a bit wider for better usability */
+  .sidebar {
+    width: 85%;
   }
 }

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/email.css') }}"
+    />
+  </head>
+  <body>
+    <div class="email-container">
+      <div class="email-header">
+        <h1 class="email-logo">
+          Pafel<span class="email-logo-accent">NG</span>
+        </h1>
+        <h2 class="email-title">Admin Registration Verification</h2>
+      </div>
+
+      <div class="email-body">
+        <div class="email-content">
+          <p>
+            <strong
+              >A new admin is trying to register on the PafelNG
+              platform.</strong
+            >
+          </p>
+          <p>
+            Please review the details below and determine if this registration
+            should be authorized.
+          </p>
+        </div>
+
+        <div class="email-data-box">
+          <div class="email-data-item">
+            <span class="email-data-label">Name:</span> {name}
+          </div>
+          <div class="email-data-item">
+            <span class="email-data-label">Email:</span> {email}
+          </div>
+        </div>
+
+        <p>
+          <strong
+            >Use this verification code to complete the registration
+            process:</strong
+          >
+        </p>
+
+        <div class="verification-code">{verification_code}</div>
+
+        <div class="email-notice">
+          <p>
+            If you did not authorize this registration, please ignore this email
+            and the code will expire automatically.
+          </p>
+        </div>
+      </div>
+
+      <div class="email-footer">
+        <p>&copy; 2025 PafelNG Logistics. All rights reserved.</p>
+        <p>Delivering Excellence Across Borders</p>
+      </div>
+    </div>
+
+    <!-- Template 2: Vehicle Verification Status Update -->
+    <div style="margin-top: 40px"></div>
+    <div class="email-container">
+      <div class="email-header">
+        <h1 class="email-logo">
+          Pafel<span class="email-logo-accent">NG</span>
+        </h1>
+        <h2 class="email-title">Vehicle Verification Update</h2>
+      </div>
+
+      <div class="email-body">
+        <div class="email-greeting">Dear {verification.name},</div>
+
+        <div class="email-content">
+          <p>
+            Your vehicle verification request (ID:
+            <strong>VV-{verification.id}</strong>) status has been updated.
+          </p>
+
+          <div style="text-align: center">
+            <div class="status-badge status-{new_status}">{new_status}</div>
+          </div>
+
+          <div class="message-content">{get_status_message(new_status)}</div>
+
+          <p>
+            If you have any questions about your request, please don't hesitate
+            to reply to this email or log in to your PafelNG account to view
+            more details.
+          </p>
+
+          <div style="text-align: center">
+            <a href="#" class="button">View Request Details</a>
+          </div>
+        </div>
+
+        <div class="email-notice">
+          <p>
+            This is an automated message. Please do not reply directly to this
+            email.
+          </p>
+        </div>
+      </div>
+
+      <div class="email-footer">
+        <p>&copy; 2025 PafelNG Logistics. All rights reserved.</p>
+        <p>Delivering Excellence Across Borders</p>
+      </div>
+    </div>
+
+    <!-- Template 3: Global Courier Status Update -->
+    <div style="margin-top: 40px"></div>
+    <div class="email-container">
+      <div class="email-header">
+        <h1 class="email-logo">
+          Pafel<span class="email-logo-accent">NG</span>
+        </h1>
+        <h2 class="email-title">Global Courier Update</h2>
+      </div>
+
+      <div class="email-body">
+        <div class="email-greeting">Dear {courier.name},</div>
+
+        <div class="email-content">
+          <p>
+            Your global courier request (ID: <strong>GC-{courier.id}</strong>)
+            status has been updated.
+          </p>
+
+          <div style="text-align: center">
+            <div class="status-badge status-{new_status}">{new_status}</div>
+          </div>
+
+          <div class="message-content">{get_status_message(new_status)}</div>
+
+          <p>
+            If you have any questions about your request, please don't hesitate
+            to reply to this email or log in to your PafelNG account to view
+            more details.
+          </p>
+
+          <div style="text-align: center">
+            <a href="#" class="button">View Request Details</a>
+          </div>
+        </div>
+
+        <div class="email-notice">
+          <p>
+            This is an automated message. Please do not reply directly to this
+            email.
+          </p>
+        </div>
+      </div>
+
+      <div class="email-footer">
+        <p>&copy; 2025 PafelNG Logistics. All rights reserved.</p>
+        <p>Delivering Excellence Across Borders</p>
+      </div>
+    </div>
+
+    <!-- Template 4: New Message Notification -->
+    <div style="margin-top: 40px"></div>
+    <div class="email-container">
+      <div class="email-header">
+        <h1 class="email-logo">
+          Pafel<span class="email-logo-accent">NG</span>
+        </h1>
+        <h2 class="email-title">New Message Notification</h2>
+      </div>
+
+      <div class="email-body">
+        <div class="email-greeting">Dear {verification.name},</div>
+
+        <div class="email-content">
+          <p>
+            You have received a new message regarding your vehicle verification
+            request (ID: <strong>VV-{verification.id}</strong>).
+          </p>
+
+          <div class="message-content">{message_content}</div>
+
+          <p>
+            Please log in to your PafelNG account to view the complete
+            conversation and any attachments.
+          </p>
+
+          <div style="text-align: center">
+            <a href="#" class="button">View Message</a>
+          </div>
+        </div>
+
+        <div class="email-notice">
+          <p>
+            For security reasons, attachments may not be displayed in this
+            email. Please log in to your account to view any attachments.
+          </p>
+        </div>
+      </div>
+
+      <div class="email-footer">
+        <p>&copy; 2025 PafelNG Logistics. All rights reserved.</p>
+        <p>Delivering Excellence Across Borders</p>
+      </div>
+    </div>
+
+    <!-- Template 5: Global Courier Message Notification -->
+    <div style="margin-top: 40px"></div>
+    <div class="email-container">
+      <div class="email-header">
+        <h1 class="email-logo">
+          Pafel<span class="email-logo-accent">NG</span>
+        </h1>
+        <h2 class="email-title">New Message Notification</h2>
+      </div>
+
+      <div class="email-body">
+        <div class="email-greeting">Dear {courier.name},</div>
+
+        <div class="email-content">
+          <p>
+            You have received a new message regarding your global courier
+            request (ID: <strong>GC-{courier.id}</strong>).
+          </p>
+
+          <div class="message-content">{message_content}</div>
+
+          <p>
+            Please log in to your PafelNG account to view the complete
+            conversation and any attachments.
+          </p>
+
+          <div style="text-align: center">
+            <a href="#" class="button">View Message</a>
+          </div>
+        </div>
+
+        <div class="email-notice">
+          <p>
+            For security reasons, attachments may not be displayed in this
+            email. Please log in to your account to view any attachments.
+          </p>
+        </div>
+      </div>
+
+      <div class="email-footer">
+        <p>&copy; 2025 PafelNG Logistics. All rights reserved.</p>
+        <p>Delivering Excellence Across Borders</p>
+      </div>
+    </div>
+  </body>
+</html>

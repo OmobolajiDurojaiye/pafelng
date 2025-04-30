@@ -60,7 +60,7 @@
             <li>
               <a href="{{ url_for('user.quotes_update') }}">
                 <i class="fas fa-comments"></i>
-                <span>Trackng Updates</span>
+                <span>Tracking Updates</span>
               </a>
             </li>
             {#
@@ -111,12 +111,7 @@
             </div>
             <div class="profile-section">
               <div class="profile-dropdown">
-                <div class="profile-img">
-                  <img
-                    src="{{ url_for('static', filename='images/profile-placeholder.png') }}"
-                    alt="Profile Image"
-                  />
-                </div>
+                <div class="profile-avatar">{{ user.name[0] }}</div>
               </div>
             </div>
           </div>
@@ -263,8 +258,10 @@
       </main>
     </div>
 
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+
     <script src="{{ url_for('static', filename='js/flash.js') }}"></script>
-    
+
     <script src="{{ url_for('static', filename='js/preloader.js') }}"></script>
   </body>
 </html>

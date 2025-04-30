@@ -172,7 +172,7 @@ def quotes_update():
         unread_messages = VehicleVerificationMessage.query.filter_by(
             verification_id=vv.id, 
             is_admin=True
-        ).count()  # In a real app, you'd track read status
+        ).count()
         
         quotes.append({
             'id': vv.id,
@@ -189,7 +189,7 @@ def quotes_update():
         unread_messages = GlobalCourierMessage.query.filter_by(
             courier_id=gc.id, 
             is_admin=True
-        ).count()  # In a real app, you'd track read status
+        ).count()
         
         quotes.append({
             'id': gc.id,
@@ -420,7 +420,7 @@ def user_history():
         unread_messages = VehicleVerificationMessage.query.filter_by(
             verification_id=vv.id, 
             is_admin=True
-        ).count()  # In a real app, you'd track read status
+        ).count()
         
         quotes.append({
             'id': vv.id,
@@ -437,7 +437,7 @@ def user_history():
         unread_messages = GlobalCourierMessage.query.filter_by(
             courier_id=gc.id, 
             is_admin=True
-        ).count()  # In a real app, you'd track read status
+        ).count()
         
         quotes.append({
             'id': gc.id,
@@ -495,7 +495,7 @@ def user_history():
     completed_quotes = sum(1 for q in quotes if q['status'] == 'completed')
     
     return render_template(
-        'user/user_history.html',  # Change the template name to match your file
+        'user/user_history.html',
         user=user,
         quotes=quotes,
         total_quotes=total_quotes,

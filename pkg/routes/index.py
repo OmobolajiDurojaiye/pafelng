@@ -7,6 +7,10 @@ index_bp = Blueprint('index', __name__)
 def home():
     return render_template('home.html')
 
+@index_bp.route('/about')
+def about():
+    return render_template('about.html')
+
 # Error handlers
 @index_bp.app_errorhandler(404)
 def page_not_found(e):

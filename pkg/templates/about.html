@@ -1,0 +1,748 @@
+{% extends "home.html" %} {% block title %}About Us - Pafel Logistics{% endblock
+title %} {% block extra_style %}
+<style>
+  /* About Page Specific Styles */
+  .about-hero {
+    position: relative;
+    height: 400px;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+      url("../static/images/about-hero.jpg");
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    text-align: center;
+  }
+
+  .about-hero-content {
+    max-width: 800px;
+    padding: 0 20px;
+  }
+
+  .about-hero h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    font-weight: 700;
+  }
+
+  .about-hero p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+  }
+
+  .about-badge {
+    background-color: #42b0d5;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: inline-block;
+    margin-bottom: 15px;
+  }
+
+  .about-section {
+    padding: 80px 0;
+  }
+
+  .about-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .about-intro {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  .about-intro h2 {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 20px;
+    position: relative;
+    padding-bottom: 15px;
+  }
+
+  .about-intro h2::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background-color: #42b0d5;
+  }
+
+  .about-intro p {
+    font-size: 1.1rem;
+    color: #666;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .mission-vision {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-bottom: 60px;
+  }
+
+  .mission-box,
+  .vision-box {
+    flex: 1;
+    min-width: 300px;
+    background: #fff;
+    border-radius: 10px;
+    padding: 40px 30px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease;
+  }
+
+  .mission-box:hover,
+  .vision-box:hover {
+    transform: translateY(-10px);
+  }
+
+  .box-icon {
+    font-size: 2.5rem;
+    color: #42b0d5;
+    margin-bottom: 20px;
+  }
+
+  .mission-box h3,
+  .vision-box h3 {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    color: #333;
+  }
+
+  .mission-box p,
+  .vision-box p {
+    color: #666;
+    line-height: 1.6;
+  }
+
+  .company-story {
+    padding: 60px 0;
+    background-color: #f9f9f9;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .story-content {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 40px;
+  }
+
+  .story-text {
+    flex: 1;
+    min-width: 300px;
+  }
+
+  .story-text h3 {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 20px;
+    position: relative;
+    padding-bottom: 15px;
+  }
+
+  .story-text h3::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background-color: #42b0d5;
+  }
+
+  .story-text p {
+    margin-bottom: 20px;
+    line-height: 1.6;
+    color: #666;
+  }
+
+  .story-highlight {
+    color: #42b0d5;
+    font-weight: 600;
+  }
+
+  .story-image {
+    flex: 1;
+    min-width: 300px;
+    position: relative;
+  }
+
+  .story-image img {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  }
+
+  .shape-bg {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    background-color: rgba(66, 176, 213, 0.1);
+    border-radius: 50%;
+    z-index: -1;
+  }
+
+  .shape-bg.left {
+    top: -150px;
+    left: -150px;
+  }
+
+  .shape-bg.right {
+    bottom: -150px;
+    right: -150px;
+  }
+
+  .team-section {
+    padding: 80px 0;
+  }
+
+  .team-header {
+    text-align: center;
+    margin-bottom: 50px;
+  }
+
+  .team-header h3 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 15px;
+  }
+
+  .team-header p {
+    color: #666;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 30px;
+  }
+
+  .team-member {
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease;
+  }
+
+  .team-member:hover {
+    transform: translateY(-10px);
+  }
+
+  .member-image {
+    height: 250px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .member-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .member-info {
+    padding: 20px;
+    text-align: center;
+  }
+
+  .member-info h4 {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+    color: #333;
+  }
+
+  .member-info span {
+    color: #42b0d5;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 15px;
+  }
+
+  .member-social {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+  }
+
+  .member-social a {
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f5f5f5;
+    color: #333;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+  }
+
+  .member-social a:hover {
+    background-color: #42b0d5;
+    color: #fff;
+  }
+
+  .values-section {
+    padding: 80px 0;
+    background-color: #f9f9f9;
+  }
+
+  .values-header {
+    text-align: center;
+    margin-bottom: 50px;
+  }
+
+  .values-header h3 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 15px;
+  }
+
+  .values-header p {
+    color: #666;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+  }
+
+  .value-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    border-bottom: 3px solid transparent;
+  }
+
+  .value-card:hover {
+    border-bottom: 3px solid #42b0d5;
+    transform: translateY(-10px);
+  }
+
+  .value-icon {
+    width: 70px;
+    height: 70px;
+    background-color: rgba(66, 176, 213, 0.1);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
+  .value-icon i {
+    font-size: 2rem;
+    color: #42b0d5;
+  }
+
+  .value-card h4 {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    color: #333;
+  }
+
+  .value-card p {
+    color: #666;
+    line-height: 1.6;
+  }
+
+  .cta-about {
+    padding: 80px 0;
+    background-color: #42b0d5;
+    color: #fff;
+    text-align: center;
+  }
+
+  .cta-about-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .cta-about h3 {
+    font-size: 2.2rem;
+    margin-bottom: 20px;
+  }
+
+  .cta-about p {
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+  }
+
+  .cta-about-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .cta-about-primary {
+    background-color: #fff;
+    color: #42b0d5;
+    padding: 12px 30px;
+    border-radius: 5px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-block;
+  }
+
+  .cta-about-primary:hover {
+    background-color: #333;
+    color: #fff;
+  }
+
+  .cta-about-secondary {
+    background-color: transparent;
+    color: #fff;
+    padding: 12px 30px;
+    border-radius: 5px;
+    font-weight: 600;
+    border: 2px solid #fff;
+    transition: all 0.3s ease;
+    display: inline-block;
+  }
+
+  .cta-about-secondary:hover {
+    background-color: #fff;
+    color: #42b0d5;
+  }
+
+  @media (max-width: 768px) {
+    .about-hero h1 {
+      font-size: 2.5rem;
+    }
+
+    .mission-vision {
+      flex-direction: column;
+    }
+
+    .story-content {
+      flex-direction: column;
+    }
+
+    .cta-about-buttons {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+</style>
+{% endblock extra_style %} {% block content %}
+<!-- About Hero Section -->
+<section class="about-hero">
+  <div class="about-hero-content">
+    <span class="about-badge">The Power of Zero Delay</span>
+    <h1>Who We Are</h1>
+    <p>
+      PAF Engineering & Logistics Limited - Eliminating delays, maximizing
+      productivity
+    </p>
+  </div>
+</section>
+
+<!-- About Introduction -->
+<section class="about-section">
+  <div class="about-container">
+    <div class="about-intro">
+      <h2>About Pafel Logistics</h2>
+      <p>
+        At Pafel, we're driven by a singular mission: to eliminate delays in
+        logistics and ensure that your productivity never falters. With our
+        dedication to excellence and innovation, we strive to provide seamless
+        logistics solutions that keep your business moving forward.
+      </p>
+    </div>
+
+    <!-- Mission & Vision -->
+    <div class="mission-vision">
+      <div class="mission-box">
+        <div class="box-icon">
+          <i class="fas fa-bullseye"></i>
+        </div>
+        <h3>Our Mission</h3>
+        <p>
+          To eliminate delays in logistics operations through innovative
+          solutions and strategic partnerships, ensuring our clients achieve
+          maximum productivity and operational efficiency.
+        </p>
+      </div>
+      <div class="vision-box">
+        <div class="box-icon">
+          <i class="fas fa-eye"></i>
+        </div>
+        <h3>Our Vision</h3>
+        <p>
+          To become the leading logistics provider known for reliability,
+          innovation, and the power of zero delay - setting new standards in the
+          global logistics industry.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Company Story -->
+<section class="company-story">
+  <div class="shape-bg left"></div>
+  <div class="shape-bg right"></div>
+  <div class="about-container">
+    <div class="story-content">
+      <div class="story-text">
+        <h3>Our Journey</h3>
+        <p>
+          Founded two years ago, Pafel emerged from a vision to transform
+          logistics challenges into opportunities for growth. We recognized that
+          in today's fast-paced world, even the smallest delay can have a
+          massive ripple effect on operations.
+        </p>
+        <p>
+          In <span class="story-highlight">2024</span>, we took an important
+          step forward by officially incorporating as
+          <span class="story-highlight"
+            >PAF Engineering & Logistics Limited</span
+          >, solidifying our commitment to providing innovative and reliable
+          solutions for your logistics needs.
+        </p>
+        <p>
+          Whether it's optimizing supply chains, streamlining delivery
+          processes, or implementing cutting-edge technologies, our goal is
+          clear—maximize your efficiency by removing delays from the equation.
+        </p>
+        <p>
+          With a team of experts who are passionate about logistics and
+          productivity, Pafel is here to make sure your business runs smoothly,
+          every step of the way. We're not just solving problems; we're building
+          a future where your operations are always ahead of the curve.
+        </p>
+      </div>
+      <div class="story-image">
+        <img
+          src="{{ url_for('static', filename='images/about-story.jpg') }}"
+          alt="Pafel Logistics Journey"
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Our Values -->
+<section class="values-section">
+  <div class="about-container">
+    <div class="values-header">
+      <h3>Our Core Values</h3>
+      <p>The principles that guide everything we do at Pafel Logistics</p>
+    </div>
+    <div class="values-grid">
+      <div class="value-card">
+        <div class="value-icon">
+          <i class="fas fa-bolt"></i>
+        </div>
+        <h4>Zero Delay</h4>
+        <p>
+          We are committed to eliminating delays at every step of the logistics
+          process, ensuring maximum efficiency for our clients.
+        </p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">
+          <i class="fas fa-shield-alt"></i>
+        </div>
+        <h4>Reliability</h4>
+        <p>
+          We deliver on our promises, maintaining consistency and dependability
+          in all our services and operations.
+        </p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">
+          <i class="fas fa-lightbulb"></i>
+        </div>
+        <h4>Innovation</h4>
+        <p>
+          We continuously seek new and better ways to solve logistics challenges
+          and improve our service offerings.
+        </p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">
+          <i class="fas fa-handshake"></i>
+        </div>
+        <h4>Partnership</h4>
+        <p>
+          We build lasting relationships with our clients, treating their
+          business goals as our own and working collaboratively towards success.
+        </p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">
+          <i class="fas fa-globe"></i>
+        </div>
+        <h4>Global Perspective</h4>
+        <p>
+          We understand the interconnected nature of today's business world and
+          provide solutions that work across borders and cultures.
+        </p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">
+          <i class="fas fa-chart-line"></i>
+        </div>
+        <h4>Continuous Improvement</h4>
+        <p>
+          We are never satisfied with the status quo, always striving to enhance
+          our processes, services, and results.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Our Team -->
+<section class="team-section">
+  <div class="about-container">
+    <div class="team-header">
+      <h3>Meet Our Leadership Team</h3>
+      <p>
+        Dedicated professionals with extensive experience in logistics and
+        supply chain management
+      </p>
+    </div>
+    <div class="team-grid">
+      <div class="team-member">
+        <div class="member-image">
+          <img
+            src="{{ url_for('static', filename='images/team1.jpg') }}"
+            alt="Team Member"
+          />
+        </div>
+        <div class="member-info">
+          <h4>Philip Afolabi</h4>
+          <span>CEO & Founder</span>
+          <div class="member-social">
+            <a href="#"><i class="fab fa-linkedin"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-envelope"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="team-member">
+        <div class="member-image">
+          <img
+            src="{{ url_for('static', filename='images/team2.jpg') }}"
+            alt="Team Member"
+          />
+        </div>
+        <div class="member-info">
+          <h4>Sarah Johnson</h4>
+          <span>Operations Director</span>
+          <div class="member-social">
+            <a href="#"><i class="fab fa-linkedin"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-envelope"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="team-member">
+        <div class="member-image">
+          <img
+            src="{{ url_for('static', filename='images/team3.jpg') }}"
+            alt="Team Member"
+          />
+        </div>
+        <div class="member-info">
+          <h4>Michael Chang</h4>
+          <span>Global Logistics Manager</span>
+          <div class="member-social">
+            <a href="#"><i class="fab fa-linkedin"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-envelope"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="team-member">
+        <div class="member-image">
+          <img
+            src="{{ url_for('static', filename='images/team4.jpg') }}"
+            alt="Team Member"
+          />
+        </div>
+        <div class="member-info">
+          <h4>Aisha Oladipo</h4>
+          <span>Customer Relations Lead</span>
+          <div class="member-social">
+            <a href="#"><i class="fab fa-linkedin"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-envelope"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-about">
+  <div class="cta-about-content">
+    <h3>Experience The Power of Zero Delay</h3>
+    <p>
+      Join hundreds of satisfied clients who have transformed their logistics
+      operations with Pafel
+    </p>
+    <div class="cta-about-buttons">
+      <a href="/user/signup" class="cta-about-primary">Get Started Today</a>
+      <a href="contact.html" class="cta-about-secondary">Contact Our Team</a>
+    </div>
+  </div>
+</section>
+{% endblock content %} {% block script %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Animation on scroll for about page elements
+    const animateElements = () => {
+      const elements = document.querySelectorAll(
+        ".mission-box, .vision-box, .value-card, .team-member"
+      );
+      elements.forEach((element) => {
+        const position = element.getBoundingClientRect().top;
+        const screenPosition = window.innerHeight / 1.2;
+
+        if (position < screenPosition) {
+          element.style.opacity = 1;
+          element.style.transform = "translateY(0)";
+        }
+      });
+    };
+
+    // Initial setup for animation
+    document
+      .querySelectorAll(".mission-box, .vision-box, .value-card, .team-member")
+      .forEach((element) => {
+        element.style.opacity = 0;
+        element.style.transform = "translateY(20px)";
+        element.style.transition = "all 0.5s ease";
+      });
+
+    // Run on load and scroll
+    animateElements();
+    window.addEventListener("scroll", animateElements);
+  });
+</script>
+{% endblock script %}

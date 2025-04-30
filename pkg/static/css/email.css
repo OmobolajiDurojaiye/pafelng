@@ -1,0 +1,166 @@
+/* Base email styles */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  line-height: 1.6;
+}
+
+/* Master Template */
+.email-container {
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e9ecef;
+}
+
+.email-header {
+  background-color: #42b0d5;
+  color: white;
+  padding: 20px 30px;
+  text-align: center;
+}
+
+.email-logo {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+.email-logo-accent {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.email-title {
+  font-size: 18px;
+  margin: 10px 0 0;
+  font-weight: normal;
+}
+
+.email-body {
+  padding: 30px;
+  color: #333;
+}
+
+.email-greeting {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.email-content {
+  margin-bottom: 25px;
+}
+
+.email-data-box {
+  background-color: rgba(66, 176, 213, 0.1);
+  border-left: 4px solid #42b0d5;
+  padding: 15px 20px;
+  margin: 20px 0;
+  border-radius: 0 8px 8px 0;
+}
+
+.email-data-item {
+  margin: 8px 0;
+}
+
+.email-data-label {
+  font-weight: bold;
+  color: #42b0d5;
+  display: inline-block;
+  width: 140px;
+}
+
+.verification-code {
+  font-family: "Courier New", monospace;
+  font-size: 24px;
+  letter-spacing: 5px;
+  text-align: center;
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  margin: 20px 0;
+  border: 1px dashed #42b0d5;
+  color: #333;
+  font-weight: bold;
+}
+
+.email-notice {
+  font-style: italic;
+  color: #6c757d;
+  margin-top: 25px;
+  font-size: 14px;
+  border-top: 1px solid #e9ecef;
+  padding-top: 15px;
+}
+
+.email-footer {
+  background-color: #f8f9fa;
+  color: #6c757d;
+  padding: 20px 30px;
+  text-align: center;
+  font-size: 14px;
+  border-top: 1px solid #e9ecef;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 30px;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 1px;
+  margin: 10px 0;
+}
+
+.status-pending {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.status-processing {
+  background-color: #cce5ff;
+  color: #004085;
+}
+
+.status-completed {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status-declined {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.button {
+  display: inline-block;
+  background-color: #42b0d5;
+  color: white;
+  text-decoration: none;
+  padding: 12px 25px;
+  border-radius: 6px;
+  font-weight: bold;
+  margin: 15px 0;
+  text-align: center;
+}
+
+.message-content {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  margin: 10px 0 20px;
+  border-left: 4px solid #42b0d5;
+}
+
+/* Responsive design */
+@media only screen and (max-width: 620px) {
+  .email-container {
+    width: 100%;
+    border-radius: 0;
+  }
+}

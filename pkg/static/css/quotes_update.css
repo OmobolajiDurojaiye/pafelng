@@ -176,7 +176,6 @@ body {
 
 .search-input:focus {
   border-color: var(--accent-color);
-  box-shadow: 0 2px 8px rgba(255, 127, 80, 0.2);
   outline: none;
 }
 
@@ -224,7 +223,6 @@ body {
 
 .filter-select:focus {
   border-color: var(--accent-color);
-  box-shadow: 0 2px 8px rgba(255, 127, 80, 0.2);
   outline: none;
 }
 
@@ -485,13 +483,10 @@ body {
 .accent-button {
   background-color: var(--accent-color);
   color: var(--white);
-  box-shadow: 0 4px 10px rgba(255, 127, 80, 0.3);
 }
 
 .accent-button:hover {
-  background-color: #ff6a3c;
   transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(255, 127, 80, 0.4);
 }
 
 /* Quote Details Page */
@@ -770,7 +765,6 @@ body {
 
 .form-control:focus {
   border-color: var(--accent-color);
-  box-shadow: 0 2px 8px rgba(255, 127, 80, 0.2);
   outline: none;
 }
 
