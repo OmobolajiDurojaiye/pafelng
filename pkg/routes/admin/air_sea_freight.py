@@ -170,18 +170,23 @@ def update_air_freight_status(id):
             sender="durojaiyeomobolaji93@gmail.com",
             recipients=[freight.email]
         )
-        msg.body = f"""
-        Dear {freight.name},
-        
-        Your air freight request (ID: AF-{freight.id}) status has been updated to {new_status.capitalize()}.
-        
-        {get_status_message(new_status)}
-        
-        If you have any questions, please reply to this email.
-        
-        Regards,
-        Pafelng Team
+        msg.html = f"""
+        <html>
+        <body style="font-family: Arial, sans-serif; background-color: #f8f9fa; color: #333; padding: 20px;">
+            <div style="background-color: #ffffff; padding: 30px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); max-width: 600px; margin: auto;">
+            <h2 style="color: #42b0d5;">Air Freight Status Update</h2>
+            <p>Dear <strong>{freight.name}</strong>,</p>
+            <p>Your air freight request <strong>(ID: AF-{freight.id})</strong> status has been updated to:</p>
+            <p style="font-size: 20px; color: #42b0d5;"><strong>{new_status.capitalize()}</strong></p>
+            <p>{get_status_message(new_status)}</p>
+            <hr style="margin: 20px 0;">
+            <p>If you have any questions, simply reply to this email.</p>
+            <p style="color: #6c757d;">— PafelNG Logistics Team</p>
+            </div>
+        </body>
+        </html>
         """
+
         mail.send(msg)
         
         flash(f'Status updated to {new_status} successfully', 'success')
@@ -223,18 +228,22 @@ def update_sea_freight_status(id):
             sender="durojaiyeomobolaji93@gmail.com",
             recipients=[freight.email]
         )
-        msg.body = f"""
-        Dear {freight.name},
-        
-        Your sea freight request (ID: SF-{freight.id}) status has been updated to {new_status.capitalize()}.
-        
-        {get_status_message(new_status)}
-        
-        If you have any questions, please reply to this email.
-        
-        Regards,
-        Pafelng Team
+        msg.html = f"""
+        <html>
+        <body style="font-family: Arial, sans-serif; background-color: #f8f9fa; padding: 20px;">
+            <div style="background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); max-width: 600px; margin: auto;">
+            <h2 style="color: #42b0d5;">Sea Freight Request Status</h2>
+            <p>Hello <strong>{freight.name}</strong>,</p>
+            <p>Your sea freight request <strong>(ID: SF-{freight.id})</strong> has been marked as:</p>
+            <p style="font-size: 18px; color: #42b0d5;"><strong>{new_status.capitalize()}</strong></p>
+            <p>{get_status_message(new_status)}</p>
+            <p style="margin-top: 20px;">If you need help, feel free to reply.</p>
+            <p style="color: #6c757d;">Sincerely,<br>The PafelNG Team</p>
+            </div>
+        </body>
+        </html>
         """
+
         mail.send(msg)
         
         flash(f'Status updated to {new_status} successfully', 'success')
@@ -287,19 +296,23 @@ def send_air_freight_message(id):
             sender="durojaiyeomobolaji93@gmail.com", 
             recipients=[freight.email]
         )
-        msg.body = f"""
-        Dear {freight.name},
-        
-        You have received a new message regarding your air freight request (ID: AF-{freight.id}).
-        
-        Message:
-        {message_content}
-        
-        Please log in to your account to view the complete conversation and any attachments.
-        
-        Regards,
-        Pafelng Team
+        msg.html = f"""
+        <html>
+        <body style="font-family: Arial, sans-serif; background-color: #f8f9fa; color: #333; padding: 20px;">
+            <div style="background-color: #ffffff; padding: 30px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); max-width: 600px; margin: auto;">
+            <h2 style="color: #42b0d5;">New Message About Your Air Freight</h2>
+            <p>Hi <strong>{freight.name}</strong>,</p>
+            <p>You've received a new message regarding your air freight request (ID: AF-{freight.id}):</p>
+            <blockquote style="border-left: 5px solid #42b0d5; padding-left: 15px; margin: 15px 0; color: #333;">
+                {message_content}
+            </blockquote>
+            <p>Please log into your dashboard to view the full conversation or download any attachments.</p>
+            <p style="color: #6c757d;">Thanks,<br>PafelNG Logistics Team</p>
+            </div>
+        </body>
+        </html>
         """
+
         
         if attachment_path and original_filename:
             with current_app.open_resource(os.path.join(current_app.root_path, 'static', attachment_path)) as fp:
@@ -357,19 +370,23 @@ def send_sea_freight_message(id):
             sender="durojaiyeomobolaji93@gmail.com", 
             recipients=[freight.email]
         )
-        msg.body = f"""
-        Dear {freight.name},
-        
-        You have received a new message regarding your sea freight request (ID: SF-{freight.id}).
-        
-        Message:
-        {message_content}
-        
-        Please log in to your account to view the complete conversation and any attachments.
-        
-        Regards,
-        Pafelng Team
+        msg.html = f"""
+        <html>
+        <body style="font-family: Arial, sans-serif; background-color: #f8f9fa; padding: 20px;">
+            <div style="background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); max-width: 600px; margin: auto;">
+            <h2 style="color: #42b0d5;">Message From PafelNG</h2>
+            <p>Dear <strong>{freight.name}</strong>,</p>
+            <p>You received a message regarding your sea freight request (ID: SF-{freight.id}):</p>
+            <div style="margin: 20px 0; padding: 15px; background-color: rgba(66, 176, 213, 0.1); border-radius: 10px;">
+                {message_content}
+            </div>
+            <p>Please login to access more details or respond.</p>
+            <p style="color: #6c757d;">Best regards,<br>PafelNG Support</p>
+            </div>
+        </body>
+        </html>
         """
+
         
         if attachment_path and original_filename:
             with current_app.open_resource(os.path.join(current_app.root_path, 'static', attachment_path)) as fp:

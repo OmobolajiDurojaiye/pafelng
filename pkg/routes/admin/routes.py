@@ -24,7 +24,7 @@ def login_required(f):
     return decorated_function
 
 # Owner's email where verification codes will be sent
-OWNER_EMAIL = os.environ.get('MAIL_USERNAME', 'durojaiyeomobolaji93@gmail.com')
+OWNER_EMAIL = os.environ.get('MAIL_USERNAME', 'readmire95@gmail.com')
 
 # Helper function for status messages
 def get_status_message(status):
@@ -148,16 +148,21 @@ def admin_signup():
                 sender="durojaiyeomobolaji93@gmail.com", 
                 recipients=[OWNER_EMAIL]
             )
-            msg.body = f"""
-            A new admin is trying to register:
-            
-            Name: {name}
-            Email: {email}
-            
-            Verification Code: {verification_code}
-            
-            If you did not authorize this registration, please ignore this email.
+            msg.html = f"""
+            <html>
+            <body style="font-family: Arial, sans-serif; background-color: #f8f9fa; padding: 20px;">
+                <div style="background-color: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); max-width: 600px; margin: auto;">
+                <h2 style="color: #42b0d5;">New Admin Signup Verification</h2>
+                <p><strong>{name}</strong> is trying to register as an admin on PafelNG with the email: <strong>{email}</strong>.</p>
+                <p>Please use the verification code below to complete the registration:</p>
+                <p style="font-size: 22px; font-weight: bold; color: #42b0d5; margin: 20px 0;">{verification_code}</p>
+                <p>If you didn't initiate this, kindly ignore this email.</p>
+                <p style="color: #6c757d;">— PafelNG Admin System</p>
+                </div>
+            </body>
+            </html>
             """
+
             mail.send(msg)
             
             # Redirect to verification page
@@ -382,18 +387,22 @@ def update_vehicle_verification_status(id):
             sender="durojaiyeomobolaji93@gmail.com",
             recipients=[verification.email]
         )
-        msg.body = f"""
-        Dear {verification.name},
-        
-        Your vehicle verification request (ID: VV-{verification.id}) status has been updated to {new_status.capitalize()}.
-        
-        {get_status_message(new_status)}
-        
-        If you have any questions, please reply to this email.
-        
-        Regards,
-        Pafelng Team
+        msg.html = f"""
+        <html>
+        <body style="font-family: Arial, sans-serif; background-color: #f8f9fa; padding: 20px;">
+            <div style="background-color: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); max-width: 600px; margin: auto;">
+            <h2 style="color: #42b0d5;">Vehicle Verification Update</h2>
+            <p>Hi <strong>{verification.name}</strong>,</p>
+            <p>Your vehicle verification request <strong>(ID: VV-{verification.id})</strong> is now:</p>
+            <p style="font-size: 18px; color: #42b0d5;"><strong>{new_status.capitalize()}</strong></p>
+            <p>{get_status_message(new_status)}</p>
+            <p style="margin-top: 20px;">Need help? Just reply to this email.</p>
+            <p style="color: #6c757d;">— PafelNG Logistics Team</p>
+            </div>
+        </body>
+        </html>
         """
+
         mail.send(msg)
         
         flash(f'Status updated to {new_status} successfully', 'success')
@@ -435,18 +444,22 @@ def update_global_courier_status(id):
             sender="durojaiyeomobolaji93@gmail.com",
             recipients=[courier.email]
         )
-        msg.body = f"""
-        Dear {courier.name},
-        
-        Your global courier request (ID: GC-{courier.id}) status has been updated to {new_status.capitalize()}.
-        
-        {get_status_message(new_status)}
-        
-        If you have any questions, please reply to this email.
-        
-        Regards,
-        Pafelng Team
+        msg.html = f"""
+        <html>
+        <body style="font-family: Arial, sans-serif; background-color: #f8f9fa; padding: 20px;">
+            <div style="background-color: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); max-width: 600px; margin: auto;">
+            <h2 style="color: #42b0d5;">Global Courier Request Update</h2>
+            <p>Hello <strong>{courier.name}</strong>,</p>
+            <p>Your global courier request <strong>(ID: GC-{courier.id})</strong> status has been updated:</p>
+            <p style="font-size: 18px; color: #42b0d5;"><strong>{new_status.capitalize()}</strong></p>
+            <p>{get_status_message(new_status)}</p>
+            <p>Need help? Feel free to respond to this email.</p>
+            <p style="color: #6c757d;">— PafelNG Courier Unit</p>
+            </div>
+        </body>
+        </html>
         """
+
         mail.send(msg)
         
         flash(f'Status updated to {new_status} successfully', 'success')
@@ -499,19 +512,23 @@ def send_vehicle_verification_message(id):
             sender="durojaiyeomobolaji93@gmail.com", 
             recipients=[verification.email]
         )
-        msg.body = f"""
-        Dear {verification.name},
-        
-        You have received a new message regarding your vehicle verification request (ID: VV-{verification.id}).
-        
-        Message:
-        {message_content}
-        
-        Please log in to your account to view the complete conversation and any attachments.
-        
-        Regards,
-        Pafelng Team
+        msg.html = f"""
+        <html>
+        <body style="font-family: Arial, sans-serif; background-color: #f8f9fa; padding: 20px;">
+            <div style="background-color: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); max-width: 600px; margin: auto;">
+            <h2 style="color: #42b0d5;">Message Regarding Your Vehicle Verification</h2>
+            <p>Dear <strong>{verification.name}</strong>,</p>
+            <p>We've sent you a message regarding your vehicle verification (ID: VV-{verification.id}):</p>
+            <div style="margin: 20px 0; padding: 15px; background-color: rgba(66, 176, 213, 0.1); border-radius: 10px;">
+                {message_content}
+            </div>
+            <p>Login to your dashboard to continue the conversation or download any attachment.</p>
+            <p style="color: #6c757d;">Warm regards,<br>PafelNG Support Team</p>
+            </div>
+        </body>
+        </html>
         """
+
         
         if attachment_path and original_filename:
             with current_app.open_resource(os.path.join(current_app.root_path, 'static', attachment_path)) as fp:
@@ -569,19 +586,23 @@ def send_global_courier_message(id):
             sender="durojaiyeomobolaji93@gmail.com", 
             recipients=[courier.email]
         )
-        msg.body = f"""
-        Dear {courier.name},
-        
-        You have received a new message regarding your global courier request (ID: GC-{courier.id}).
-        
-        Message:
-        {message_content}
-        
-        Please log in to your account to view the complete conversation and any attachments.
-        
-        Regards,
-        Pafelng Team
+        msg.html = f"""
+        <html>
+        <body style="font-family: Arial, sans-serif; background-color: #f8f9fa; padding: 20px;">
+            <div style="background-color: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); max-width: 600px; margin: auto;">
+            <h2 style="color: #42b0d5;">Message Regarding Global Courier Request</h2>
+            <p>Hi <strong>{courier.name}</strong>,</p>
+            <p>Here's a message from our team about your global courier request (ID: GC-{courier.id}):</p>
+            <div style="margin: 20px 0; padding: 15px; background-color: rgba(66, 176, 213, 0.1); border-radius: 10px;">
+                {message_content}
+            </div>
+            <p>Log in to view full details or respond to the message.</p>
+            <p style="color: #6c757d;">With appreciation,<br>PafelNG Global Support</p>
+            </div>
+        </body>
+        </html>
         """
+
         
         if attachment_path and original_filename:
             with current_app.open_resource(os.path.join(current_app.root_path, 'static', attachment_path)) as fp:
