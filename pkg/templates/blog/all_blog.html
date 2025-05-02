@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,7 +10,7 @@
     />
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
     <link
       rel="apple-touch-icon"
@@ -26,28 +26,43 @@
     <meta name="theme-color" content="#ffffff" />
   </head>
   <body>
+    <div class="theme-toggle">
+      <button id="theme-switch" aria-label="Toggle dark mode">
+        <i class="fas fa-moon"></i>
+        <i class="fas fa-sun"></i>
+      </button>
+    </div>
+
     <header class="header">
       <div class="container">
-        <div class="logo">
-          <a
-            href="{{ url_for('blog.all_blogs') }}"
-            style="text-decoration: none !important; color: #000 !important"
-            >PafelNG Blogs</a
-          >
+        <div class="header-content">
+          <div class="logo">
+            <a href="{{ url_for('blog.all_blogs') }}">
+              <span class="logo-text">PafelNG Blogs</span>
+            </a>
+          </div>
+
+          <div class="header-actions">
+            <form
+              class="search-form"
+              action="{{ url_for('blog.search_blogs') }}"
+              method="get"
+            >
+              <input
+                type="text"
+                name="query"
+                placeholder="Search blogs..."
+                value="{{ search_query if search_query else '' }}"
+              />
+              <button type="submit" aria-label="Search">
+                <i class="fas fa-search"></i>
+              </button>
+            </form>
+            <button class="mobile-menu-toggle" aria-label="Toggle menu">
+              <i class="fas fa-bars"></i>
+            </button>
+          </div>
         </div>
-        <form
-          class="search-form"
-          action="{{ url_for('blog.search_blogs') }}"
-          method="get"
-        >
-          <input
-            type="text"
-            name="query"
-            placeholder="Search blogs..."
-            value="{{ search_query if search_query else '' }}"
-          />
-          <button type="submit"><i class="fas fa-search"></i></button>
-        </form>
       </div>
     </header>
 
@@ -60,6 +75,25 @@
             class="featured-post-link"
           >
             <div class="featured-post-content">
+              <div class="featured-post-info">
+                <div class="post-category">Featured</div>
+                <h2 class="post-title">{{ newest_post.title }}</h2>
+                <p class="post-excerpt">
+                  {{ newest_post.content|striptags|truncate(150) }}
+                </p>
+                <div class="post-meta">
+                  <span class="post-date"
+                    ><i class="far fa-calendar-alt"></i> {{
+                    newest_post.created_at.strftime('%B %d, %Y') }}</span
+                  >
+                  <span class="post-author"
+                    ><i class="far fa-user"></i> PafelNG</span
+                  >
+                  <span class="read-more"
+                    >Read Article <i class="fas fa-arrow-right"></i
+                  ></span>
+                </div>
+              </div>
               <div
                 class="featured-post-image"
                 {%
@@ -67,28 +101,31 @@
                 newest_post.cover_image
                 %}style="background-image: url('{{ url_for('static', filename=newest_post.cover_image.replace('\\', '/')) }}');"
                 {%
+                else
+                %}style="background-image: url('{{ url_for('static', filename='img/default-cover.jpg') }}');"
+                {%
                 endif
                 %}
-              >
-                <div class="featured-post-info">
-                  <span class="post-date"
-                    >{{ newest_post.created_at.strftime('%B %d, %Y') }}</span
-                  >
-                  <h2 class="post-title">{{ newest_post.title }}</h2>
-                  <div class="post-author">
-                    <span>PafelNG</span>
-                  </div>
-                </div>
-              </div>
+              ></div>
             </div>
           </a>
         </section>
         {% endif %}
 
         <section class="blog-posts">
-          <h2 class="section-title">Latest Posts</h2>
+          <div class="section-header">
+            <h2 class="section-title">Latest Articles</h2>
+            <div class="view-options">
+              <button class="view-option active" data-view="grid">
+                <i class="fas fa-th-large"></i>
+              </button>
+              <button class="view-option" data-view="list">
+                <i class="fas fa-list"></i>
+              </button>
+            </div>
+          </div>
 
-          <div class="posts-grid">
+          <div class="posts-grid" id="posts-container">
             {% for post in posts %}
             <article class="post-card">
               <a
@@ -101,14 +138,33 @@
                     src="{{ url_for('static', filename=post.cover_image.replace('\\', '/')) }}"
                     alt="{{ post.title }}"
                     class="post-image"
+                    loading="lazy"
                   />
                   {% else %}
-                  <div class="post-image post-image-placeholder"></div>
+                  <img
+                    src="{{ url_for('static', filename='img/default-cover.jpg') }}"
+                    alt="{{ post.title }}"
+                    class="post-image"
+                    loading="lazy"
+                  />
                   {% endif %}
-                  <div class="post-overlay">
-                    <h3 class="post-title">{{ post.title }}</h3>
+                </div>
+                <div class="post-content">
+                  <div class="post-category">Blog</div>
+                  <h3 class="post-title">{{ post.title }}</h3>
+                  <p class="post-excerpt">
+                    {{ post.content|striptags|truncate(100) }}
+                  </p>
+                  <div class="post-meta">
                     <span class="post-date"
-                      >{{ post.created_at.strftime('%B %d, %Y') }}</span
+                      ><i class="far fa-calendar-alt"></i> {{
+                      post.created_at.strftime('%B %d, %Y') }}</span
+                    >
+                    <span class="read-time"
+                      ><i class="far fa-clock"></i> {% set words =
+                      post.content|striptags|wordcount %}{{ (words /
+                      200)|round|int if (words / 200)|round|int > 0 else 1 }}
+                      min read</span
                     >
                   </div>
                 </div>
@@ -119,21 +175,101 @@
 
           {% if not posts %}
           <div class="no-posts">
+            <div class="no-posts-icon">
+              <i class="far fa-sad-tear"></i>
+            </div>
+            <h3>No posts found</h3>
             <p>
-              No posts found{% if search_query %} for "{{ search_query }}"{%
-              endif %}.
+              {% if search_query %}We couldn't find any posts matching "{{
+              search_query }}".{% else %}There are no posts available at the
+              moment.{% endif %}
             </p>
+            {% if search_query %}
+            <a href="{{ url_for('blog.all_blogs') }}" class="btn"
+              >Back to all posts</a
+            >
+            {% endif %}
           </div>
           {% endif %}
         </section>
       </div>
     </main>
 
+    <section class="newsletter-section">
+      <div class="container">
+        <div class="newsletter-wrapper">
+          <div class="newsletter-text">
+            <h2>Subscribe to our newsletter</h2>
+            <p>
+              Get notified about new articles and updates directly to your inbox
+            </p>
+          </div>
+          <form class="newsletter-form-footer" id="newsletter-form-footer">
+            <input type="hidden" name="csrf_token" value="{{csrf_token()}}" />
+            <div class="form-group">
+              <input
+                type="email"
+                name="email"
+                placeholder="Your email address"
+                required
+              />
+              <button type="submit">Subscribe</button>
+            </div>
+            <div class="form-message" id="newsletter-message-footer"></div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    {#
     <footer class="footer">
       <div class="container">
-        <p>&copy; {{ current_year }} PafelNG. All rights reserved.</p>
+        <div class="footer-content">
+          <div class="footer-logo">
+            <a href="{{ url_for('blog.all_blogs') }}">
+              <span class="logo-text">PafelNG</span>
+            </a>
+            <p>Insightful articles and updates from PafelNG</p>
+          </div>
+          <div class="footer-links">
+            <div class="footer-column">
+              <h3>Navigation</h3>
+              <ul>
+                <li><a href="{{ url_for('blog.all_blogs') }}">Home</a></li>
+                <li><a href="#categories">Categories</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+              </ul>
+            </div>
+            <div class="footer-column">
+              <h3>Follow Us</h3>
+              <div class="social-links">
+                <a href="#" aria-label="Twitter"
+                  ><i class="fab fa-twitter"></i
+                ></a>
+                <a href="#" aria-label="Facebook"
+                  ><i class="fab fa-facebook-f"></i
+                ></a>
+                <a href="#" aria-label="Instagram"
+                  ><i class="fab fa-instagram"></i
+                ></a>
+                <a href="#" aria-label="LinkedIn"
+                  ><i class="fab fa-linkedin-in"></i
+                ></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; {{ current_year }} PafelNG. All rights reserved.</p>
+          <div class="footer-bottom-links">
+            <a href="#privacy">Privacy Policy</a>
+            <a href="#terms">Terms of Service</a>
+          </div>
+        </div>
       </div>
     </footer>
+    #}
 
     <script src="{{ url_for('static', filename='js/blog.js') }}"></script>
   </body>

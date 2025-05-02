@@ -427,3 +427,25 @@ class IssueReport(db.Model):
             'status': self.status,
             'created_at': self.created_at
         }
+
+class NewsletterSubscriber(db.Model):
+    __tablename__ = 'newsletter_subscribers'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    source = db.Column(db.String(50), nullable=True)  # 'article', 'footer', etc.
+    subscribed_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    is_active = db.Column(db.Boolean, default=True)
+    
+    def __init__(self, email, source=None):
+        self.email = email
+        self.source = source
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'email': self.email,
+            'source': self.source,
+            'subscribed_at': self.subscribed_at,
+            'is_active': self.is_active
+        }

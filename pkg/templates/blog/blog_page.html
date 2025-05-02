@@ -1,16 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{ post.title }} | PafelNG Blogs</title>
+    <meta
+      name="description"
+      content="{{ post.content|striptags|truncate(160) }}"
+    />
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/blog.css') }}"
     />
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
     <link
       rel="apple-touch-icon"
@@ -23,26 +27,57 @@
       sizes="192x192"
       href="{{url_for('static', filename='/android-icon-192x192.png')}}"
     />
+    <meta property="og:title" content="{{ post.title }}" />
+    <meta
+      property="og:description"
+      content="{{ post.content|striptags|truncate(160) }}"
+    />
+    {% if post.cover_image %}
+    <meta
+      property="og:image"
+      content="{{ url_for('static', filename=post.cover_image.replace('\\', '/'), _external=True) }}"
+    />
+    {% endif %}
+    <meta property="og:url" content="{{ request.url }}" />
+    <meta property="og:type" content="article" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="theme-color" content="#ffffff" />
   </head>
   <body>
+    <div class="theme-toggle">
+      <button id="theme-switch" aria-label="Toggle dark mode">
+        <i class="fas fa-moon"></i>
+        <i class="fas fa-sun"></i>
+      </button>
+    </div>
+
+    <div class="progress-bar" id="read-progress"></div>
+
     <header class="header">
       <div class="container">
-        <div class="logo">
-          <a
-            href="{{ url_for('blog.all_blogs') }}"
-            style="text-decoration: none !important; color: #000 !important"
-            >PafelNG Blogs</a
-          >
+        <div class="header-content">
+          <div class="logo">
+            <a href="{{ url_for('blog.all_blogs') }}">
+              <span class="logo-text">PafelNG Blogs</span>
+            </a>
+          </div>
+
+          <div class="header-actions">
+            <form
+              class="search-form"
+              action="{{ url_for('blog.search_blogs') }}"
+              method="get"
+            >
+              <input type="text" name="query" placeholder="Search blogs..." />
+              <button type="submit" aria-label="Search">
+                <i class="fas fa-search"></i>
+              </button>
+            </form>
+            <button class="mobile-menu-toggle" aria-label="Toggle menu">
+              <i class="fas fa-bars"></i>
+            </button>
+          </div>
         </div>
-        <form
-          class="search-form"
-          action="{{ url_for('blog.search_blogs') }}"
-          method="get"
-        >
-          <input type="text" name="query" placeholder="Search blogs..." />
-          <button type="submit"><i class="fas fa-search"></i></button>
-        </form>
       </div>
     </header>
 
@@ -50,11 +85,22 @@
       <div class="container">
         <article class="blog-post">
           <div class="blog-header">
+            <a href="{{ url_for('blog.all_blogs') }}" class="back-to-home">
+              <i class="fas fa-arrow-left"></i> Back to all articles
+            </a>
             <div class="blog-meta">
-              <span class="blog-date"
-                >{{ post.created_at.strftime('%B %d, %Y') }}</span
-              >
-              <span class="blog-author">PafelNG</span>
+              <span class="blog-date">
+                <i class="far fa-calendar-alt"></i> {{
+                post.created_at.strftime('%B %d, %Y') }}
+              </span>
+              <span class="blog-author">
+                <i class="far fa-user"></i> PafelNG
+              </span>
+              <span class="blog-reading-time">
+                <i class="far fa-clock"></i> {% set words =
+                post.content|striptags|wordcount %}{{ (words / 200)|round|int if
+                (words / 200)|round|int > 0 else 1 }} min read
+              </span>
             </div>
             <h1 class="blog-title">{{ post.title }}</h1>
           </div>
@@ -64,11 +110,39 @@
             <img
               src="{{ url_for('static', filename=post.cover_image.replace('\\', '/')) }}"
               alt="{{ post.title }}"
+              loading="eager"
             />
           </div>
           {% endif %}
 
-          <div class="blog-content">{{ post.content|safe }}</div>
+          <div class="blog-content" id="blog-content">
+            {{ post.content|safe }}
+          </div>
+
+          <div class="blog-author-bio">
+            <div class="author-image"></div>
+            <div class="author-info">
+              <h3>PafelNG</h3>
+              <p>
+                Logistics writer and industry observer specializing in vehicle
+                verification, freight forwarding, and global courier services.
+                Dedicated to simplifying complex supply chain topics and sharing
+                practical insights for businesses and individuals navigating the
+                logistics landscape.
+              </p>
+              <div class="author-social">
+                <a href="#" aria-label="Twitter"
+                  ><i class="fab fa-twitter"></i
+                ></a>
+                <a href="#" aria-label="LinkedIn"
+                  ><i class="fab fa-linkedin-in"></i
+                ></a>
+                <a href="#" aria-label="Website"
+                  ><i class="fas fa-globe"></i
+                ></a>
+              </div>
+            </div>
+          </div>
 
           <div class="blog-share">
             <span>Share this article:</span>
@@ -77,30 +151,64 @@
                 href="https://twitter.com/intent/tweet?url={{ request.url }}&text={{ post.title }}"
                 target="_blank"
                 class="share-button twitter"
+                aria-label="Share on Twitter"
               >
-                <i class="fab fa-twitter"></i>
+                <i class="fab fa-twitter"></i> Twitter
               </a>
               <a
                 href="https://www.facebook.com/sharer/sharer.php?u={{ request.url }}"
                 target="_blank"
                 class="share-button facebook"
+                aria-label="Share on Facebook"
               >
-                <i class="fab fa-facebook-f"></i>
+                <i class="fab fa-facebook-f"></i> Facebook
               </a>
               <a
                 href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.url }}&title={{ post.title }}"
                 target="_blank"
                 class="share-button linkedin"
+                aria-label="Share on LinkedIn"
               >
-                <i class="fab fa-linkedin-in"></i>
+                <i class="fab fa-linkedin-in"></i> LinkedIn
               </a>
+              <button
+                class="share-button copy"
+                id="copy-link"
+                data-url="{{ request.url }}"
+                aria-label="Copy link"
+              >
+                <i class="fas fa-link"></i> Copy Link
+              </button>
             </div>
           </div>
         </article>
 
+        <section class="newsletter-box">
+          <div class="newsletter-box-content">
+            <h2>Enjoyed this article?</h2>
+            <p>
+              Subscribe to our newsletter and get the latest articles directly
+              to your inbox
+            </p>
+            <form class="newsletter-form-article" id="newsletter-form-article">
+              <input type="hidden" name="csrf_token" value="{{csrf_token()}}" />
+              <div class="form-group">
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Your email address"
+                  required
+                />
+                <button type="submit">Subscribe</button>
+              </div>
+              <div class="form-message" id="newsletter-message-article"></div>
+            </form>
+          </div>
+        </section>
+
         {% if related_posts %}
         <section class="related-posts">
-          <h2 class="section-title">Related Posts</h2>
+          <h2 class="section-title">You Might Also Like</h2>
           <div class="posts-grid">
             {% for related_post in related_posts %}
             <article class="post-card">
@@ -114,14 +222,33 @@
                     src="{{ url_for('static', filename=related_post.cover_image.replace('\\', '/')) }}"
                     alt="{{ related_post.title }}"
                     class="post-image"
+                    loading="lazy"
                   />
                   {% else %}
-                  <div class="post-image post-image-placeholder"></div>
+                  <img
+                    src="{{ url_for('static', filename='img/default-cover.jpg') }}"
+                    alt="{{ related_post.title }}"
+                    class="post-image"
+                    loading="lazy"
+                  />
                   {% endif %}
-                  <div class="post-overlay">
-                    <h3 class="post-title">{{ related_post.title }}</h3>
+                </div>
+                <div class="post-content">
+                  <div class="post-category">Related</div>
+                  <h3 class="post-title">{{ related_post.title }}</h3>
+                  <p class="post-excerpt">
+                    {{ related_post.content|striptags|truncate(100) }}
+                  </p>
+                  <div class="post-meta">
                     <span class="post-date"
-                      >{{ related_post.created_at.strftime('%B %d, %Y') }}</span
+                      ><i class="far fa-calendar-alt"></i> {{
+                      related_post.created_at.strftime('%B %d, %Y') }}</span
+                    >
+                    <span class="read-time"
+                      ><i class="far fa-clock"></i> {% set words =
+                      related_post.content|striptags|wordcount %}{{ (words /
+                      200)|round|int if (words / 200)|round|int > 0 else 1 }}
+                      min read</span
                     >
                   </div>
                 </div>
@@ -131,14 +258,106 @@
           </div>
         </section>
         {% endif %}
+
+        <div class="post-navigation">
+          <div class="post-nav-prev">
+            {% if prev_post %}
+            <a href="{{ url_for('blog.blog_post', slug=prev_post.slug) }}">
+              <i class="fas fa-arrow-left"></i>
+              <span>
+                <small>Previous Article</small>
+                <strong>{{ prev_post.title }}</strong>
+              </span>
+            </a>
+            {% endif %}
+          </div>
+          <div class="post-nav-next">
+            {% if next_post %}
+            <a href="{{ url_for('blog.blog_post', slug=next_post.slug) }}">
+              <span>
+                <small>Next Article</small>
+                <strong>{{ next_post.title }}</strong>
+              </span>
+              <i class="fas fa-arrow-right"></i>
+            </a>
+            {% endif %}
+          </div>
+        </div>
       </div>
     </main>
 
+    <section class="newsletter-section">
+      <div class="container">
+        <div class="newsletter-wrapper">
+          <div class="newsletter-text">
+            <h2>Subscribe to our newsletter</h2>
+            <p>
+              Get notified about new articles and updates directly to your inbox
+            </p>
+          </div>
+          <form class="newsletter-form-footer" id="newsletter-form-footer">
+            <input type="hidden" name="csrf_token" value="{{csrf_token()}}" />
+            <div class="form-group">
+              <input
+                type="email"
+                name="email"
+                placeholder="Your email address"
+                required
+              />
+              <button type="submit">Subscribe</button>
+            </div>
+            <div class="form-message" id="newsletter-message-footer"></div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    {#
     <footer class="footer">
       <div class="container">
-        <p>&copy; {{ current_year }} PafelNG. All rights reserved.</p>
+        <div class="footer-content">
+          <div class="footer-logo">
+            <a href="{{ url_for('blog.all_blogs') }}">
+              <span class="logo-text">PafelNG</span>
+            </a>
+            <p>Insightful articles and updates from PafelNG</p>
+          </div>
+          <div class="footer-links">
+            <div class="footer-column">
+              <h3>Follow Us</h3>
+              <div class="social-links">
+                <a href="#" aria-label="Twitter"
+                  ><i class="fab fa-twitter"></i
+                ></a>
+                <a href="#" aria-label="Facebook"
+                  ><i class="fab fa-facebook-f"></i
+                ></a>
+                <a href="#" aria-label="Instagram"
+                  ><i class="fab fa-instagram"></i
+                ></a>
+                <a href="#" aria-label="LinkedIn"
+                  ><i class="fab fa-linkedin-in"></i
+                ></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; {{ current_year }} PafelNG. All rights reserved.</p>
+          <div class="footer-bottom-links">
+            <a href="#privacy">Privacy Policy</a>
+            <a href="#terms">Terms of Service</a>
+          </div>
+        </div>
       </div>
     </footer>
+    #} {#
+    <div class="scroll-to-top" id="scroll-to-top">
+      <button aria-label="Scroll to top">
+        <i class="fas fa-arrow-up"></i>
+      </button>
+    </div>
+    #}
 
     <script src="{{ url_for('static', filename='js/blog.js') }}"></script>
   </body>
