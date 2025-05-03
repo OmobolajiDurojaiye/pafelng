@@ -1,12 +1,14 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session, jsonify, current_app
 from werkzeug.utils import secure_filename
 from functools import wraps
-from pkg.models import User, BlogPost, db
+from flask_mail import Mail, Message
+from pkg.models import User, BlogPost, db, NewsletterSubscriber
 import os
 import datetime
 import re
 import uuid
 import random
+import html
 
 blog_admin_bp = Blueprint('blog_admin', __name__, url_prefix='/admin-blog')
 
@@ -23,6 +25,66 @@ def login_required(f):
 def allowed_file(filename):
     ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif', 'webp'}
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+# Helper function to send notification emails to subscribers
+def send_notification_emails(post):
+    mail = Mail(current_app)
+    subscribers = NewsletterSubscriber.query.filter_by(is_active=True).all()
+    
+    if not subscribers:
+        return
+    
+    # Create an excerpt from the content (first 150 characters)
+    content_text = html.unescape(re.sub(r'<[^>]+>', '', post.content))
+    excerpt = content_text[:150] + '...' if len(content_text) > 150 else content_text
+    
+    # Generate the article URL
+    article_url = url_for('blog.blog_post', slug=post.slug, _external=True)
+    
+    # Image URL (if exists)
+    image_url = None
+    if post.cover_image:
+        image_url = url_for('static', filename=post.cover_image, _external=True)
+    
+    # Create email subject
+    subject = f"New Blog Post: {post.title}"
+    
+    # Create email HTML body
+    html_body = f"""
+    <html>
+        <body style="font-family: Arial, sans-serif; background-color: #f8f9fa; padding: 20px;">
+            <div style="background-color: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); max-width: 600px; margin: auto;">
+                <h2 style="color: #42b0d5;">New Article Published!</h2>
+                <h3><a href="{article_url}">{post.title}</a></h3>
+                
+                {'<img src="' + image_url + '" style="max-width:600px; height:auto;" />' if image_url else ''}
+                
+                <p>{excerpt}</p>
+                
+                <p><a href="{article_url}">Read the full article</a></p>
+                
+                <hr>
+                <p style="color: #6c757d;">You received this email because you subscribed to our newsletter. 
+                If you no longer wish to receive these emails, please contact us.</p>
+            </div>
+        </body>
+    </html>
+    """
+    
+    # Create a single message with BCC for all subscribers
+    msg = Message(
+        subject=subject,
+        # recipients=[current_app.config['MAIL_USERNAME']],  # Send to self
+        bcc=[subscriber.email for subscriber in subscribers],  # BCC to all subscribers
+        sender="durojaiyeomobolaji93@gmail.com",
+        html=html_body
+    )
+    
+    try:
+        mail.send(msg)
+        print(f"Email notification sent to {len(subscribers)} subscribers")
+    except Exception as e:
+        print(f"Error sending email notification: {e}")
 
 # Blog dashboard
 @blog_admin_bp.route('/')
@@ -88,6 +150,10 @@ def new_post():
         db.session.add(post)
         db.session.commit()
         
+        # Send notification emails to subscribers if the post is published
+        if post.is_published:
+            send_notification_emails(post)
+        
         flash('Blog post created successfully!', 'success')
         return redirect(url_for('blog_admin.all_posts'))
     
@@ -100,6 +166,7 @@ def edit_post(id):
     post = BlogPost.query.get_or_404(id)
     
     if request.method == 'POST':
+        was_published = post.is_published
         post.title = request.form.get('title')
         post.content = request.form.get('content')
         
@@ -170,6 +237,10 @@ def toggle_publish(id):
     post = BlogPost.query.get_or_404(id)
     post.is_published = not post.is_published
     db.session.commit()
+    
+    # If the post is being published, send notification emails
+    if post.is_published:
+        send_notification_emails(post)
     
     status = 'published' if post.is_published else 'unpublished'
     flash(f'Blog post {status} successfully!', 'success')

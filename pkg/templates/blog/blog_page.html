@@ -27,6 +27,10 @@
       sizes="192x192"
       href="{{url_for('static', filename='/android-icon-192x192.png')}}"
     />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/flash.css') }}"
+    />
     <meta property="og:title" content="{{ post.title }}" />
     <meta
       property="og:description"
@@ -44,6 +48,14 @@
     <meta name="theme-color" content="#ffffff" />
   </head>
   <body>
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %}
+    <div class="flash-container">
+      {% for category, message in messages %}
+      <div class="flash flash-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %} {% endwith %}
     <div class="theme-toggle">
       <button id="theme-switch" aria-label="Toggle dark mode">
         <i class="fas fa-moon"></i>
@@ -120,7 +132,13 @@
           </div>
 
           <div class="blog-author-bio">
-            <div class="author-image"></div>
+            <div class="author-image">
+              <img
+                src="{{ url_for('static', filename='images/pafelnglogosmall.png') }}"
+                alt=""
+                srcset=""
+              />
+            </div>
             <div class="author-info">
               <h3>PafelNG</h3>
               <p>
@@ -129,6 +147,7 @@
                 Dedicated to simplifying complex supply chain topics and sharing
                 practical insights for businesses and individuals navigating the
                 logistics landscape.
+                <a href="/" target="_blank">Order a logistic service here</a>.
               </p>
               <div class="author-social">
                 <a href="#" aria-label="Twitter"
@@ -190,8 +209,14 @@
               Subscribe to our newsletter and get the latest articles directly
               to your inbox
             </p>
-            <form class="newsletter-form-article" id="newsletter-form-article">
+            <form
+              class="newsletter-form-article"
+              id="newsletter-form-article"
+              action="{{ url_for('blog.subscribe_newsletter') }}"
+              method="post"
+            >
               <input type="hidden" name="csrf_token" value="{{csrf_token()}}" />
+              <input type="hidden" name="source" value="article" />
               <div class="form-group">
                 <input
                   type="email"
@@ -295,8 +320,14 @@
               Get notified about new articles and updates directly to your inbox
             </p>
           </div>
-          <form class="newsletter-form-footer" id="newsletter-form-footer">
+          <form
+            class="newsletter-form-article"
+            id="newsletter-form-article"
+            action="{{ url_for('blog.subscribe_newsletter') }}"
+            method="post"
+          >
             <input type="hidden" name="csrf_token" value="{{csrf_token()}}" />
+            <input type="hidden" name="source" value="article" />
             <div class="form-group">
               <input
                 type="email"
@@ -306,7 +337,7 @@
               />
               <button type="submit">Subscribe</button>
             </div>
-            <div class="form-message" id="newsletter-message-footer"></div>
+            <div class="form-message" id="newsletter-message-article"></div>
           </form>
         </div>
       </div>
@@ -351,14 +382,10 @@
         </div>
       </div>
     </footer>
-    #} {#
-    <div class="scroll-to-top" id="scroll-to-top">
-      <button aria-label="Scroll to top">
-        <i class="fas fa-arrow-up"></i>
-      </button>
-    </div>
     #}
 
     <script src="{{ url_for('static', filename='js/blog.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='js/flash.js') }}"></script>
   </body>
 </html>

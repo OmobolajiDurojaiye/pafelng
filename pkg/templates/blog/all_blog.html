@@ -23,9 +23,21 @@
       sizes="192x192"
       href="{{url_for('static', filename='/android-icon-192x192.png')}}"
     />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/flash.css') }}"
+    />
     <meta name="theme-color" content="#ffffff" />
   </head>
   <body>
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %}
+    <div class="flash-container">
+      {% for category, message in messages %}
+      <div class="flash flash-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %} {% endwith %}
     <div class="theme-toggle">
       <button id="theme-switch" aria-label="Toggle dark mode">
         <i class="fas fa-moon"></i>
@@ -204,8 +216,14 @@
               Get notified about new articles and updates directly to your inbox
             </p>
           </div>
-          <form class="newsletter-form-footer" id="newsletter-form-footer">
+          <form
+            class="newsletter-form-footer"
+            id="newsletter-form-footer"
+            action="{{ url_for('blog.subscribe_newsletter') }}"
+            method="post"
+          >
             <input type="hidden" name="csrf_token" value="{{csrf_token()}}" />
+            <input type="hidden" name="source" value="footer" />
             <div class="form-group">
               <input
                 type="email"
@@ -272,5 +290,6 @@
     #}
 
     <script src="{{ url_for('static', filename='js/blog.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/flash.js') }}"></script>
   </body>
 </html>

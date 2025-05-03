@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session, jsonify, current_app
 from werkzeug.utils import secure_filename
 from functools import wraps
-from pkg.models import User, BlogPost, db
+from pkg.models import User, BlogPost, NewsletterSubscriber, db
 import os
 import datetime
 import uuid
@@ -55,3 +55,34 @@ def search_blogs():
     
     current_year = datetime.datetime.now().year
     return render_template('blog/all_blog.html', posts=posts, search_query=query, current_year=current_year)
+
+@blog_bp.route('/subscribe-newsletter', methods=['POST'])
+def subscribe_newsletter():
+    email = request.form.get('email')
+    source = request.form.get('source', 'footer')  # Default to 'footer' if not specified
+    
+    if not email:
+        flash('Email address is required.', 'error')
+        return redirect(request.referrer or url_for('blog.all_blogs'))
+    
+    # Check if email already exists
+    existing_subscriber = NewsletterSubscriber.query.filter_by(email=email).first()
+    
+    if existing_subscriber:
+        if existing_subscriber.is_active:
+            flash('You are already subscribed to our newsletter!', 'error')
+        else:
+            # Reactivate the subscription
+            existing_subscriber.is_active = True
+            existing_subscriber.source = source  # Update the source
+            db.session.commit()
+            flash('Your subscription has been reactivated!', 'success')
+    else:
+        # Create new subscriber
+        new_subscriber = NewsletterSubscriber(email=email, source=source)
+        db.session.add(new_subscriber)
+        db.session.commit()
+        flash('Thank you for subscribing to our newsletter!', 'success')
+    
+    # Redirect back to the referring page
+    return redirect(request.referrer or url_for('blog.all_blogs'))

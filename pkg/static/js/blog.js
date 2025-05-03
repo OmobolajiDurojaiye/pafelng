@@ -239,22 +239,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Handle newsletter forms
   const newsletterForms = document.querySelectorAll(
-    "#newsletter-form, #newsletter-form-footer, #newsletter-form-article"
+    "#newsletter-form-footer, #newsletter-form-article"
   );
 
   newsletterForms.forEach((form) => {
     form.addEventListener("submit", function (e) {
-      e.preventDefault();
+      // Remove the preventDefault() to allow normal form submission
+      // e.preventDefault(); <- Remove this line
 
       const emailInput = this.querySelector('input[type="email"]');
-      const messageContainer =
-        this.nextElementSibling || this.querySelector(".form-message");
+      const messageContainer = this.querySelector(".form-message");
 
       if (!emailInput || !messageContainer) return;
 
       const email = emailInput.value.trim();
 
       if (!email) {
+        e.preventDefault(); // Only prevent submission if email is empty
         showFormMessage(
           messageContainer,
           "Please enter your email address",
@@ -262,17 +263,10 @@ document.addEventListener("DOMContentLoaded", function () {
         );
         return;
       }
+
+      // Let the form submit naturally to the server
     });
   });
-
-  function showFormMessage(container, message, type = "") {
-    container.textContent = message;
-    container.className = "form-message";
-
-    if (type) {
-      container.classList.add(type);
-    }
-  }
 
   // Progress bar for blog post reading
   const progressBar = document.querySelector(".progress-bar");
