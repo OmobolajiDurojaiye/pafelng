@@ -26,12 +26,16 @@ document.addEventListener("DOMContentLoaded", function () {
   // Close mobile menu when clicking on a link
   document.querySelectorAll(".nav-links a").forEach(function (link) {
     link.addEventListener("click", function () {
-      hamburger.classList.remove("active");
-      navLinks.classList.remove("active");
+      if (hamburger) {
+        hamburger.classList.remove("active");
+      }
+      if (navLinks) {
+        navLinks.classList.remove("active");
+      }
     });
   });
 
-  // Hero slider
+  // Hero slider - check if elements exist before working with them
   const slides = document.querySelectorAll(".slide");
   const dots = document.querySelectorAll(".dot");
   const prevBtn = document.querySelector(".prev-btn");
@@ -41,6 +45,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Function to change slide
   function changeSlide(n) {
+    if (!slides.length || !dots.length) return;
+
     slides[currentSlide].classList.remove("active");
     dots[currentSlide].classList.remove("active");
 
@@ -51,7 +57,13 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Initialize slider controls
-  if (prevBtn && nextBtn) {
+  if (prevBtn && nextBtn && slides.length > 0 && dots.length > 0) {
+    // Initialize first slide to be active if none are
+    if (!document.querySelector(".slide.active")) {
+      slides[0].classList.add("active");
+      dots[0].classList.add("active");
+    }
+
     prevBtn.addEventListener("click", function () {
       changeSlide(currentSlide - 1);
       resetInterval();
@@ -90,12 +102,12 @@ document.addEventListener("DOMContentLoaded", function () {
   let countStarted = false;
 
   function startCounter() {
-    if (countStarted) return;
+    if (countStarted || !statNumbers.length) return;
 
     countStarted = true;
 
     statNumbers.forEach(function (stat) {
-      const target = parseInt(stat.getAttribute("data-count"));
+      const target = parseInt(stat.getAttribute("data-count") || "0");
       const duration = 2000; // 2 seconds
       const step = target / (duration / 16); // 60fps
       let current = 0;
@@ -117,16 +129,22 @@ document.addEventListener("DOMContentLoaded", function () {
   // Start counter when stats section comes into view
   const statsSection = document.querySelector(".stats-section");
   if (statsSection) {
-    const observer = new IntersectionObserver(
-      function (entries) {
-        if (entries[0].isIntersecting) {
-          startCounter();
-        }
-      },
-      { threshold: 0.3 }
-    );
+    // Check if IntersectionObserver is supported
+    if ("IntersectionObserver" in window) {
+      const observer = new IntersectionObserver(
+        function (entries) {
+          if (entries[0].isIntersecting) {
+            startCounter();
+          }
+        },
+        { threshold: 0.3 }
+      );
 
-    observer.observe(statsSection);
+      observer.observe(statsSection);
+    } else {
+      // Fallback for browsers that don't support IntersectionObserver
+      startCounter(); // Just start it immediately
+    }
   }
 
   // Testimonial slider
@@ -139,6 +157,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Function to change testimonial
   function changeTestimonial(n) {
+    if (!testimonialCards.length || !testimonialDots.length) return;
+
     testimonialCards[currentTestimonial].classList.remove("active");
     testimonialDots[currentTestimonial].classList.remove("active");
 
@@ -150,7 +170,18 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Initialize testimonial controls
-  if (testimonialPrev && testimonialNext) {
+  if (
+    testimonialPrev &&
+    testimonialNext &&
+    testimonialCards.length > 0 &&
+    testimonialDots.length > 0
+  ) {
+    // Initialize first testimonial to be active if none are
+    if (!document.querySelector(".testimonial-card.active")) {
+      testimonialCards[0].classList.add("active");
+      testimonialDots[0].classList.add("active");
+    }
+
     testimonialPrev.addEventListener("click", function () {
       changeTestimonial(currentTestimonial - 1);
       resetTestimonialInterval();
@@ -189,23 +220,37 @@ document.addEventListener("DOMContentLoaded", function () {
     ".service-icon, .service-text h2, .service-text p, .service-features, .quote-btn, .service-image"
   );
 
-  const observerOptions = {
-    threshold: 0.1,
-    rootMargin: "0px 0px -50px 0px",
-  };
+  if (animateElements.length > 0) {
+    // Check if IntersectionObserver is supported
+    if ("IntersectionObserver" in window) {
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: "0px 0px -50px 0px",
+      };
 
-  const appearOnScroll = new IntersectionObserver(function (entries, observer) {
-    entries.forEach(function (entry) {
-      if (!entry.isIntersecting) return;
+      const appearOnScroll = new IntersectionObserver(function (
+        entries,
+        observer
+      ) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
 
-      entry.target.classList.add("fade-in");
-      observer.unobserve(entry.target);
-    });
-  }, observerOptions);
+          entry.target.classList.add("fade-in");
+          observer.unobserve(entry.target);
+        });
+      },
+      observerOptions);
 
-  animateElements.forEach(function (element) {
-    appearOnScroll.observe(element);
-  });
+      animateElements.forEach(function (element) {
+        appearOnScroll.observe(element);
+      });
+    } else {
+      // Fallback for browsers that don't support IntersectionObserver
+      animateElements.forEach(function (element) {
+        element.classList.add("fade-in");
+      });
+    }
+  }
 
   // Scroll to top button
   const scrollTopBtn = document.createElement("div");
@@ -253,29 +298,58 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // Service section background effects
+  // Service section background effects - limit on mobile
   const serviceSections = document.querySelectorAll(".service-section");
+  const isMobile = window.innerWidth < 768;
 
   serviceSections.forEach(function (section) {
-    section.addEventListener("mousemove", function (e) {
-      const bgElement = section.querySelector(".service-bg-element");
+    const bgElement = section.querySelector(".service-bg-element");
 
-      if (bgElement) {
+    // Don't apply mousemove effect on mobile devices
+    if (!isMobile && bgElement) {
+      section.addEventListener("mousemove", function (e) {
         const x = (e.clientX / window.innerWidth) * 20;
         const y = (e.clientY / window.innerHeight) * 20;
 
         bgElement.style.transform = `translate(${x}px, ${y}px)`;
-      }
-    });
+      });
+    }
   });
 
-  // Add parallax effect to CTA section
+  // Add parallax effect to CTA section - disable on mobile
   const ctaSection = document.querySelector(".cta-section");
 
-  if (ctaSection) {
+  if (ctaSection && !isMobile) {
     window.addEventListener("scroll", function () {
       const scrollPosition = window.pageYOffset;
       ctaSection.style.backgroundPositionY = scrollPosition * 0.05 + "px";
     });
   }
+
+  // Initialize any sliders that may not be active
+  if (slides.length > 0 && !document.querySelector(".slide.active")) {
+    slides[0].classList.add("active");
+    if (dots.length > 0) {
+      dots[0].classList.add("active");
+    }
+  }
+
+  if (
+    testimonialCards.length > 0 &&
+    !document.querySelector(".testimonial-card.active")
+  ) {
+    testimonialCards[0].classList.add("active");
+    if (testimonialDots.length > 0) {
+      testimonialDots[0].classList.add("active");
+    }
+  }
+
+  // Fix for viewport height issues on mobile browsers
+  function setVh() {
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty("--vh", `${vh}px`);
+  }
+
+  setVh();
+  window.addEventListener("resize", setVh);
 });

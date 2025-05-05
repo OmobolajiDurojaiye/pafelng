@@ -1222,3 +1222,82 @@ html {
     width: 100%;
   }
 }
+
+/*ADDITIONAL CSS FOR MOBILE RESPONSIVENESS*/
+
+:root {
+  --vh: 1vh;
+}
+
+.hero-slider {
+  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
+}
+
+@supports (-webkit-overflow-scrolling: touch) {
+  .cta-section {
+    background-attachment: scroll;
+  }
+}
+
+.slide {
+  background-size: cover;
+  background-position: center;
+}
+
+.slider-text,
+.slider-controls {
+  width: auto;
+  max-width: 100%;
+}
+
+@media (max-width: 768px) {
+  .slider-overlay {
+    background: linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0.7),
+      rgba(0, 0, 0, 0.6)
+    );
+  }
+
+  /* .slider-text {
+    /* padding: 5px; 
+    box-sizing: border-box;
+  } */
+
+  .slider-features {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .testimonials-slider {
+    height: auto;
+    min-height: 350px;
+  }
+
+  .testimonial-card {
+    position: relative;
+    display: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .testimonial-card.active {
+    display: block;
+  }
+}
+
+@media (max-width: 768px) {
+  .cta-section {
+    background-attachment: scroll;
+    background-position: center !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .service-bg-element {
+    display: none;
+  }
+}
