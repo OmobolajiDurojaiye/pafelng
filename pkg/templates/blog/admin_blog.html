@@ -9,6 +9,11 @@ additional_css %}
   rel="stylesheet"
   href="{{ url_for('static', filename='css/blog_admin.css') }}"
 />
+{% endblock %} {% block sidebar_user_info %}
+<div class="user-info">
+  <h3>{{ admin.name }}</h3>
+  <p>Administrator</p>
+</div>
 {% endblock %} {% block blog_active %}class="active"{% endblock %} {% block
 dashboard_active %}{% endblock %} {% block content %}
 <div class="page-header">

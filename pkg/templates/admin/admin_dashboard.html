@@ -18,6 +18,11 @@
       sizes="180x180"
       href="{{url_for('static', filename='/apple-icon-180x180.png')}}"
     />
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/flash.css') }}"
+    />
     <link
       rel="icon"
       type="image/png"
@@ -27,6 +32,14 @@
     <meta name="theme-color" content="#ffffff" />
   </head>
   <body>
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %}
+    <div class="flash-container">
+      {% for category, message in messages %}
+      <div class="flash flash-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %} {% endwith %}
     <div class="dashboard-container">
       <!-- Sidebar -->
       <aside class="sidebar">
@@ -46,10 +59,8 @@
           </div>
           {% block sidebar_user_info %}
           <div class="user-info">
-            {#
             <h3>{{ admin.name }}</h3>
             <p>Administrator</p>
-            #}
           </div>
           {% endblock %}
         </div>
@@ -119,15 +130,6 @@
             </div>
           </div>
         </header>
-
-        <!-- Flash Messages -->
-        {% with messages = get_flashed_messages(with_categories=true) %} {% if
-        messages %} {% for category, message in messages %}
-        <div class="alert alert-{{ category }}">
-          {{ message }}
-          <span class="close-alert">&times;</span>
-        </div>
-        {% endfor %} {% endif %} {% endwith %}
 
         <div class="dashboard-content">
           {% block content %}
@@ -567,6 +569,8 @@
     </div>
 
     <script src="{{ url_for('static', filename='js/admin_dashboard.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='js/flash.js') }}"></script>
     {% block additional_scripts %}{% endblock %}
   </body>
 </html>

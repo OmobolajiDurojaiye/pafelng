@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from werkzeug.utils import secure_filename
 from functools import wraps
 from flask_mail import Mail, Message
-from pkg.models import User, BlogPost, db, NewsletterSubscriber
+from pkg.models import User, BlogPost, db, NewsletterSubscriber, Admin
 import os
 import datetime
 import re
@@ -90,19 +90,26 @@ def send_notification_emails(post):
 @blog_admin_bp.route('/')
 @login_required
 def blog_dashboard():
-    return redirect(url_for('blog_admin.all_posts'))
+    # Get admin info
+    admin = Admin.query.get(session['admin_id'])
+    return redirect(url_for('blog_admin.all_posts'), admin=admin)
 
 # All posts
 @blog_admin_bp.route('/posts')
 @login_required
 def all_posts():
+    # Get admin info
+    admin = Admin.query.get(session['admin_id'])
     posts = BlogPost.query.order_by(BlogPost.created_at.desc()).all()
-    return render_template('blog/admin_all_posts.html', posts=posts)
+    return render_template('blog/admin_all_posts.html', posts=posts, admin=admin)
 
 # Create new post
 @blog_admin_bp.route('/posts/new', methods=['GET', 'POST'])
 @login_required
 def new_post():
+    # Get admin info
+    admin = Admin.query.get(session['admin_id'])
+
     if request.method == 'POST':
         title = request.form.get('title')
         content = request.form.get('content')
@@ -110,7 +117,6 @@ def new_post():
         # Generate slug from title
         slug = BlogPost.generate_slug(title)
         
-        # Check if a post with this slug already exists
         existing_post = BlogPost.query.filter_by(slug=slug).first()
         if existing_post:
             # Append a number to make the slug unique
@@ -153,16 +159,20 @@ def new_post():
         # Send notification emails to subscribers if the post is published
         if post.is_published:
             send_notification_emails(post)
+
         
         flash('Blog post created successfully!', 'success')
         return redirect(url_for('blog_admin.all_posts'))
     
-    return render_template('blog/admin_blog.html')
+    return render_template('blog/admin_blog.html', admin=admin)
 
 # Edit post
 @blog_admin_bp.route('/posts/<int:id>/edit', methods=['GET', 'POST'])
 @login_required
 def edit_post(id):
+    # Get admin info
+    admin = Admin.query.get(session['admin_id'])
+
     post = BlogPost.query.get_or_404(id)
     
     if request.method == 'POST':
@@ -170,7 +180,6 @@ def edit_post(id):
         post.title = request.form.get('title')
         post.content = request.form.get('content')
         
-        # Handle cover image upload
         if 'cover_image' in request.files:
             file = request.files['cover_image']
             if file and file.filename:
@@ -207,7 +216,7 @@ def edit_post(id):
         flash('Blog post updated successfully!', 'success')
         return redirect(url_for('blog_admin.all_posts'))
     
-    return render_template('blog/admin_blog.html', post=post)
+    return render_template('blog/admin_blog.html', post=post, admin=admin)
 
 # Delete post
 @blog_admin_bp.route('/posts/<int:id>/delete', methods=['POST'])
