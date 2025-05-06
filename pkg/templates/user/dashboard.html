@@ -256,6 +256,26 @@
           </div>
         </div>
       </main>
+
+      <!-- Bottom nav -->
+      <div class="mobile-bottom-nav">
+        <a href="#" class="active">
+          <i class="fas fa-home"></i>
+          <span>Home</span>
+        </a>
+        <a href="{{ url_for('user.quotes_update') }}">
+          <i class="fas fa-comments"></i>
+          <span>Updates</span>
+        </a>
+        <a href="{{ url_for('user.user_history') }}">
+          <i class="fas fa-history"></i>
+          <span>History</span>
+        </a>
+        <a href="#">
+          <i class="fas fa-user"></i>
+          <span>Profile</span>
+        </a>
+      </div>
     </div>
 
     <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>

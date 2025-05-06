@@ -477,7 +477,7 @@ ul {
   }
 }
 
-/* Main content hamburger menu toggle */
+/* Main content hamburger menu toggle - updated positioning */
 .main-menu-toggle {
   display: none;
   cursor: pointer;
@@ -563,6 +563,44 @@ ul {
   }
 }
 
+@media (max-width: 992px) {
+  /* Show the main menu toggle button */
+  .main-menu-toggle {
+    display: block;
+    position: relative;
+    margin-right: 15px;
+  }
+
+  /* Adjust header content to allow space for the toggle */
+  .header-content {
+    position: relative;
+    padding: 20px;
+  }
+
+  /* Move the welcome section away from the toggle */
+  .welcome-section {
+    margin-left: 30px;
+  }
+
+  /* Different positioning options - use one of these */
+
+  /* Option 1: Top left positioning */
+  .main-menu-toggle {
+    position: absolute;
+    left: 20px;
+    top: 20px;
+  }
+
+  /* Option 2: Top right positioning (uncomment to use) */
+  /*
+  .main-menu-toggle {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+  }
+  */
+}
+
 @media (max-width: 768px) {
   /* Adjustments for smaller screens */
   .header-content {
@@ -635,5 +673,257 @@ ul {
   /* Make the sidebar a bit wider for better usability */
   .sidebar {
     width: 85%;
+  }
+}
+
+/* Improve mobile spacing and layout */
+@media (max-width: 992px) {
+  /* Improved sidebar handling */
+  .sidebar {
+    transform: translateX(-100%);
+    width: 260px;
+    z-index: 1000;
+    box-shadow: 3px 0 20px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .sidebar.active {
+    transform: translateX(0);
+  }
+
+  /* Overlay styling */
+  .sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 99;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  /* Show overlay when sidebar is active */
+  body:has(.sidebar.active) .sidebar-overlay {
+    display: block;
+    opacity: 1;
+  }
+
+  /* Improved header layout */
+  .main-content {
+    margin-left: 0;
+    padding: 15px;
+  }
+
+  .main-header {
+    padding: 10px;
+    margin-bottom: 15px;
+  }
+
+  .header-content {
+    flex-direction: row;
+    align-items: center;
+    padding: 15px;
+    gap: 10px;
+    position: relative;
+  }
+
+  /* Better hamburger menu positioning */
+  .main-menu-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--primary-light);
+    color: var(--primary-color);
+  }
+
+  /* Improved welcome section */
+  .welcome-section {
+    flex: 1;
+    padding-left: 5px;
+  }
+
+  .welcome-section h1 {
+    font-size: 1.4rem;
+    margin-bottom: 0;
+  }
+
+  .welcome-section p {
+    font-size: 0.9rem;
+  }
+
+  /* Compact profile section */
+  .profile-section {
+    justify-content: flex-end;
+  }
+
+  .profile-avatar {
+    width: 45px;
+    height: 45px;
+    font-size: 1.8rem;
+  }
+}
+
+/* Adjustments for smaller devices */
+@media (max-width: 768px) {
+  /* Make the cards more visually appealing */
+  .service-cards {
+    gap: 15px;
+  }
+
+  .service-card {
+    padding: 20px;
+    gap: 15px;
+  }
+
+  /* Better spacing for dashboard cards */
+  .dashboard-cards {
+    gap: 15px;
+  }
+
+  .dashboard-card {
+    padding: 15px;
+  }
+
+  /* Fixed bottom navigation alternative */
+  .mobile-bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #fff;
+    box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.1);
+    z-index: 90;
+    height: 60px;
+    justify-content: space-around;
+    align-items: center;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .mobile-bottom-nav a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--gray);
+    font-size: 0.7rem;
+    padding: 5px 0;
+  }
+
+  .mobile-bottom-nav a.active {
+    color: var(--primary-color);
+  }
+
+  .mobile-bottom-nav i {
+    font-size: 1.2rem;
+    margin-bottom: 3px;
+  }
+
+  /* Add padding to main content to account for bottom nav */
+  .main-content {
+    padding-bottom: 80px;
+  }
+}
+
+/* Even smaller screens */
+@media (max-width: 480px) {
+  /* More compact layout */
+  .main-content {
+    padding: 10px;
+  }
+
+  .header-content {
+    padding: 10px;
+  }
+
+  /* Stack header items for very small screens */
+  .header-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .welcome-section {
+    padding-left: 40px;
+    margin-bottom: 10px;
+  }
+
+  .profile-section {
+    align-self: flex-end;
+  }
+
+  .main-menu-toggle {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+  }
+
+  /* Adjust card sizing */
+  .service-card {
+    padding: 15px;
+  }
+
+  .service-icon {
+    width: 45px;
+    height: 45px;
+  }
+
+  .service-info h3 {
+    font-size: 1.1rem;
+  }
+
+  /* Make card icon more prominent */
+  .card-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .card-icon i {
+    font-size: 1.1rem;
+  }
+
+  /* Better spacing in service cards */
+  .service-cards {
+    margin-bottom: 20px;
+  }
+
+  /* Add some space to dashboard cards */
+  .dashboard-cards {
+    margin-top: 20px;
+  }
+}
+
+/* Optional: Add notch-friendly padding for iOS devices */
+@supports (padding-top: env(safe-area-inset-top)) {
+  .sidebar {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .main-content {
+    padding-top: max(15px, env(safe-area-inset-top));
+    padding-left: max(15px, env(safe-area-inset-left));
+    padding-right: max(15px, env(safe-area-inset-right));
+  }
+}
+
+/* Optional: Add a nice touch effect to buttons and cards */
+@media (max-width: 992px) {
+  .service-card,
+  .dashboard-card,
+  .sidebar-nav ul li a,
+  .main-menu-toggle {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .service-card:active,
+  .dashboard-card:active {
+    transform: scale(0.98);
+    transition: transform 0.1s;
   }
 }
