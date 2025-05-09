@@ -24,7 +24,7 @@ def login_required(f):
     return decorated_function
 
 # Owner's email where verification codes will be sent
-OWNER_EMAIL = os.environ.get('MAIL_USERNAME', 'durojaiyeomobolaji93@gmail.com')
+OWNER_EMAIL = os.environ.get('MAIL_USERNAME', 'help@pafelng.com')
 
 # Helper function for status messages
 def get_status_message(status):
@@ -167,7 +167,7 @@ def update_air_freight_status(id):
         # Send email notification to user about status change
         msg = Message(
             subject=f"Air Freight Request Status Update - {new_status.capitalize()}",
-            sender="durojaiyeomobolaji93@gmail.com",
+            sender="help@pafelng.com",
             recipients=[freight.email]
         )
         msg.html = f"""
@@ -225,7 +225,7 @@ def update_sea_freight_status(id):
         # Send email notification to user about status change
         msg = Message(
             subject=f"Sea Freight Request Status Update - {new_status.capitalize()}",
-            sender="durojaiyeomobolaji93@gmail.com",
+            sender="help@pafelng.com",
             recipients=[freight.email]
         )
         msg.html = f"""
@@ -293,7 +293,7 @@ def send_air_freight_message(id):
         # Send email notification to user
         msg = Message(
             subject=f"New Message Regarding Your Air Freight Request",
-            sender="durojaiyeomobolaji93@gmail.com", 
+            sender="help@pafelng.com", 
             recipients=[freight.email]
         )
         msg.html = f"""
@@ -367,7 +367,7 @@ def send_sea_freight_message(id):
         # Send email notification to user
         msg = Message(
             subject=f"New Message Regarding Your Sea Freight Request",
-            sender="durojaiyeomobolaji93@gmail.com", 
+            sender="help@pafelng.com", 
             recipients=[freight.email]
         )
         msg.html = f"""

@@ -24,7 +24,7 @@ def login_required(f):
     return decorated_function
 
 # Owner's email where verification codes will be sent
-OWNER_EMAIL = os.environ.get('MAIL_USERNAME', 'readmire95@gmail.com')
+OWNER_EMAIL = os.environ.get('MAIL_USERNAME', 'help@pafelng.com')
 
 # Helper function for status messages
 def get_status_message(status):
@@ -145,7 +145,7 @@ def admin_signup():
             # Send verification code to owner's email
             msg = Message(
                 subject="New Admin Registration Verification Code",
-                sender="durojaiyeomobolaji93@gmail.com", 
+                sender="help@pafelng.com", 
                 recipients=[OWNER_EMAIL]
             )
             msg.html = f"""
@@ -384,7 +384,7 @@ def update_vehicle_verification_status(id):
         # Send email notification to user about status change
         msg = Message(
             subject=f"Vehicle Verification Status Update - {new_status.capitalize()}",
-            sender="durojaiyeomobolaji93@gmail.com",
+            sender="help@pafelng.com",
             recipients=[verification.email]
         )
         msg.html = f"""
@@ -441,7 +441,7 @@ def update_global_courier_status(id):
         # Send email notification to user about status change
         msg = Message(
             subject=f"Global Courier Request Status Update - {new_status.capitalize()}",
-            sender="durojaiyeomobolaji93@gmail.com",
+            sender="help@pafelng.com",
             recipients=[courier.email]
         )
         msg.html = f"""
@@ -509,7 +509,7 @@ def send_vehicle_verification_message(id):
         # Send email notification to user
         msg = Message(
             subject=f"New Message Regarding Your Vehicle Verification Request",
-            sender="durojaiyeomobolaji93@gmail.com", 
+            sender="help@pafelng.com", 
             recipients=[verification.email]
         )
         msg.html = f"""
@@ -583,7 +583,7 @@ def send_global_courier_message(id):
         # Send email notification to user
         msg = Message(
             subject=f"New Message Regarding Your Global Courier Request",
-            sender="durojaiyeomobolaji93@gmail.com", 
+            sender="help@pafelng.com", 
             recipients=[courier.email]
         )
         msg.html = f"""

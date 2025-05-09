@@ -376,17 +376,28 @@ def send_message(quote_type, quote_id):
         # Optional: Send email notification to admin
         msg = Message(
             subject=f"New Message from User - {quote_type.replace('_', ' ').title()} #{quote_id}",
-            sender="durojaiyeomobolaji93@gmail.com",
-            recipients=["durojaiyeomobolaji93@gmail.com"]  # Admin email
+            sender="help@pafelng.com",
+            recipients=["help@pafelng.com"]  # Admin email
         )
-        msg.body = f"""
-        A user has sent a new message regarding their {quote_type.replace('_', ' ')} request.
-        
-        User: {user.name} ({user.email})
-        Request ID: {quote_id}
-        Message: {message_content}
-        
-        Please log in to the admin panel to respond.
+        msg.html = f"""
+        <html>
+        <body style="font-family: Arial, sans-serif; background-color: #f8f9fa; color: #333; padding: 20px;">
+            <div style="background-color: #ffffff; padding: 30px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); max-width: 600px; margin: auto;">
+            <h2 style="color: #42b0d5;">New Customer Message</h2>
+            <p>A user has sent a new message regarding their <strong>{quote_type.replace('_', ' ')}</strong> request.</p>
+            <p><strong>User:</strong> {user.name} (<a href="mailto:{user.email}">{user.email}</a>)</p>
+            <p><strong>Request ID:</strong> {quote_id}</p>
+            <p><strong>Message:</strong></p>
+            <div style="background-color: #f1f1f1; padding: 15px; border-left: 4px solid #42b0d5; border-radius: 8px; margin: 10px 0;">
+                <p style="margin: 0; white-space: pre-line;">{message_content}</p>
+            </div>
+            <hr style="margin: 20px 0;">
+            <p>Please log in to the admin panel to respond.</p>
+            <p style="color: #6c757d;">— PafelNG Logistics Team</p>
+            </div>
+        </body>
+        </html>
+
         """
         mail.send(msg)
         

@@ -76,7 +76,7 @@ def send_notification_emails(post):
         subject=subject,
         # recipients=[current_app.config['MAIL_USERNAME']],  # Send to self
         bcc=[subscriber.email for subscriber in subscribers],  # BCC to all subscribers
-        sender="durojaiyeomobolaji93@gmail.com",
+        sender="help@pafelng.com",
         html=html_body
     )
     
