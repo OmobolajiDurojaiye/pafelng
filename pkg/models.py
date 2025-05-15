@@ -108,6 +108,11 @@ class VehicleVerification(db.Model):
     payment_method = db.Column(db.String(50), nullable=False)
     verification_status = db.Column(db.String(20), default='pending')
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+
+    paystack_ref = db.Column(db.String(100), nullable=True)
+    amount_paid = db.Column(db.Integer, nullable=True)
+    payment_verified = db.Column(db.Boolean, default=False)
+
     
     # Relationship with VehicleVerificationMessage
     messages = db.relationship('VehicleVerificationMessage', backref='verification', lazy=True, order_by='VehicleVerificationMessage.created_at')
@@ -448,4 +453,42 @@ class NewsletterSubscriber(db.Model):
             'source': self.source,
             'subscribed_at': self.subscribed_at,
             'is_active': self.is_active
+        }
+    
+class UnsignedVehicleVerification(db.Model):
+    __tablename__ = 'unsigned_vehicle_verifications'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(120), nullable=False)
+    phone = db.Column(db.String(20), nullable=False)
+    
+    # For C-Number verification method
+    c_number = db.Column(db.String(50), nullable=True)
+    
+    # For document upload verification method
+    document_path = db.Column(db.String(255), nullable=True)
+    original_filename = db.Column(db.String(255), nullable=True)
+    
+    payment_method = db.Column(db.String(50), nullable=False)
+    verification_status = db.Column(db.String(20), default='pending')
+    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+
+    paystack_ref = db.Column(db.String(100), nullable=True)
+    amount_paid = db.Column(db.Integer, nullable=True)
+    payment_verified = db.Column(db.Boolean, default=False)
+    
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'email': self.email,
+            'phone': self.phone,
+            'c_number': self.c_number,
+            'document_path': self.document_path,
+            'original_filename': self.original_filename,
+            'payment_method': self.payment_method,
+            'verification_status': self.verification_status,
+            'created_at': self.created_at
         }

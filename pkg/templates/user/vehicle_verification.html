@@ -61,7 +61,7 @@
 
         <form
           id="vehicleForm"
-          action="{{ url_for('car_custom_doc.vehicle_verification')}}"
+          action="{{ url_for('paystack.verify_payment') }}"
           method="POST"
           enctype="multipart/form-data"
         >
@@ -230,5 +230,6 @@
     <script src="{{ url_for('static', filename='js/vehicle_verification.js') }}"></script>
     <script src="{{ url_for('static', filename='js/flash.js') }}"></script>
     <script src="{{ url_for('static', filename='js/preloader.js') }}"></script>
+    <script src="https://js.paystack.co/v1/inline.js"></script>
   </body>
 </html>

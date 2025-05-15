@@ -1,3 +1,5 @@
+"use strict";
+
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("vehicleForm");
 
@@ -154,7 +156,7 @@ document.addEventListener("DOMContentLoaded", function () {
     event.preventDefault(); // Prevent default form submit
     let isValid = true;
 
-    // Validation code (same as yours)
+    // Validation code
     if (!nameInput.value.trim()) {
       nameError.textContent = "Name is required";
       isValid = false;
@@ -213,7 +215,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function payWithPaystack() {
     const email = emailInput.value.trim();
-    const amount = 15000 * 100; // Kobo
+    const amount = 10 * 100; // Kobo
 
     const handler = PaystackPop.setup({
       key: "pk_live_ca0a35a5213903cc49738af8e6061386b5e8503e",

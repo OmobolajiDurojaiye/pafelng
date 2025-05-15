@@ -1071,6 +1071,10 @@ html {
 
 /* Media Queries */
 @media (max-width: 1024px) {
+  .slider-container {
+    padding: 70px;
+  }
+
   .slider-text {
     width: 65%;
   }
@@ -1094,6 +1098,10 @@ html {
 }
 
 @media (max-width: 768px) {
+  .slider-container {
+    padding: 70px;
+  }
+
   .nav-links {
     position: fixed;
     top: 70px;
@@ -1166,6 +1174,10 @@ html {
 }
 
 @media (max-width: 576px) {
+  .slider-container {
+    padding: 70px;
+  }
+
   .slider-text h1 {
     font-size: 2rem;
   }
@@ -1234,6 +1246,10 @@ html {
   height: calc(var(--vh, 1vh) * 100);
 }
 
+.slider-container {
+  padding: 60px;
+}
+
 @supports (-webkit-overflow-scrolling: touch) {
   .cta-section {
     background-attachment: scroll;
@@ -1300,4 +1316,46 @@ html {
   .service-bg-element {
     display: none;
   }
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.quote-btn,
+.quick-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--border-radius);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  text-decoration: none;
+}
+
+.quote-btn {
+  background-color: var(--primary-color);
+  color: var(--white);
+}
+
+.quote-btn:hover {
+  background-color: var(--accent-color);
+}
+
+.quick-btn {
+  background-color: var(--white);
+  color: var(--primary-color);
+  border: 2px solid var(--primary-color);
+}
+
+.quick-btn:hover {
+  background-color: var(--primary-light);
+}
+
+.quote-btn i,
+.quick-btn i {
+  margin-left: 0.5rem;
 }
